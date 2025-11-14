@@ -1,5 +1,5 @@
 from typing import List, Dict, Tuple
-from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N
+from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N, M, PRIMITIVE_POLY
 
 # -------------------------
 # GF(2^6) 向量(bit-serial)版
@@ -8,9 +8,9 @@ from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N
 # -------------------------
 class GF2mVector:
     def __init__(self):
-        self.m = 6
+        self.m = M
         # 溢出時 XOR 的約簡 taps：x^6 ≡ x + 1 → [1,1,0,0,0,0]
-        self.reduction_taps = [1, 1, 0, 0, 0, 0]
+        self.reduction_taps = PRIMITIVE_POLY[:-1]  # 去掉最高次項 x^6
 
 
     # ---------- 基本工具 ----------
