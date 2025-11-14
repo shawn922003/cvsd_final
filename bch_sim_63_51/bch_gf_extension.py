@@ -19,7 +19,7 @@ class GF2mVector:
         '''
             檢查向量長度與元素型態
         '''
-        assert isinstance(a, list) and len(a) == 6 and all((x & 1) == x for x in a)
+        assert isinstance(a, list) and len(a) == M and all((x & 1) == x for x in a)
 
     @staticmethod
     def clone(a: List[int]) -> List[int]: 
@@ -27,11 +27,11 @@ class GF2mVector:
 
     @staticmethod
     def zero() -> List[int]: 
-        return [0]*6
+        return [0]*M
 
     @staticmethod
     def one() -> List[int]:
-        v = [0]*6
+        v = [0]*M
         v[0] = 1
         return v
 
@@ -44,6 +44,7 @@ class GF2mVector:
         '''
         GF2mVector.check_len(a)
         GF2mVector.check_len(b)
+        # 000100 + 001011 = 001111 
         return [(x ^ y) for x, y in zip(a, b)]
     
     @staticmethod
@@ -171,7 +172,7 @@ class GF2mVector:
     def poly_eval(self, coeffs: List[List[int]], x: List[int]) -> List[int]:
         y = self.zero()
         for c in reversed(coeffs):
-            y = self.mul(y, x)
+            y = self.mul_table(y, x)
             y = self.add(y, c)
         return y
 

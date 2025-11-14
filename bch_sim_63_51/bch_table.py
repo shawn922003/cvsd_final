@@ -15,7 +15,6 @@ GENERATOR_POLY = [1, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 1]  # g(x) = 1 + x^3 + x^4
 
 PRIMITIVE_POLY = [1, 1, 0, 0, 0, 0, 1]  # p(x) = 1 + x + x^6
 
-FIELD_SIZE = 63  # 2^6 - 1
 T = 2  # error correction capability 
 N = 63  # codeword length
 K = 51  # message length
@@ -24,7 +23,7 @@ M = 6
 # 預先計算 alpha 的多項式表示
 # 產生方法：
 # alpha^0 = 1
-# alpha^i = x * alpha^(i-1) mod p(x)
+# alpha^i = alpha * alpha^(i-1) mod p(x)
 ALPHA_POLY_BITS = [
     [1, 0, 0, 0, 0, 0],  # alpha^0 = 1
     [0, 1, 0, 0, 0, 0],  # alpha^1 = x
