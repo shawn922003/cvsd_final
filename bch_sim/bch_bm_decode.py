@@ -6,9 +6,14 @@
 # phi4(x) = x^6 + x + 1
 # g(x) = x^12 + x^10 + x^8 + x^5 + x^4 + x^3 + 1
 
+
 from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N, T
 from bch_gf_extension import GF2mVector
 from typing import List, Tuple
+
+
+
+
 
 # -------------------------
 # BCH(63,51) 解碼（t=2）
@@ -32,6 +37,7 @@ class BCH63_51_Decoder:
     def _poly_add(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
         '''
             多項式加法：C(x) = A(x) + B(x)
+            方法：對應係數相加（GF 加法）
         '''
         L = max(len(A), len(B))
         Z = self.gf.zero()
@@ -48,14 +54,16 @@ class BCH63_51_Decoder:
     def _poly_scale(self, A: List[List[int]], s: List[int]) -> List[List[int]]:
         '''
             多項式數乘：B(x) = s * A(x)
+            方法：每個係數乘以 s（GF 乘法）
         '''
         return [self.gf.mul_table(a, s) for a in A]
 
     def _poly_shift(self, A: List[List[int]], k: int) -> List[List[int]]:
         '''
             多項式位移：B(x) = x^k * A(x)
+            方法：在前面補 k 個零係數 (x^0 到 x^{k-1} 的係數為0)
         '''
-        if k <= 0:
+        if k <= 0: 
             return A[:]
         Z = self.gf.zero()
         return [Z for _ in range(k)] + A[:]
@@ -65,87 +73,61 @@ class BCH63_51_Decoder:
         if len(A) < length:
             A = A + [Z] * (length - len(A))
         return A
-
+    
     # ---------------- Berlekamp（t=2）: 回傳 (sigma1, sigma2) ----------------
-    # 依 p.22–23：把 μ 從投影片的 -1 起跳，平移成從 0 起跳
-    # ---------------- Berlekamp（t=2）: 回傳 (sigma1, sigma2) ----------------
-    # 依投影片 p.22–23：以 μ = -1, 0 為起始列，往上推到 μ = 2t
+    # 依 p.22：使用 S1..S4，迭代 discrepancy d、更新 σ(x) 與長度 L
     def berlekamp(self, S1: List[int], S3: List[int]) -> Tuple[List[int], List[int]]:
-        gf = self.gf
+        # --- Frobenius：S2 = S1^2, S4 = S2^2 ---
+        S2 = self.gf.square_table(S1)
+        S4 = self.gf.square_table(S2)
+        S  = [S1, S2, S3, S4]  # 對應 S_{1..4}，索引 0..3
 
-        # 準備 S1..S4（t=2）
-        S2 = gf.square_table(S1)
-        S4 = gf.square_table(S2)
-        S  = [S1, S2, S3, S4]  # S[0]=S1, S[1]=S2, ...
+        one  = self.gf.one()
+        zero = self.gf.zero()
 
-        sigma_mu_poly_array: List[List[List[int]]] = []
-        d_mu_array: List[List[int]] = []
-        l_mu_array: List[int] = []
+        # ---- 變數名稱對齊 PDF p.22 ----
+        # μ
+        # σ^(μ)(x) → sigma_mu_poly
+        # B^(μ)(x) → B_mu
+        # ℓ_μ      → l_mu
+        # b_μ      → b_mu
+        # μ−ℓ_μ    → mu_minus_l_mu（位移計數，等價於原本的 m）
+        sigma_mu_poly       = [one]   # σ^(0)(x) = 1
+        B_mu_poly           = [one]   # B^(0)(x) = 1  # B^μ(x)：上一個被選中的 σ^(ρ)(x) 的快取（滿足 d_ρ≠0 且 ρ−ℓ_ρ 最大），用於更新項 (d_μ/b_μ)·x^{μ−ℓ_μ}·B^μ(x)
+        l_mu           = 0       # ℓ_0 = 0
+        b_mu           = one     # b_0 = 1 # b^μ：上一個被選中迭代 ρ 的 discrepancy（= d_ρ），做為比例係數 (d_μ / b^μ) 的分母；當 2ℓ_μ ≤ μ 時更新為當前 d_μ，否則保持不變
 
-        # μ = -1  對應 index 0
-        sigma_mu_poly_array.append([gf.one()])
-        d_mu_array.append(gf.one())
-        l_mu_array.append(0)
+        for mu in range(4):  # 用 S1..S4
+            # d_μ = S_{μ+1} + sum_{i=1..ℓ_μ} σ_i^(μ) * S_{μ+1-i}
+            d_mu = S[mu][:]
+            for i in range(1, l_mu + 1):
+                d_mu = self.gf.add(d_mu, self.gf.mul_table(sigma_mu_poly[i], S[mu - i]))
 
-        # μ = 0   對應 index 1
-        sigma_mu_poly_array.append([gf.one()])
-        d_mu_array.append(S[0])      # d_0 = S1
-        l_mu_array.append(0)
-
-        # μ = 1..2T-1 （t=2 → μ=1,2,3），每一步產生 σ^(μ+1)
-        for mu in range(1, 2*T):     # FIX#1: μ 從 1 起算，用 d_mu
-            curr_d_mu = d_mu_array[mu]   # 用 d_μ，不是 d_{μ-1}
-
-            if gf.is_zero(curr_d_mu):
-                # d_μ = 0：σ、L 不變 → 直接複製到 μ+1 列
-                sigma_mu_poly_array.append(sigma_mu_poly_array[mu][:])
-                l_mu_array.append(l_mu_array[mu])
-            else:
-                # 找 ρ < μ 且 d_ρ ≠ 0 使 (ρ - l_ρ) 最大
-                rho = 0
-                best = -10**9
-                for candidate_rho in range(0, mu):   # FIX#2: 允許到 ρ = μ-1
-                    if not gf.is_zero(d_mu_array[candidate_rho]):
-                        val = candidate_rho - l_mu_array[candidate_rho]
-                        if val > best:
-                            best = val
-                            rho  = candidate_rho
-
-                shift  = mu - rho
-                factor = gf.div_table(curr_d_mu, d_mu_array[rho])
-                sigma_next = self._poly_add(
-                    sigma_mu_poly_array[mu],
-                    self._poly_scale(
-                        self._poly_shift(sigma_mu_poly_array[rho], shift),
-                        factor
-                    )
+            if not self.gf.is_zero(d_mu):
+                temp_sigma_mu_poly = sigma_mu_poly[:]  # 暫存 σ^(μ)(x)
+                factor = self.gf.div_table(d_mu, b_mu)  # d_μ / b_μ
+                sigma_mu_poly = self._poly_add(
+                    sigma_mu_poly,
+                    self._poly_shift(self._poly_scale(B_mu_poly, factor), mu - l_mu + 1)  # mu - ℓ_μ 之所以要加1，是因為 B^μ(x) 的次數是從 0 開始計算的
                 )
-                l_next = max(l_mu_array[mu], l_mu_array[rho] + (mu - rho))
-                sigma_mu_poly_array.append(sigma_next)
-                l_mu_array.append(l_next)
+                # 若 2ℓ_μ ≤ μ：更新度數與參考多項式
+                if 2 * l_mu <= mu:
+                    l_new = mu + 1 - l_mu                 # ℓ_{μ+1}
+                    B_mu_poly, b_mu = temp_sigma_mu_poly, d_mu                  # B^(μ+1), b_{μ+1}
+                    l_mu = l_new
 
-            # 計 d_{μ+1}：用「新的一列」(μ+1) 的 σ、L
-            if mu <= 2*T - 1:
-                L = l_mu_array[mu + 1]                        # FIX#3: 用 L_{μ+1}
-                sigma_pad = self._poly_pad(sigma_mu_poly_array[mu + 1], L + 1)
-                d_next = S[mu]                                 # S_{μ+1}（0-based）
-                for i in range(1, L + 1):
-                    d_next = gf.add(d_next, gf.mul_table(sigma_pad[i], S[mu - i]))
-                d_mu_array.append(d_next)
 
-        # 最終 σ(x) 取 σ^(2T)(x)
-        final_sigma_poly = sigma_mu_poly_array[2*T]
-        sigma1 = final_sigma_poly[1] if len(final_sigma_poly) > 1 else gf.zero()
-        sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
+        # σ(x) = 1 + σ1 x + σ2 x^2
+        sigma1 = sigma_mu_poly[1] if len(sigma_mu_poly) > 1 else zero
+        sigma2 = sigma_mu_poly[2] if len(sigma_mu_poly) > 2 else zero
         return sigma1, sigma2
-
 
     # Chien 掃根：找 i 使 σ(α^{-i})=0
     def chien_search(self, sigma1: List[int], sigma2: List[int]) -> List[int]:
         roots = []
         one = self.gf.one()
         for i in range(63):
-            x  = ALPHA_POLY_BITS[(-i) % N]       # x = α^{-i}
+            x = ALPHA_POLY_BITS[(-i) % N]     # x = α^{-i}
             x2 = ALPHA_POLY_BITS[(-2 * i) % N]   # x^2 = α^{-2i}
             val = self.gf.add(one, self.gf.add(self.gf.mul_table(sigma1, x),
                                                self.gf.mul_table(sigma2, x2)))
@@ -179,7 +161,7 @@ class BCH63_51_Decoder:
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
-    # 假設某合法碼字（示範用全 0）
+    # 假設某合法碼字（這裡用全 0 當示範），再注入錯誤：
     cw = [0]*63
 
     # 單錯在位置 i0

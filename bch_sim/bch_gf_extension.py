@@ -142,12 +142,25 @@ class GF2mVector:
             raise ZeroDivisionError("division by zero")
         res_pow = (a_pow - b_pow) % N
         return ALPHA_POLY_BITS[res_pow]
+    
+    def inv_table(self, a: List[int]) -> List[int]:
+        GF2mVector.check_len(a)
+        a_pow = BITS_TO_ALPHA_EXP[tuple(a)]
+        if a_pow == -1:
+            raise ZeroDivisionError("inverse(0) undefined")
+        res_pow = (-a_pow) % N
+        return ALPHA_POLY_BITS[res_pow]
 
     # ---------- 判等 / 零 ----------
     @staticmethod
     def is_zero(a: List[int]) -> bool:
         GF2mVector.check_len(a)
         return not any(a)
+    
+    @staticmethod
+    def is_one(a: List[int]) -> bool:
+        GF2mVector.check_len(a)
+        return a[0] == 1 and all(x == 0 for x in a[1:])
 
     @staticmethod
     def eq(a: List[int], b: List[int]) -> bool:
