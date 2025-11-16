@@ -7,10 +7,11 @@
 # g(x) = x^12 + x^10 + x^8 + x^5 + x^4 + x^3 + 1
 
 
-from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N, T
+from bch_table import ALPHA_POLY_BITS, BITS_TO_ALPHA_EXP, N, T, GENERATOR_POLY
 from bch_gf_extension import GF2mVector
 from typing import List, Tuple
-
+from itertools import product
+import random
 
 
 
@@ -143,40 +144,105 @@ class BCH63_51_Decoder:
         return c
 
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
-    def decode(self, r: List[int]):
+    def hard_decode(self, r: List[int]):
         S1, S3 = self.syndromes(r)
         sigma1, sigma2 = self.berlekamp(S1, S3)
         roots = self.chien_search(sigma1, sigma2)
-        # 若 roots 少於 deg(σ) 代表失敗；這裡做基本檢查（t=2）
-        deg = (0 if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2)
-               else (1 if self.gf.is_zero(sigma2) else 2))
-        if len(roots) != deg:
-            # 可能超出可修正或雜訊不一致
-            raise ValueError(f"Decoding failure: roots={len(roots)} but deg(sigma)={deg}")
+
+
         corrected = self.correct(r, roots)
-        return corrected, roots, (sigma1, sigma2), (S1, S3)
+
+        # 再檢查一次 syndrome 是否為 0，保險
+        S1_new, S3_new = self.syndromes(corrected)
+        success = self.gf.is_zero(S1_new) and self.gf.is_zero(S3_new)
+
+        return corrected, roots, success, (sigma1, sigma2), (S1, S3)
+    
+    # ---------------------------- 軟判決解碼 ----------------------------
+    def soft_decode(self, r: List[float], p: int = 2):
+        # Step 1: 找出 p 個最不可靠位（|LLR| 最小）
+        sorted_indices = sorted(range(len(r)), key=lambda i: abs(r[i]))[:p]
+
+        # 硬判決基準
+        input_rx = [0 if val >= 0 else 1 for val in r]
+
+        best_correlation = float('-inf')
+        best_decoded = None
+        best_roots = None
+
+        for pattern in product([0, 1], repeat=p):
+            # 先從硬判決結果複製一份
+            rx = input_rx[:]
+
+            # 依 pattern 覆寫/翻轉最不可靠的位
+            for idx, bit in zip(sorted_indices, pattern):
+                rx[idx] = bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
+
+            # 硬解碼
+            corrected, roots, success, _, _ = self.hard_decode(rx)
+
+            if not success:
+                # 解碼失敗的 candidate 丟掉，不算 correlation
+                continue
+
+            # 計算 correlation
+            correlation = sum(r[i] * (1 - 2 * corrected[i]) for i in range(len(r)))
+
+            if correlation > best_correlation:
+                best_correlation = correlation
+                best_decoded = corrected
+                # roots 要加上你在 pattern 裡面翻轉的那些 index
+                extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
+                            if input_rx[idx] != corrected[idx]]
+                best_roots = sorted(set(roots + extra_roots))
+
+        return best_decoded, best_roots
+
+
+def mul(a, b):
+    result = [0] * (len(a) + len(b) - 1)
+    for i in range(len(a)):
+        if a[i] == 1:
+            for j in range(len(b)):
+                if b[j] == 1:
+                    result[i + j] ^= 1
+                    
+    return result[:N]  # 截斷為 N 位
 
 # -------------------------
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
-    # 假設某合法碼字（這裡用全 0 當示範），再注入錯誤：
-    cw = [0]*63
+    tx = [0]*51
+    
+    # 編碼
+    rx = mul(tx, GENERATOR_POLY)
+    
+    hard_codeword = rx[:]
+    error0 = 10
+    error1 = 20
+    hard_codeword[error0] ^= 1
+    hard_codeword[error1] ^= 1
+    correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
+    print(f"硬判決：是否修正回原碼字？ {correted == rx}")
+    print(f"硬判決：Chien 找到 roots = {roots}") 
+    
+    
+    # p=2：只在這兩個最不可靠位上枚舉 4 個候選
+    soft_decode_llr = []
+    errors =[10, 20, 30, 40]
+    for idx in range(N):
+        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+    
+    soft_decode_llr[errors[0]] = -20
+    soft_decode_llr[errors[1]] = -20
+    soft_decode_llr[errors[2]] = -10
+    soft_decode_llr[errors[3]] = -10
+    
+    p = 2
+    soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
-    # 單錯在位置 i0
-    i0 = 7
-    rx = cw[:]
-    rx[i0] ^= 1
-    corrected, roots, (s1,s2), (S1,S3) = dec.decode(rx)
-    print("1-error roots:", roots)            # 應含 i0
-    print("1-error ok  :", corrected == cw)   # True
-
-    # 兩錯在位置 i1, i2
-    i1, i2 = 5, 33
-    rx2 = cw[:]
-    rx2[i1] ^= 1
-    rx2[i2] ^= 1
-    corrected2, roots2, *_ = dec.decode(rx2)
-    print("2-error roots:", roots2)           # 應含 {i1, i2}
-    print("2-error ok   :", corrected2 == cw) # True
+    # 驗證與顯示
+    print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
+    print(f"軟判決：Chien 找到 roots = {roots}")
