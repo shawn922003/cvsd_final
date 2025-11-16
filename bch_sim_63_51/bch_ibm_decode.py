@@ -165,11 +165,19 @@ class BCH63_51_Decoder:
 
         corrected = self.correct(r, roots)
 
-        # 再檢查一次 syndrome 是否為 0，保險
-        S1_new, S3_new = self.syndromes(corrected)
-        success = self.gf.is_zero(S1_new) and self.gf.is_zero(S3_new)
-
+        # 再檢是否success
+        if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2):
+            deg = 0
+        elif self.gf.is_zero(sigma2):
+            deg = 1
+        else:
+            deg = 2
+            
+        success = (deg == len(roots))
+        
+        
         return corrected, roots, success, (sigma1, sigma2), (S1, S3)
+
     
     # ---------------------------- 軟判決解碼 ----------------------------
     def soft_decode(self, r: List[float], p: int = 2):
