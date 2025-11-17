@@ -98,7 +98,7 @@ class BCH63_51_Decoder:
         l_mu_array.append(0)
 
         # μ = 1..2T-1 （t=2 → μ=1,2,3），每一步產生 σ^(μ+1)
-        for mu in range(1, 2*T):     # FIX#1: μ 從 1 起算，用 d_mu
+        for mu in range(1, 2*T + 1):     # FIX#1: μ 從 1 起算，用 d_mu
             curr_d_mu = d_mu_array[mu]   # 用 d_μ，不是 d_{μ-1}
 
             if gf.is_zero(curr_d_mu):
@@ -139,7 +139,7 @@ class BCH63_51_Decoder:
                 d_mu_array.append(d_next)
 
         # 最終 σ(x) 取 σ^(2T)(x)
-        final_sigma_poly = sigma_mu_poly_array[2*T]
+        final_sigma_poly = sigma_mu_poly_array[2*T + 1]
         sigma1 = final_sigma_poly[1] if len(final_sigma_poly) > 1 else gf.zero()
         sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
         return sigma1, sigma2
