@@ -21,14 +21,18 @@ class BCH1023_983_Decoder:
     # S_k = sum r[j] * (alpha)^{j*k}; 計算 S1, S3, ..., S39
     def syndromes(self, r: List[int]) -> List[List[int]]:
         assert len(r) == N and all((b & 1) == b for b in r)
-        S = []
-        for k in range(1, 2*T, 2):  # k = 1, 3, 5, ..., 39
-            S_k = self.gf.zero()
-            for j, bit in enumerate(r):
-                if bit & 1:
-                    S_k = self.gf.add(S_k, ALPHA_POLY_BITS[(k * j) % N])  # α^{kj}
-            S.append(S_k)
-        return S
+        S1 = self.gf.zero()
+        S3 = self.gf.zero()
+        S5 = self.gf.zero()
+        S7 = self.gf.zero()
+        
+        for j, bit in enumerate(r):
+            if bit & 1:
+                S1 = self.gf.add(S1, ALPHA_POLY_BITS[j])              # α^{j}
+                S3 = self.gf.add(S3, ALPHA_POLY_BITS[(3 * j) % N])    # α^{3j}
+                S5 = self.gf.add(S5, ALPHA_POLY_BITS[(5 * j) % N])    # α^{5j}
+                S7 = self.gf.add(S7, ALPHA_POLY_BITS[(7 * j) % N])    # α^{7j}
+        return S1, S3, S5, S7
 
     # ------------ 多項式工具（係數是 GF 元素的 10-bit list）------------
     def _poly_add(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
@@ -70,20 +74,15 @@ class BCH1023_983_Decoder:
 
     # ---------------- Berlekamp（t=20）: 回傳 (sigma1, sigma2, ..., sigma20) ----------------
     # 依投影片 p.22–23：以 μ = -1, 0 為起始列，往上推到 μ = 2t
-    def berlekamp(self, S: List[List[int]]) -> List[List[int]]:
+    def berlekamp(self, S1: List[int], S3: List[int], S5: List[int], S7: List[int]) -> Tuple[List[int], List[int], List[int], List[int]]:
         gf = self.gf
 
-        # 準備 S1..S40（t=20）
-        # S 已經是 [S1, S3, S5, ..., S39]，需要補上偶數次方
-        S_full = [gf.zero()]  # S[0] 不使用
-        for i in range(1, 2*T + 1):
-            if i % 2 == 1:
-                # 奇數：直接從輸入取
-                S_full.append(S[(i-1)//2])
-            else:
-                # 偶數：從奇數平方得到
-                # S_{2k} = (S_k)^2
-                S_full.append(gf.square_table(S_full[i//2]))
+         # 準備 S1..S8（t=4）
+        S2 = gf.square_table(S1)
+        S4 = gf.square_table(S2)
+        S6 = gf.square_table(S3)
+        S8 = gf.square_table(S4)
+        S  = [S1, S2, S3, S4, S5, S6, S7, S8]  # S[0]=S1, S[1]=S2, ...
 
         sigma_mu_poly_array: List[List[List[int]]] = []
         d_mu_array: List[List[int]] = []
@@ -96,11 +95,11 @@ class BCH1023_983_Decoder:
 
         # μ = 0   對應 index 1
         sigma_mu_poly_array.append([gf.one()])
-        d_mu_array.append(S_full[1])      # d_0 = S1
+        d_mu_array.append(S[0])      # d_0 = S1
         l_mu_array.append(0)
 
-        # μ = 1..2T-1 （t=20 → μ=1,2,...,39），每一步產生 σ^(μ+1)
-        for mu in range(1, 2*T):
+        
+        for mu in range(1, 2*T+1):
             curr_d_mu = d_mu_array[mu]
 
             if gf.is_zero(curr_d_mu):
@@ -135,33 +134,34 @@ class BCH1023_983_Decoder:
             if mu <= 2*T - 1:
                 L = l_mu_array[mu + 1]
                 sigma_pad = self._poly_pad(sigma_mu_poly_array[mu + 1], L + 1)
-                d_next = S_full[mu + 1]
+                d_next = S[mu]
                 for i in range(1, L + 1):
-                    d_next = gf.add(d_next, gf.mul_table(sigma_pad[i], S_full[mu + 1 - i]))
+                    d_next = gf.add(d_next, gf.mul_table(sigma_pad[i], S[mu - i]))
                 d_mu_array.append(d_next)
 
         # 最終 σ(x) 取 σ^(2T)(x)
-        final_sigma_poly = sigma_mu_poly_array[2*T]
-        # 提取係數 sigma1, sigma2, ..., sigma20
-        sigma_coeffs = []
-        for i in range(1, T + 1):
-            if i < len(final_sigma_poly):
-                sigma_coeffs.append(final_sigma_poly[i])
-            else:
-                sigma_coeffs.append(gf.zero())
-        return sigma_coeffs
+        final_sigma_poly = sigma_mu_poly_array[2*T +1]
+        sigma1 = final_sigma_poly[1] if len(final_sigma_poly) > 1 else gf.zero()
+        sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
+        sigma3 = final_sigma_poly[3] if len(final_sigma_poly) > 3 else gf.zero()
+        sigma4 = final_sigma_poly[4] if len(final_sigma_poly) > 4 else gf.zero()
+        return sigma1, sigma2, sigma3, sigma4
 
 
     # Chien 掃根：找 i 使 σ(α^{-i})=0
-    def chien_search(self, sigma_coeffs: List[List[int]]) -> List[int]:
+    def chien_search(self, sigma1: List[int], sigma2: List[int], sigma3: List[int], sigma4: List[int]) -> List[int]:
         roots = []
         one = self.gf.one()
-        for i in range(N):
-            # 計算 σ(α^{-i}) = 1 + σ1*α^{-i} + σ2*α^{-2i} + ... + σt*α^{-ti}
-            val = one
-            for j in range(1, T + 1):
-                x_power = ALPHA_POLY_BITS[(-j * i) % N]  # α^{-ji}
-                val = self.gf.add(val, self.gf.mul_table(sigma_coeffs[j-1], x_power))
+        for i in range(N):  # N = 1023
+            x  = ALPHA_POLY_BITS[(-i) % N]       # x = α^{-i}
+            x2 = ALPHA_POLY_BITS[(-2 * i) % N]   # x^2 = α^{-2i}
+            x3 = ALPHA_POLY_BITS[(-3 * i) % N]   # x^3 = α^{-3i}
+            x4 = ALPHA_POLY_BITS[(-4 * i) % N]   # x^4 = α^{-4i}
+            val = self.gf.add(one, 
+                    self.gf.add(self.gf.mul_table(sigma1, x),
+                    self.gf.add(self.gf.mul_table(sigma2, x2),
+                    self.gf.add(self.gf.mul_table(sigma3, x3),
+                                self.gf.mul_table(sigma4, x4)))))
             if self.gf.is_zero(val):
                 roots.append(i)
         return roots
@@ -173,58 +173,80 @@ class BCH1023_983_Decoder:
             c[i] ^= 1
         return c
 
-    # 高階接口：回傳（corrected, roots, sigma_coeffs, S）
+    # 高階接口：回傳（corrected, roots, (sigma1, sigma2, sigma3, sigma4), (S1, S3, S5, S7)）
     def hard_decode(self, r: List[int]):
-        S = self.syndromes(r)
-        sigma_coeffs = self.berlekamp(S)
-        roots = self.chien_search(sigma_coeffs)
+        S1, S3, S5, S7 = self.syndromes(r)
+        sigma1, sigma2, sigma3, sigma4 = self.berlekamp(S1, S3, S5, S7)
+        roots = self.chien_search(sigma1, sigma2, sigma3, sigma4)
+
+
+       
+
         corrected = self.correct(r, roots)
-        return corrected, roots, sigma_coeffs, S
+
+
+
+
+         # 5) 再檢查是否 success：deg(σ) 是否等於 roots 數量
+        if (self.gf.is_zero(sigma1)
+            and self.gf.is_zero(sigma2)
+            and self.gf.is_zero(sigma3)
+            and self.gf.is_zero(sigma4)):
+            deg = 0
+        elif not self.gf.is_zero(sigma4):
+            deg = 4
+        elif not self.gf.is_zero(sigma3):
+            deg = 3
+        elif not self.gf.is_zero(sigma2):
+            deg = 2
+        else:
+            deg = 1
+            
+        success = (deg == len(roots))
+        return corrected, roots,success, (sigma1, sigma2, sigma3, sigma4), (S1, S3, S5, S7)
     
     # ---------------------------- 軟判決解碼 ----------------------------
-    def soft_decode(self, r: List[int], p: int = 4):
+    def soft_decode(self, r: List[float], p: int = 2):
         # Step 1: 找出 p 個最不可靠的位
         sorted_indices = sorted(range(len(r)), key=lambda i: abs(r[i]))[:p]
         
-        # Step 2: 生成所有 2^p 的測試模式
-        test_patterns = list(product([0, 1], repeat=p))
+
+        # 硬判決基準
+        input_rx = [0 if val >= 0 else 1 for val in r]
+        
         
         best_correlation = float('-inf')
         best_decoded = None
         best_roots = None
         
-        # 將 LLR 轉換為硬判決
-        input_rx = []
-        for val in r:
-            if val >= 0:
-                input_rx.append(0)
-            else:
-                input_rx.append(1)
-        
-        # Step 3: 測試每一個測試模式
-        for pattern in test_patterns:
-            # 複製接收信號
+        for pattern in product([0, 1], repeat=p):
+            # 先從硬判決結果複製一份
             rx = input_rx[:]
-            
-            # 根據當前測試模式翻轉最不可靠的位
+
+            # 依 pattern 覆寫/翻轉最不可靠的位
             for idx, bit in zip(sorted_indices, pattern):
-                rx[idx] = bit
-            
-            # Step 4: 使用硬判決解碼
-            corrected, roots, sigma_coeffs, S = self.hard_decode(rx)
-            
-            # Step 5: 計算相關性
-            correlation = sum([r[i] * (1 - 2 * corrected[i]) for i in range(len(r))])
-            
-            # Step 6: 保持最佳解碼結果
+                rx[idx] = bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
+
+            # 硬解碼
+            corrected, roots, success, _, _ = self.hard_decode(rx)
+
+            if not success:
+                # 解碼失敗的 candidate 丟掉，不算 correlation
+                continue
+
+            # 計算 correlation
+            correlation = sum(r[i] * (1 - 2 * corrected[i]) for i in range(len(r)))
+
             if correlation > best_correlation:
                 best_correlation = correlation
                 best_decoded = corrected
-                # 重新計算相對於原始輸入的錯誤位置
-                best_roots = [i for i in range(len(input_rx)) 
-                            if input_rx[i] != corrected[i]]
-    
+                # roots 要加上你在 pattern 裡面翻轉的那些 index
+                extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
+                            if input_rx[idx] != corrected[idx]]
+                best_roots = sorted(set(roots + extra_roots))
+
         return best_decoded, best_roots
+
 
 def mul(a, b):
     result = [0] * (len(a) + len(b) - 1)
@@ -251,31 +273,22 @@ if __name__ == "__main__":
     error1 = 500
     hard_codeword[error0] ^= 1
     hard_codeword[error1] ^= 1
-    hard_decode = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {hard_decode[0] == rx}")
-    print(f"硬判決：Chien 找到 roots = {hard_decode[1]}") 
+    corrected, roots, _, _, _  = dec.hard_decode(hard_codeword)
+    print(f"硬判決：是否修正回原碼字？ {corrected == rx}")
+    print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
-    # === 軟判決測試 ===
-    # 製造接收訊號（有錯誤）
-    received = rx[:]
-    error_positions = [100, 500]  # 實際錯誤位置
-    for pos in error_positions:
-        received[pos] ^= 1
-
-    # 基於接收訊號生成 LLR
+    
     soft_decode_llr = []
-    for idx in range(N):
-        # 正確映射：0→正LLR, 1→負LLR
-        soft_decode_llr.append((1 - 2 * received[idx]) * 127)
-
     # 模擬信道不確定性：降低某些位置的可靠性
-    unreliable_positions = [100, 200, 500, 800]
-    # 只降低絕對值，不改變符號
-    soft_decode_llr[unreliable_positions[0]] = soft_decode_llr[unreliable_positions[0]] / 5
-    soft_decode_llr[unreliable_positions[1]] = soft_decode_llr[unreliable_positions[1]] / 10
-    soft_decode_llr[unreliable_positions[2]] = soft_decode_llr[unreliable_positions[2]] / 15
-    soft_decode_llr[unreliable_positions[3]] = soft_decode_llr[unreliable_positions[3]] / 20
+    errors = [100, 200, 500, 800]
+    for idx in range(N):
+        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+
+    soft_decode_llr[errors[0]] = soft_decode_llr[errors[0]] / 5
+    soft_decode_llr[errors[1]] = soft_decode_llr[errors[1]] / 10
+    soft_decode_llr[errors[2]] = soft_decode_llr[errors[2]] / 15
+    soft_decode_llr[errors[3]] = soft_decode_llr[errors[3]] / 20
 
     p = 4  # 測試 4 個最不可靠的位
     soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
