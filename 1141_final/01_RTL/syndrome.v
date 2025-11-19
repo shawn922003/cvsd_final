@@ -250,7 +250,6 @@ module syndrome(
 
     reg [7:0] counter, counter_next;
 
-    reg odd_valid;
 
 
     integer i;
@@ -347,7 +346,7 @@ module syndrome(
         else if (counter == 8'd131) begin
             counter_next = counter;
         end
-        else if (i_wen) begin
+        else if (i_wen || counter >= 8'd7) begin
             counter_next = counter + 8'b1;
         end
         else begin
@@ -359,16 +358,16 @@ module syndrome(
     always @(*) begin
         case(i_code) // synopsys full_case
             2'b00: begin
-                o_odd_valid = counter >= 8'd8;
-                o_all_valid = counter >= 8'd10;
+                o_odd_valid = counter >= 8'd8 && !i_clear_and_wen;
+                o_all_valid = counter >= 8'd10 && !i_clear_and_wen;
             end
             2'b01: begin
-                o_odd_valid = counter >= 8'd32;
-                o_all_valid = counter >= 8'd34;
+                o_odd_valid = counter >= 8'd32 && !i_clear_and_wen;
+                o_all_valid = counter >= 8'd34 && !i_clear_and_wen;
             end
             2'b10: begin
-                o_odd_valid = counter >= 8'd128;
-                o_all_valid = counter >= 8'd131;
+                o_odd_valid = counter >= 8'd128 && !i_clear_and_wen;
+                o_all_valid = counter >= 8'd131 && !i_clear_and_wen;
             end
         endcase
     end
@@ -643,7 +642,8 @@ module syndrome(
             endcase
         end
         else if (i_wen) begin
-            S1_next = (S1_poly_power[0] & {10{i_data[7]}}) ^
+            S1_next = S1 ^
+                      (S1_poly_power[0] & {10{i_data[7]}}) ^
                       (S1_poly_power[1] & {10{i_data[6]}}) ^
                       (S1_poly_power[2] & {10{i_data[5]}}) ^
                       (S1_poly_power[3] & {10{i_data[4]}}) ^
@@ -652,7 +652,8 @@ module syndrome(
                       (S1_poly_power[6] & {10{i_data[1]}}) ^
                       (S1_poly_power[7] & {10{i_data[0]}});
 
-            S3_next = (S3_poly_power[0] & {10{i_data[7]}}) ^
+            S3_next =   S3 ^
+                        (S3_poly_power[0] & {10{i_data[7]}}) ^
                         (S3_poly_power[1] & {10{i_data[6]}}) ^
                         (S3_poly_power[2] & {10{i_data[5]}}) ^
                         (S3_poly_power[3] & {10{i_data[4]}}) ^
@@ -662,7 +663,8 @@ module syndrome(
                         (S3_poly_power[7] & {10{i_data[0]}});
 
             if (i_code == 2'b10) begin
-                S5_next = (S5_poly_power[0] & {10{i_data[7]}}) ^
+                S5_next =   S5 ^
+                            (S5_poly_power[0] & {10{i_data[7]}}) ^
                             (S5_poly_power[1] & {10{i_data[6]}}) ^
                             (S5_poly_power[2] & {10{i_data[5]}}) ^
                             (S5_poly_power[3] & {10{i_data[4]}}) ^
@@ -671,7 +673,8 @@ module syndrome(
                             (S5_poly_power[6] & {10{i_data[1]}}) ^
                             (S5_poly_power[7] & {10{i_data[0]}});
 
-                S7_next = (S7_poly_power[0] & {10{i_data[7]}}) ^
+                S7_next =   S7 ^
+                            (S7_poly_power[0] & {10{i_data[7]}}) ^
                             (S7_poly_power[1] & {10{i_data[6]}}) ^
                             (S7_poly_power[2] & {10{i_data[5]}}) ^
                             (S7_poly_power[3] & {10{i_data[4]}}) ^
