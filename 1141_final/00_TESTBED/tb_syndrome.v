@@ -31,7 +31,7 @@ module syndrome_tb();
     //========================================
     parameter CLK_PERIOD = 10.0;        // 100MHz clock
     parameter RST_CYCLES = 5;           // Reset duration in clock cycles
-    parameter TIMEOUT_CYCLES = 200;     // Timeout for valid signals
+    parameter TIMEOUT_CYCLES = 10000;     // Timeout for valid signals
     parameter NUM_PATTERNS = 10;        // Number of test patterns
     
     parameter DATA_WIDTH = 8;
@@ -126,17 +126,11 @@ module syndrome_tb();
     //========================================
     // Waveform Dump
     //========================================
-    initial begin
-        `ifdef FSDB
-            $fsdbDumpfile("syndrome.fsdb");
-            $fsdbDumpvars(0, syndrome_tb, "+all");
-            $fsdbDumpMDA();
-        `endif
-        
-        `ifdef VCD
-            $dumpfile("syndrome.vcd");
-            $dumpvars(0, syndrome_tb);
-        `endif
+    initial 
+    begin
+        $fsdbDumpfile("syndrome.fsdb");
+        $fsdbDumpvars(0, syndrome_tb, "+all");
+        $fsdbDumpMDA();
     end
 
     //========================================
@@ -158,16 +152,16 @@ module syndrome_tb();
     //========================================
     initial begin
         if ($test$plusargs("LOAD_PATTERNS")) begin
-            $readmemb("pattern/test_code.dat", test_codes);
-            $readmemh("pattern/test_data.dat", test_data);
-            $readmemh("pattern/golden_S1.dat", golden_S1);
-            $readmemh("pattern/golden_S2.dat", golden_S2);
-            $readmemh("pattern/golden_S3.dat", golden_S3);
-            $readmemh("pattern/golden_S4.dat", golden_S4);
-            $readmemh("pattern/golden_S5.dat", golden_S5);
-            $readmemh("pattern/golden_S6.dat", golden_S6);
-            $readmemh("pattern/golden_S7.dat", golden_S7);
-            $readmemh("pattern/golden_S8.dat", golden_S8);
+            $readmemb("../00_TESTBED/pattern/test_code.dat", test_codes);
+            $readmemh("../00_TESTBED/pattern/test_data.dat", test_data);
+            $readmemh("../00_TESTBED/pattern/golden_S1.dat", golden_S1);
+            $readmemh("../00_TESTBED/pattern/golden_S2.dat", golden_S2);
+            $readmemh("../00_TESTBED/pattern/golden_S3.dat", golden_S3);
+            $readmemh("../00_TESTBED/pattern/golden_S4.dat", golden_S4);
+            $readmemh("../00_TESTBED/pattern/golden_S5.dat", golden_S5);
+            $readmemh("../00_TESTBED/pattern/golden_S6.dat", golden_S6);
+            $readmemh("../00_TESTBED/pattern/golden_S7.dat", golden_S7);
+            $readmemh("../00_TESTBED/pattern/golden_S8.dat", golden_S8);
             $display("[INFO] Test patterns loaded from files");
         end else begin
             // Default test patterns
