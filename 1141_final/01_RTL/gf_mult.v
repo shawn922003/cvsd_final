@@ -1,14 +1,3 @@
-module gf_add(
-    input [9:0] i_a,
-    input [9:0] i_b,
-    output [9:0] o_sum
-);
-
-
-    assign o_sum = i_a ^ i_b; // GF(2^m) addition is XOR
-
-endmodule
-
 // i_code == 0: m = 6, p(x) = x^6 + x + 1
 // i_code == 1: m = 8, p(x) = x^8 + x^4 + x^3 + x^2 + 1
 // i_code == 2: m = 10, p(x) = x^10 + x^3 + 1
