@@ -27,7 +27,7 @@ class BCH63_51_Decoder:
         assert len(r) == N and all((b & 1) == b for b in r)
         S1 = self.gf.zero()
         S3 = self.gf.zero()
-        for j, bit in enumerate(r):
+        for j, bit in reversed(list(enumerate(r))):
             if bit & 1:
                 S1 = self.gf.add(S1, ALPHA_POLY_BITS[j])           # α^{j}
                 S3 = self.gf.add(S3, ALPHA_POLY_BITS[(3 * j) % N]) # α^{3j}
@@ -243,36 +243,45 @@ def mul(a, b):
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
-    tx = [0]*51
     
-    # 編碼
-    # rx = mul(tx, GENERATOR_POLY)
-    rx = [0] * 63
+    rx_int = int("0102_0304_0506_0708", base=16)
+    rx = [(rx_int >> i) & 1 for i in range(63)]
     
-    hard_codeword = rx[:]
-    error0 = 10
-    error1 = 20
-    hard_codeword[error0] ^= 1
-    hard_codeword[error1] ^= 1
-    correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {correted == rx}")
-    print(f"硬判決：Chien 找到 roots = {roots}") 
+    s1, s3 = dec.syndromes(rx)
+    
+    print("S1:", BITS_TO_ALPHA_EXP[tuple(s1)] if not dec.gf.is_zero(s1) else "0")
+    print("S3:", BITS_TO_ALPHA_EXP[tuple(s3)] if not dec.gf.is_zero(s3) else "0")
+    
+    # tx = [0]*51
+    
+    # # 編碼
+    # # rx = mul(tx, GENERATOR_POLY)
+    # rx = [0] * 63
+    
+    # hard_codeword = rx[:]
+    # error0 = 10
+    # error1 = 20
+    # hard_codeword[error0] ^= 1
+    # hard_codeword[error1] ^= 1
+    # correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
+    # print(f"硬判決：是否修正回原碼字？ {correted == rx}")
+    # print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
-    # p=2：只在這兩個最不可靠位上枚舉 4 個候選
-    soft_decode_llr = []
-    errors =[10, 20, 30, 40]
-    for idx in range(N):
-        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+    # # p=2：只在這兩個最不可靠位上枚舉 4 個候選
+    # soft_decode_llr = []
+    # errors =[10, 20, 30, 40]
+    # for idx in range(N):
+    #     soft_decode_llr.append((1-2 *rx[idx]) * 127)
     
-    soft_decode_llr[errors[0]] = -soft_decode_llr[errors[0]]
-    soft_decode_llr[errors[1]] = -soft_decode_llr[errors[1]]
-    soft_decode_llr[errors[2]] = -soft_decode_llr[errors[2]] / 10
-    soft_decode_llr[errors[3]] = -soft_decode_llr[errors[3]] / 10
+    # soft_decode_llr[errors[0]] = -soft_decode_llr[errors[0]]
+    # soft_decode_llr[errors[1]] = -soft_decode_llr[errors[1]]
+    # soft_decode_llr[errors[2]] = -soft_decode_llr[errors[2]] / 10
+    # soft_decode_llr[errors[3]] = -soft_decode_llr[errors[3]] / 10
     
-    p = 2
-    soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
+    # p = 2
+    # soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
-    # 驗證與顯示
-    print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
-    print(f"軟判決：Chien 找到 roots = {roots}")
+    # # 驗證與顯示
+    # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
+    # print(f"軟判決：Chien 找到 roots = {roots}")

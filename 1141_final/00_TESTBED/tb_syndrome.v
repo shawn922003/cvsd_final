@@ -74,22 +74,25 @@ module syndrome_tb();
 
     // readfile
     initial begin
-        readmemh("pattern/test_data.dat", test_data);
-        readmemh("pattern/test_code.dat", bch_code);
-        readmemh("pattern/golden_S1.dat", golden_S1);
-        readmemh("pattern/golden_S2.dat", golden_S2);
-        readmemh("pattern/golden_S3.dat", golden_S3);
-        readmemh("pattern/golden_S4.dat", golden_S4);
-        readmemh("pattern/golden_S5.dat", golden_S5);
-        readmemh("pattern/golden_S6.dat", golden_S6);
-        readmemh("pattern/golden_S7.dat", golden_S7);
-        readmemh("pattern/golden_S8.dat", golden_S8);
+        $readmemh("../00_TESTBED/pattern/test_data.dat", test_data);
+        $readmemb("../00_TESTBED/pattern/test_code.dat", bch_code);
+        $readmemb("../00_TESTBED/pattern/golden_S1.dat", golden_S1);
+        $readmemb("../00_TESTBED/pattern/golden_S2.dat", golden_S2);
+        $readmemb("../00_TESTBED/pattern/golden_S3.dat", golden_S3);
+        $readmemb("../00_TESTBED/pattern/golden_S4.dat", golden_S4);
+        $readmemb("../00_TESTBED/pattern/golden_S5.dat", golden_S5);
+        $readmemb("../00_TESTBED/pattern/golden_S6.dat", golden_S6);
+        $readmemb("../00_TESTBED/pattern/golden_S7.dat", golden_S7);
+        $readmemb("../00_TESTBED/pattern/golden_S8.dat", golden_S8);
     end
 
     // max cycle
     initial begin
         #1000000;
+        $display("============================================");
         $display("Error: Testbench Timeout");
+        $display("%d patterns are tested.", golden_idx);
+        $display("============================================");
         $finish;
     end
 
@@ -117,11 +120,11 @@ module syndrome_tb();
             i_code = bch_code[i];
             curr_data = test_data[i];
             if (i_code === BCH63_51)
-                code_length = 63;
+                code_length = 8;
             else if (i_code === BCH255_239)
-                code_length = 255;
+                code_length = 32;
             else if (i_code === BCH1023_983)
-                code_length = 1023;
+                code_length = 128;
             else begin
                 $display("Error: Invalid BCH Code");
                 $finish;
@@ -136,6 +139,7 @@ module syndrome_tb();
                 curr_data = curr_data << 8;
                 @(posedge i_clk);
             end
+            i_wen = 0;
 
             wait(o_all_valid == 1);
             @(posedge i_clk);
@@ -161,11 +165,11 @@ module syndrome_tb();
                     $display("Error: Pattern %0d, S3 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S3[golden_idx], o_S3);
                     error_count = error_count + 1;
                 end
-                if (o_S5 !== golden_S5[golden_idx]) begin
+                if (o_S5 !== golden_S5[golden_idx] && i_code === 2'b10) begin
                     $display("Error: Pattern %0d, S5 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S5[golden_idx], o_S5);
                     error_count = error_count + 1;
                 end
-                if (o_S7 !== golden_S7[golden_idx]) begin
+                if (o_S7 !== golden_S7[golden_idx] && i_code === 2'b10) begin
                     $display("Error: Pattern %0d, S7 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S7[golden_idx], o_S7);
                     error_count = error_count + 1;
                 end
@@ -188,23 +192,43 @@ module syndrome_tb();
                     $display("Error: Pattern %0d, S4 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S4[golden_idx], o_S4);
                     error_count = error_count + 1;
                 end
-                if (o_S5 !== golden_S5[golden_idx]) begin
+                if (o_S5 !== golden_S5[golden_idx] && i_code === 2'b10) begin
                     $display("Error: Pattern %0d, S5 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S5[golden_idx], o_S5);
                     error_count = error_count + 1;
                 end
-                if (o_S6 !== golden_S6[golden_idx]) begin
+                if (o_S6 !== golden_S6[golden_idx] && i_code === 2'b10) begin
                     $display("Error: Pattern %0d, S6 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S6[golden_idx], o_S6);
                     error_count = error_count + 1;
                 end
-                if (o_S7 !== golden_S7[golden_idx]) begin
+                if (o_S7 !== golden_S7[golden_idx] && i_code === 2'b10) begin
                     $display("Error: Pattern %0d, S7 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S7[golden_idx], o_S7);
                     error_count = error_count + 1;
                 end
+                if (o_S8 !== golden_S8[golden_idx] && i_code === 2'b10) begin
+                    $display("Error: Pattern %0d, S8 Mismatch! Expected: %h, Got: %h", golden_idx, golden_S8[golden_idx], o_S8);
+                    error_count = error_count + 1;
+                    
+                end
 
+                wait(o_all_valid === 0 || golden_idx == PATTERN_LEN - 1);
                 golden_idx = golden_idx + 1;
+                
             end
             @(posedge i_clk);
         end
+
+
+        if (error_count == 0) begin
+            $display("============================================");
+            $display("All patterns passed!");
+            $display("============================================");
+        end else begin
+            $display("============================================");
+            $display("Total %0d errors found!", error_count);
+            $display("============================================");
+        end
+
+        $finish;
     end
 
 
