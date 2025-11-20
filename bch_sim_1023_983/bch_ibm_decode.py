@@ -17,11 +17,11 @@ import random
 
 
 # -------------------------
-# BCH(63,51) 解碼（t=2）
+# BCH(1023,983) 解碼（t=4）
 # -------------------------
-class BCH63_51_Decoder:
+class BCH1023_983_Decoder:
     def __init__(self):
-        assert N == 63 and T == 2, "This implementation expects N=63, T=2."
+        assert N == 1023 and T == 4, "This implementation expects N=63, T=2."
         self.gf = GF2mVector()
 
     # S_k = sum_j r[j] * (alpha)^{j*k} ; returns S1, S3 (other via Frobenius)
@@ -29,12 +29,16 @@ class BCH63_51_Decoder:
         assert len(r) == N and all((b & 1) == b for b in r)
         S1 = self.gf.zero()
         S3 = self.gf.zero()
+        S5 = self.gf.zero()
+        S7 = self.gf.zero()
         for j, bit in enumerate(r):
             if bit & 1:
                 # α^{j}, α^{3j}
                 S1 = self.gf.add(S1, ALPHA_POLY_BITS[j])
                 S3 = self.gf.add(S3, ALPHA_POLY_BITS[(3 * j) % N])
-        return S1, S3
+                S5 = self.gf.add(S5, ALPHA_POLY_BITS[(5 * j) % N])
+                S7 = self.gf.add(S7, ALPHA_POLY_BITS[(7 * j) % N])
+        return S1, S3, S5, S7
 
     # -------- polynomial helpers (coefficients are GF elements) --------
     def _poly_add(self, A: List[List[int]], B: List[List[int]]) -> List[List[int]]:
@@ -58,7 +62,7 @@ class BCH63_51_Decoder:
         return [self.gf.zero() for _ in range(k)] + A[:]
 
     # ---------------- iBM (Algorithm 4 / Φ–Ψ 版, t=2) ----------------
-    def berlekamp_iBM(self, S1: List[int], S3: List[int]) -> Tuple[List[int], List[int], List[int]]:
+    def berlekamp_iBM(self, S1: List[int], S3: List[int], S5: List[int], S7: List[int]) -> Tuple[List[int], List[int], List[int]]:
         """
         Returns sigma0, sigma1, sigma2 (locator polynomial Λ(z) = σ0 + σ1 z + σ2 z^2).
         Notes:
@@ -70,7 +74,9 @@ class BCH63_51_Decoder:
         # Prepare syndromes S0..S3 mapped from S1,S2,S3,S4
         S2 = self.gf.square_table(S1)
         S4 = self.gf.square_table(S2)
-        S = [S1, S2, S3, S4]  # 2t = 4 entries
+        S6 = self.gf.square_table(S3)
+        S8 = self.gf.square_table(S4)
+        S = [S1, S2, S3, S4, S5, S6, S7, S8]  # 2t = 4 entries
 
         three_t = 3 * T
         zero = self.gf.zero()
@@ -114,19 +120,25 @@ class BCH63_51_Decoder:
         sigma0 = sigma[0] if len(sigma) > 0 else zero
         sigma1 = sigma[1] if len(sigma) > 1 else zero
         sigma2 = sigma[2] if len(sigma) > 2 else zero
-        return sigma0, sigma1, sigma2
+        sigma3 = sigma[3] if len(sigma) > 3 else zero
+        sigma4 = sigma[4] if len(sigma) > 4 else zero
+        return sigma0, sigma1, sigma2, sigma3, sigma4
 
     # ---------------- Chien Search (use sigma0, NOT hard-coded 1) ----------------
-    def chien_search(self, sigma0: List[int], sigma1: List[int], sigma2: List[int]) -> List[int]:
+    def chien_search(self, sigma0: List[int], sigma1: List[int], sigma2: List[int], sigma3: List[int], sigma4: List[int]) -> List[int]:
         roots = []
         for i in range(N):
             x = ALPHA_POLY_BITS[(-i) % N]        # α^{-i}
             x2 = ALPHA_POLY_BITS[(-2 * i) % N]   # (α^{-i})^2
+            x3 = ALPHA_POLY_BITS[(-3 * i) % N]   # (α^{-i})^3
+            x4 = ALPHA_POLY_BITS[(-4 * i) % N]   # (α^{-i})^4
             # Λ(α^{-i}) = σ0 + σ1 x + σ2 x^2
             val = self.gf.add(
                 sigma0,
                 self.gf.add(self.gf.mul_table(sigma1, x),
-                            self.gf.mul_table(sigma2, x2))
+                self.gf.add(self.gf.mul_table(sigma2, x2),
+                self.gf.add(self.gf.mul_table(sigma3, x3),
+                            self.gf.mul_table(sigma4, x4))))
             )
             if self.gf.is_zero(val):
                 roots.append(i)
@@ -158,18 +170,27 @@ class BCH63_51_Decoder:
     # High-level API
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
     def hard_decode(self, r: List[int]):
-        S1, S3 = self.syndromes(r)
-        sigma0, sigma1, sigma2 = self.berlekamp_iBM(S1, S3)
-        roots = self.chien_search(sigma0, sigma1, sigma2)
+        S1, S3, S5, S7 = self.syndromes(r)
+        sigma0, sigma1, sigma2, sigma3, sigma4 = self.berlekamp_iBM(S1, S3, S5, S7)
+        roots = self.chien_search(sigma0, sigma1, sigma2, sigma3, sigma4)
 
 
         corrected = self.correct(r, roots)
 
         # 再檢查一次 syndrome 是否為 0，保險
-        S1_new, S3_new = self.syndromes(corrected)
-        success = self.gf.is_zero(S1_new) and self.gf.is_zero(S3_new)
+        if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2) and self.gf.is_zero(sigma3) and self.gf.is_zero(sigma4):
+            deg = 0
+        elif self.gf.is_zero(sigma2) and self.gf.is_zero(sigma3) and self.gf.is_zero(sigma4):
+            deg = 1
+        elif self.gf.is_zero(sigma3) and self.gf.is_zero(sigma4):
+            deg = 2
+        elif self.gf.is_zero(sigma4):
+            deg = 3
+        else:
+            deg = 4
+        success = (deg == len(roots))
 
-        return corrected, roots, success, (sigma1, sigma2), (S1, S3)
+        return corrected, roots, success, (sigma1, sigma2, sigma3, sigma4), (S1, S3 , S5, S7)
     
     # ---------------------------- 軟判決解碼 ----------------------------
     def soft_decode(self, r: List[float], p: int = 2):
@@ -206,8 +227,13 @@ class BCH63_51_Decoder:
                 best_decoded = corrected
                 # roots 要加上你在 pattern 裡面翻轉的那些 index
                 extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
-                            if input_rx[idx] != corrected[idx]]
-                best_roots = sorted(set(roots + extra_roots))
+                        if input_rx[idx] != rx[idx]]
+
+                set_roots = set(roots)
+                set_extra = set(extra_roots)
+
+                # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
+                best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
 
         return best_decoded, best_roots
 
@@ -226,36 +252,37 @@ def mul(a, b):
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
 if __name__ == "__main__":
-    dec = BCH63_51_Decoder()
-    tx = [0]*51
+    dec = BCH1023_983_Decoder()
+    tx = [0]*400 + [1]*583  # 983 bit 傳輸
     
     # 編碼
     rx = mul(tx, GENERATOR_POLY)
     
     hard_codeword = rx[:]
-    error0 = 10
-    error1 = 20
+    error0 = 100
+    error1 = 500
     hard_codeword[error0] ^= 1
     hard_codeword[error1] ^= 1
-    correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {correted == rx}")
+    corrected, roots, _, _, _  = dec.hard_decode(hard_codeword)
+    print(f"硬判決：是否修正回原碼字？ {corrected == rx}")
     print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
-    # p=2：只在這兩個最不可靠位上枚舉 4 個候選
+    
     soft_decode_llr = []
-    errors =[10, 20, 30, 40]
+    # 模擬信道不確定性：降低某些位置的可靠性
+    errors = [100, 200, 500, 800]
     for idx in range(N):
         soft_decode_llr.append((1-2 *rx[idx]) * 127)
-    
-    soft_decode_llr[errors[0]] = -20
-    soft_decode_llr[errors[1]] = -20
-    soft_decode_llr[errors[2]] = -10
-    soft_decode_llr[errors[3]] = -10
-    
-    p = 2
+
+    soft_decode_llr[errors[0]] = soft_decode_llr[errors[0]] / 5
+    soft_decode_llr[errors[1]] = soft_decode_llr[errors[1]] / 10
+    soft_decode_llr[errors[2]] = soft_decode_llr[errors[2]] / 15
+    soft_decode_llr[errors[3]] = soft_decode_llr[errors[3]] / 20
+
+    p = 4  # 測試 4 個最不可靠的位
     soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
     # 驗證與顯示
     print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
-    print(f"軟判決：Chien 找到 roots = {roots}")
+    print(f"軟判決：找到錯誤位置 = {roots}")

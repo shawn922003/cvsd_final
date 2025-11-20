@@ -17,11 +17,11 @@ import random
 
 
 # -------------------------
-# BCH(63,51) 解碼（t=2）
+# BCH(255, 239) 解碼（t=2）
 # -------------------------
-class BCH63_51_Decoder:
+class BCH255_239_Decoder:
     def __init__(self):
-        assert N == 63 and T == 2, "This implementation expects N=63, T=2."
+        assert N == 255 and T == 2, "This implementation expects N=63, T=2."
         self.gf = GF2mVector()
 
     # S_k = sum_j r[j] * (alpha)^{j*k} ; returns S1, S3 (other via Frobenius)
@@ -166,8 +166,14 @@ class BCH63_51_Decoder:
         corrected = self.correct(r, roots)
 
         # 再檢查一次 syndrome 是否為 0，保險
-        S1_new, S3_new = self.syndromes(corrected)
-        success = self.gf.is_zero(S1_new) and self.gf.is_zero(S3_new)
+        if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2):
+            deg = 0
+        elif self.gf.is_zero(sigma2):
+            deg = 1
+        else:
+            deg = 2
+            
+        success = (deg == len(roots))
 
         return corrected, roots, success, (sigma1, sigma2), (S1, S3)
     
@@ -206,8 +212,13 @@ class BCH63_51_Decoder:
                 best_decoded = corrected
                 # roots 要加上你在 pattern 裡面翻轉的那些 index
                 extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
-                            if input_rx[idx] != corrected[idx]]
-                best_roots = sorted(set(roots + extra_roots))
+                        if input_rx[idx] != rx[idx]]
+
+                set_roots = set(roots)
+                set_extra = set(extra_roots)
+
+                # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
+                best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
 
         return best_decoded, best_roots
 
@@ -226,15 +237,15 @@ def mul(a, b):
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
 if __name__ == "__main__":
-    dec = BCH63_51_Decoder()
-    tx = [0]*51
+    dec = BCH255_239_Decoder()
+    tx = [0]*239
     
     # 編碼
     rx = mul(tx, GENERATOR_POLY)
     
     hard_codeword = rx[:]
     error0 = 10
-    error1 = 20
+    error1 = 100
     hard_codeword[error0] ^= 1
     hard_codeword[error1] ^= 1
     correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
@@ -244,7 +255,7 @@ if __name__ == "__main__":
     
     # p=2：只在這兩個最不可靠位上枚舉 4 個候選
     soft_decode_llr = []
-    errors =[10, 20, 30, 40]
+    errors =[10, 100, 150, 200]
     for idx in range(N):
         soft_decode_llr.append((1-2 *rx[idx]) * 127)
     

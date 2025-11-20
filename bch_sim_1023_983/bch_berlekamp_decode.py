@@ -242,8 +242,13 @@ class BCH1023_983_Decoder:
                 best_decoded = corrected
                 # roots 要加上你在 pattern 裡面翻轉的那些 index
                 extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
-                            if input_rx[idx] != corrected[idx]]
-                best_roots = sorted(set(roots + extra_roots))
+                        if input_rx[idx] != rx[idx]]
+
+                set_roots = set(roots)
+                set_extra = set(extra_roots)
+
+                # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
+                best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
 
         return best_decoded, best_roots
 
