@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module syndrome_tb();
+module tb_syndrome;
     // Parameters
     parameter CYCLE = 10;
     parameter PATTERN_LEN = 10;

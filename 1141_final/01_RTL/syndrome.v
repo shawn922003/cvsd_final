@@ -6,7 +6,7 @@ module syndrome(
     input i_clear_and_wen,
     input i_wen,
 
-    input [7:0] i_data,
+    input [63:0] i_data,
 
     output [9:0] o_S1,
     output [9:0] o_S2,
@@ -17,8 +17,23 @@ module syndrome(
     output [9:0] o_S7,
     output [9:0] o_S8,
 
-    output reg o_odd_valid,
-    output reg o_all_valid
+    output reg o_odd_s_valid,
+    output reg o_all_s_valid,
+
+
+    output [9:0] o_flip_alpha_S1_1,
+    output [9:0] o_flip_alpha_S1_2,
+    output [9:0] o_flip_alpha_S3_1,
+    output [9:0] o_flip_alpha_S3_2,
+    output [9:0] o_flip_alpha_S5_1,
+    output [9:0] o_flip_alpha_S5_2,
+    output [9:0] o_flip_alpha_S7_1,
+    output [9:0] o_flip_alpha_S7_2,
+
+    output [9:0] o_flip_pos1,
+    output [9:0] o_flip_pos2,
+
+    output reg o_flip_valid
 );
     localparam m6_alpha_n0  = 6'b000001; // alpha^(0)  = 1
     localparam m6_alpha_n1  = 6'b100001; // alpha^(-1)  = alpha^(62)
@@ -250,7 +265,9 @@ module syndrome(
 
     reg [7:0] counter, counter_next;
 
+    wire [7:0] rx_bit;
 
+    assign rx_bit = {i_data[63], i_data[55], i_data[47], i_data[39], i_data[31], i_data[23], i_data[15], i_data[7]};
 
     integer i;
 
@@ -358,16 +375,16 @@ module syndrome(
     always @(*) begin
         case(i_code) // synopsys full_case
             2'b00: begin
-                o_odd_valid = counter >= 8'd8 && !i_clear_and_wen;
-                o_all_valid = counter >= 8'd10 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd7 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd9 && !i_clear_and_wen;
             end
             2'b01: begin
-                o_odd_valid = counter >= 8'd32 && !i_clear_and_wen;
-                o_all_valid = counter >= 8'd34 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd31 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd33 && !i_clear_and_wen;
             end
             2'b10: begin
-                o_odd_valid = counter >= 8'd128 && !i_clear_and_wen;
-                o_all_valid = counter >= 8'd131 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd127 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd130 && !i_clear_and_wen;
             end
         endcase
     end
@@ -565,123 +582,123 @@ module syndrome(
         if (i_clear_and_wen) begin
             case(i_code) // synopsys full_case
                 2'b00: begin
-                    S1_next = (m6_alpha_n0 & {10{i_data[7]}}) ^
-                              (m6_alpha_n1 & {10{i_data[6]}}) ^
-                              (m6_alpha_n2 & {10{i_data[5]}}) ^
-                              (m6_alpha_n3 & {10{i_data[4]}}) ^
-                              (m6_alpha_n4 & {10{i_data[3]}}) ^
-                              (m6_alpha_n5 & {10{i_data[2]}}) ^
-                              (m6_alpha_n6 & {10{i_data[1]}}) ^
-                              (m6_alpha_n7 & {10{i_data[0]}});
-                    S3_next =   (m6_alpha_n0 & {10{i_data[7]}}) ^
-                                (m6_alpha_n3 & {10{i_data[6]}}) ^
-                                (m6_alpha_n6 & {10{i_data[5]}}) ^
-                                (m6_alpha_n9 & {10{i_data[4]}}) ^
-                                (m6_alpha_n12 & {10{i_data[3]}}) ^
-                                (m6_alpha_n15 & {10{i_data[2]}}) ^
-                                (m6_alpha_n18 & {10{i_data[1]}}) ^
-                                (m6_alpha_n21 & {10{i_data[0]}});
+                    S1_next = (m6_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m6_alpha_n1 & {10{rx_bit[6]}}) ^
+                              (m6_alpha_n2 & {10{rx_bit[5]}}) ^
+                              (m6_alpha_n3 & {10{rx_bit[4]}}) ^
+                              (m6_alpha_n4 & {10{rx_bit[3]}}) ^
+                              (m6_alpha_n5 & {10{rx_bit[2]}}) ^
+                              (m6_alpha_n6 & {10{rx_bit[1]}}) ^
+                              (m6_alpha_n7 & {10{rx_bit[0]}});
+                    S3_next =   (m6_alpha_n0 & {10{rx_bit[7]}}) ^
+                                (m6_alpha_n3 & {10{rx_bit[6]}}) ^
+                                (m6_alpha_n6 & {10{rx_bit[5]}}) ^
+                                (m6_alpha_n9 & {10{rx_bit[4]}}) ^
+                                (m6_alpha_n12 & {10{rx_bit[3]}}) ^
+                                (m6_alpha_n15 & {10{rx_bit[2]}}) ^
+                                (m6_alpha_n18 & {10{rx_bit[1]}}) ^
+                                (m6_alpha_n21 & {10{rx_bit[0]}});
                     S5_next = S5;
                     S7_next = S7;
                 end
                 2'b01: begin
-                    S1_next = (m8_alpha_n0 & {10{i_data[7]}}) ^
-                              (m8_alpha_n1 & {10{i_data[6]}}) ^
-                              (m8_alpha_n2 & {10{i_data[5]}}) ^
-                              (m8_alpha_n3 & {10{i_data[4]}}) ^
-                              (m8_alpha_n4 & {10{i_data[3]}}) ^
-                              (m8_alpha_n5 & {10{i_data[2]}}) ^
-                              (m8_alpha_n6 & {10{i_data[1]}}) ^
-                              (m8_alpha_n7 & {10{i_data[0]}});
-                    S3_next = (m8_alpha_n0 & {10{i_data[7]}}) ^
-                              (m8_alpha_n3 & {10{i_data[6]}}) ^
-                              (m8_alpha_n6 & {10{i_data[5]}}) ^
-                              (m8_alpha_n9 & {10{i_data[4]}}) ^
-                              (m8_alpha_n12 & {10{i_data[3]}}) ^
-                              (m8_alpha_n15 & {10{i_data[2]}}) ^
-                              (m8_alpha_n18 & {10{i_data[1]}}) ^
-                              (m8_alpha_n21 & {10{i_data[0]}});
+                    S1_next = (m8_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m8_alpha_n1 & {10{rx_bit[6]}}) ^
+                              (m8_alpha_n2 & {10{rx_bit[5]}}) ^
+                              (m8_alpha_n3 & {10{rx_bit[4]}}) ^
+                              (m8_alpha_n4 & {10{rx_bit[3]}}) ^
+                              (m8_alpha_n5 & {10{rx_bit[2]}}) ^
+                              (m8_alpha_n6 & {10{rx_bit[1]}}) ^
+                              (m8_alpha_n7 & {10{rx_bit[0]}});
+                    S3_next = (m8_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m8_alpha_n3 & {10{rx_bit[6]}}) ^
+                              (m8_alpha_n6 & {10{rx_bit[5]}}) ^
+                              (m8_alpha_n9 & {10{rx_bit[4]}}) ^
+                              (m8_alpha_n12 & {10{rx_bit[3]}}) ^
+                              (m8_alpha_n15 & {10{rx_bit[2]}}) ^
+                              (m8_alpha_n18 & {10{rx_bit[1]}}) ^
+                              (m8_alpha_n21 & {10{rx_bit[0]}});
                     S5_next = S5;
                     S7_next = S7;
                 end
                 2'b10: begin
-                    S1_next = (m10_alpha_n0 & {10{i_data[7]}}) ^
-                              (m10_alpha_n1 & {10{i_data[6]}}) ^
-                              (m10_alpha_n2 & {10{i_data[5]}}) ^
-                              (m10_alpha_n3 & {10{i_data[4]}}) ^
-                              (m10_alpha_n4 & {10{i_data[3]}}) ^
-                              (m10_alpha_n5 & {10{i_data[2]}}) ^
-                              (m10_alpha_n6 & {10{i_data[1]}}) ^
-                              (m10_alpha_n7 & {10{i_data[0]}});
-                    S3_next = (m10_alpha_n0 & {10{i_data[7]}}) ^
-                              (m10_alpha_n3 & {10{i_data[6]}}) ^
-                              (m10_alpha_n6 & {10{i_data[5]}}) ^
-                              (m10_alpha_n9 & {10{i_data[4]}}) ^
-                              (m10_alpha_n12 & {10{i_data[3]}}) ^
-                              (m10_alpha_n15 & {10{i_data[2]}}) ^
-                              (m10_alpha_n18 & {10{i_data[1]}}) ^
-                              (m10_alpha_n21 & {10{i_data[0]}});
-                    S5_next = (m10_alpha_n0 & {10{i_data[7]}}) ^
-                              (m10_alpha_n5 & {10{i_data[6]}}) ^
-                              (m10_alpha_n10 & {10{i_data[5]}}) ^
-                              (m10_alpha_n15 & {10{i_data[4]}}) ^
-                              (m10_alpha_n20 & {10{i_data[3]}}) ^
-                              (m10_alpha_n25 & {10{i_data[2]}}) ^
-                              (m10_alpha_n30 & {10{i_data[1]}}) ^
-                              (m10_alpha_n35 & {10{i_data[0]}});
-                    S7_next = (m10_alpha_n0 & {10{i_data[7]}}) ^
-                              (m10_alpha_n7 & {10{i_data[6]}}) ^
-                              (m10_alpha_n14 & {10{i_data[5]}}) ^
-                              (m10_alpha_n21 & {10{i_data[4]}}) ^
-                              (m10_alpha_n28 & {10{i_data[3]}}) ^
-                              (m10_alpha_n35 & {10{i_data[2]}}) ^
-                              (m10_alpha_n42 & {10{i_data[1]}}) ^
-                              (m10_alpha_n49 & {10{i_data[0]}});
+                    S1_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m10_alpha_n1 & {10{rx_bit[6]}}) ^
+                              (m10_alpha_n2 & {10{rx_bit[5]}}) ^
+                              (m10_alpha_n3 & {10{rx_bit[4]}}) ^
+                              (m10_alpha_n4 & {10{rx_bit[3]}}) ^
+                              (m10_alpha_n5 & {10{rx_bit[2]}}) ^
+                              (m10_alpha_n6 & {10{rx_bit[1]}}) ^
+                              (m10_alpha_n7 & {10{rx_bit[0]}});
+                    S3_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m10_alpha_n3 & {10{rx_bit[6]}}) ^
+                              (m10_alpha_n6 & {10{rx_bit[5]}}) ^
+                              (m10_alpha_n9 & {10{rx_bit[4]}}) ^
+                              (m10_alpha_n12 & {10{rx_bit[3]}}) ^
+                              (m10_alpha_n15 & {10{rx_bit[2]}}) ^
+                              (m10_alpha_n18 & {10{rx_bit[1]}}) ^
+                              (m10_alpha_n21 & {10{rx_bit[0]}});
+                    S5_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m10_alpha_n5 & {10{rx_bit[6]}}) ^
+                              (m10_alpha_n10 & {10{rx_bit[5]}}) ^
+                              (m10_alpha_n15 & {10{rx_bit[4]}}) ^
+                              (m10_alpha_n20 & {10{rx_bit[3]}}) ^
+                              (m10_alpha_n25 & {10{rx_bit[2]}}) ^
+                              (m10_alpha_n30 & {10{rx_bit[1]}}) ^
+                              (m10_alpha_n35 & {10{rx_bit[0]}});
+                    S7_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
+                              (m10_alpha_n7 & {10{rx_bit[6]}}) ^
+                              (m10_alpha_n14 & {10{rx_bit[5]}}) ^
+                              (m10_alpha_n21 & {10{rx_bit[4]}}) ^
+                              (m10_alpha_n28 & {10{rx_bit[3]}}) ^
+                              (m10_alpha_n35 & {10{rx_bit[2]}}) ^
+                              (m10_alpha_n42 & {10{rx_bit[1]}}) ^
+                              (m10_alpha_n49 & {10{rx_bit[0]}});
                 end
 
             endcase
         end
         else if (i_wen) begin
             S1_next = S1 ^
-                      (S1_poly_power[0] & {10{i_data[7]}}) ^
-                      (S1_poly_power[1] & {10{i_data[6]}}) ^
-                      (S1_poly_power[2] & {10{i_data[5]}}) ^
-                      (S1_poly_power[3] & {10{i_data[4]}}) ^
-                      (S1_poly_power[4] & {10{i_data[3]}}) ^
-                      (S1_poly_power[5] & {10{i_data[2]}}) ^
-                      (S1_poly_power[6] & {10{i_data[1]}}) ^
-                      (S1_poly_power[7] & {10{i_data[0]}});
+                      (S1_poly_power[0] & {10{rx_bit[7]}}) ^
+                      (S1_poly_power[1] & {10{rx_bit[6]}}) ^
+                      (S1_poly_power[2] & {10{rx_bit[5]}}) ^
+                      (S1_poly_power[3] & {10{rx_bit[4]}}) ^
+                      (S1_poly_power[4] & {10{rx_bit[3]}}) ^
+                      (S1_poly_power[5] & {10{rx_bit[2]}}) ^
+                      (S1_poly_power[6] & {10{rx_bit[1]}}) ^
+                      (S1_poly_power[7] & {10{rx_bit[0]}});
 
             S3_next =   S3 ^
-                        (S3_poly_power[0] & {10{i_data[7]}}) ^
-                        (S3_poly_power[1] & {10{i_data[6]}}) ^
-                        (S3_poly_power[2] & {10{i_data[5]}}) ^
-                        (S3_poly_power[3] & {10{i_data[4]}}) ^
-                        (S3_poly_power[4] & {10{i_data[3]}}) ^
-                        (S3_poly_power[5] & {10{i_data[2]}}) ^
-                        (S3_poly_power[6] & {10{i_data[1]}}) ^
-                        (S3_poly_power[7] & {10{i_data[0]}});
+                        (S3_poly_power[0] & {10{rx_bit[7]}}) ^
+                        (S3_poly_power[1] & {10{rx_bit[6]}}) ^
+                        (S3_poly_power[2] & {10{rx_bit[5]}}) ^
+                        (S3_poly_power[3] & {10{rx_bit[4]}}) ^
+                        (S3_poly_power[4] & {10{rx_bit[3]}}) ^
+                        (S3_poly_power[5] & {10{rx_bit[2]}}) ^
+                        (S3_poly_power[6] & {10{rx_bit[1]}}) ^
+                        (S3_poly_power[7] & {10{rx_bit[0]}});
 
             if (i_code == 2'b10) begin
                 S5_next =   S5 ^
-                            (S5_poly_power[0] & {10{i_data[7]}}) ^
-                            (S5_poly_power[1] & {10{i_data[6]}}) ^
-                            (S5_poly_power[2] & {10{i_data[5]}}) ^
-                            (S5_poly_power[3] & {10{i_data[4]}}) ^
-                            (S5_poly_power[4] & {10{i_data[3]}}) ^
-                            (S5_poly_power[5] & {10{i_data[2]}}) ^
-                            (S5_poly_power[6] & {10{i_data[1]}}) ^
-                            (S5_poly_power[7] & {10{i_data[0]}});
+                            (S5_poly_power[0] & {10{rx_bit[7]}}) ^
+                            (S5_poly_power[1] & {10{rx_bit[6]}}) ^
+                            (S5_poly_power[2] & {10{rx_bit[5]}}) ^
+                            (S5_poly_power[3] & {10{rx_bit[4]}}) ^
+                            (S5_poly_power[4] & {10{rx_bit[3]}}) ^
+                            (S5_poly_power[5] & {10{rx_bit[2]}}) ^
+                            (S5_poly_power[6] & {10{rx_bit[1]}}) ^
+                            (S5_poly_power[7] & {10{rx_bit[0]}});
 
                 S7_next =   S7 ^
-                            (S7_poly_power[0] & {10{i_data[7]}}) ^
-                            (S7_poly_power[1] & {10{i_data[6]}}) ^
-                            (S7_poly_power[2] & {10{i_data[5]}}) ^
-                            (S7_poly_power[3] & {10{i_data[4]}}) ^
-                            (S7_poly_power[4] & {10{i_data[3]}}) ^
-                            (S7_poly_power[5] & {10{i_data[2]}}) ^
-                            (S7_poly_power[6] & {10{i_data[1]}}) ^
-                            (S7_poly_power[7] & {10{i_data[0]}});
+                            (S7_poly_power[0] & {10{rx_bit[7]}}) ^
+                            (S7_poly_power[1] & {10{rx_bit[6]}}) ^
+                            (S7_poly_power[2] & {10{rx_bit[5]}}) ^
+                            (S7_poly_power[3] & {10{rx_bit[4]}}) ^
+                            (S7_poly_power[4] & {10{rx_bit[3]}}) ^
+                            (S7_poly_power[5] & {10{rx_bit[2]}}) ^
+                            (S7_poly_power[6] & {10{rx_bit[1]}}) ^
+                            (S7_poly_power[7] & {10{rx_bit[0]}});
             end
             else begin
                 S5_next = S5;
@@ -693,6 +710,520 @@ module syndrome(
             S3_next = S3;
             S5_next = S5;
             S7_next = S7;
+        end
+    end
+
+
+    // -------------------------- flip alpha logic ------------------------------------
+    wire [6:0] abs_llr0;
+    wire [6:0] abs_llr1;    
+    wire [6:0] abs_llr2;
+    wire [6:0] abs_llr3;
+    wire [6:0] abs_llr4;
+    wire [6:0] abs_llr5;
+    wire [6:0] abs_llr6;
+    wire [6:0] abs_llr7;
+
+    reg [6:0] min_llr, min_llr_next;
+    reg [6:0] second_min_llr, second_min_llr_next;
+
+    reg [9:0] alpha_S1_min, alpha_S1_min_next;
+    reg [9:0] alpha_S1_second_min, alpha_S1_second_min_next;
+    reg [9:0] alpha_S3_min, alpha_S3_min_next;
+    reg [9:0] alpha_S3_second_min, alpha_S3_second_min_next;
+    reg [9:0] alpha_S5_min, alpha_S5_min_next;
+    reg [9:0] alpha_S5_second_min, alpha_S5_second_min_next;
+    reg [9:0] alpha_S7_min, alpha_S7_min_next;
+    reg [9:0] alpha_S7_second_min, alpha_S7_second_min_next;
+
+    reg [9:0] min_pos, min_pos_next;
+    reg [9:0] second_min_pos, second_min_pos_next;
+
+    reg [9:0] llr_pos0;
+    reg [9:0] llr_pos1;
+    reg [9:0] llr_pos2;
+    reg [9:0] llr_pos3; 
+    reg [9:0] llr_pos4;
+    reg [9:0] llr_pos5;
+    reg [9:0] llr_pos6;
+    reg [9:0] llr_pos7;
+
+    reg [9:0] S1_alpha0;
+    reg [9:0] S1_alpha1;
+    reg [9:0] S1_alpha2;
+    reg [9:0] S1_alpha3;
+    reg [9:0] S1_alpha4;
+    reg [9:0] S1_alpha5;
+    reg [9:0] S1_alpha6;
+    reg [9:0] S1_alpha7;
+
+    reg [9:0] S3_alpha0;
+    reg [9:0] S3_alpha1;
+    reg [9:0] S3_alpha2;
+    reg [9:0] S3_alpha3;
+    reg [9:0] S3_alpha4;
+    reg [9:0] S3_alpha5;
+    reg [9:0] S3_alpha6;
+    reg [9:0] S3_alpha7;
+
+    reg [9:0] S5_alpha0;    
+    reg [9:0] S5_alpha1;
+    reg [9:0] S5_alpha2;
+    reg [9:0] S5_alpha3;
+    reg [9:0] S5_alpha4;
+    reg [9:0] S5_alpha5;
+    reg [9:0] S5_alpha6;
+    reg [9:0] S5_alpha7;
+
+    reg [9:0] S7_alpha0;
+    reg [9:0] S7_alpha1;
+    reg [9:0] S7_alpha2;
+    reg [9:0] S7_alpha3;
+    reg [9:0] S7_alpha4;
+    reg [9:0] S7_alpha5;
+    reg [9:0] S7_alpha6;
+    reg [9:0] S7_alpha7;
+
+    wire [6:0] top_2_min;
+    wire [6:0] top_2_second_min;
+    wire [3:0] top_2_min_idx;
+    wire [3:0] top_2_second_min_idx;
+
+    top_2 u_top_2_llr_min (
+        .i_0(abs_llr0),
+        .i_1(abs_llr1),
+        .i_2(abs_llr2),
+        .i_3(abs_llr3),
+        .i_4(abs_llr4),
+        .i_5(abs_llr5),
+        .i_6(abs_llr6),
+        .i_7(abs_llr7),
+        .i_8(i_clear_and_wen ? 7'b1111111 : min_llr),
+        .i_9(i_clear_and_wen ? 7'b1111111 : second_min_llr),
+
+        .o_0(top_2_min),
+        .o_1(top_2_second_min),
+
+        .o_0_idx(top_2_min_idx),
+        .o_1_idx(top_2_second_min_idx)
+    );
+
+
+
+    assign abs_llr0 = i_clear_and_wen ? 7'b1111111 : (i_data[63] ? (~i_data[62:56] + 7'b1) : i_data[62:56]);
+    assign abs_llr1 = i_data[55] ? (~i_data[54:48] + 7'b1) : i_data[54:48];
+    assign abs_llr2 = i_data[47] ? (~i_data[46:40] + 7'b1) : i_data[46:40];
+    assign abs_llr3 = i_data[39] ? (~i_data[38:32] + 7'b1) : i_data[38:32];
+    assign abs_llr4 = i_data[31] ? (~i_data[30:24] + 7'b1) : i_data[30:24];
+    assign abs_llr5 = i_data[23] ? (~i_data[22:16] + 7'b1) : i_data[22:16];
+    assign abs_llr6 = i_data[15] ? (~i_data[14:8] + 7'b1) : i_data[14:8];
+    assign abs_llr7 = i_data[7]  ? (~i_data[6:0] + 7'b1)  : i_data[6:0];
+
+
+    assign o_flip_pos1 = min_pos < second_min_pos ? min_pos : second_min_pos;
+    assign o_flip_pos2 = min_pos < second_min_pos ? second_min_pos : min_pos;
+    assign o_flip_alpha_S1_1 = min_pos < second_min_pos ?  alpha_S1_min : alpha_S1_second_min;
+    assign o_flip_alpha_S1_2 = min_pos < second_min_pos ?  alpha_S1_second_min : alpha_S1_min;
+    assign o_flip_alpha_S3_1 = min_pos < second_min_pos ?  alpha_S3_min : alpha_S3_second_min;
+    assign o_flip_alpha_S3_2 = min_pos < second_min_pos ?  alpha_S3_second_min : alpha_S3_min;
+    assign o_flip_alpha_S5_1 = min_pos < second_min_pos ?  alpha_S5_min : alpha_S5_second_min;
+    assign o_flip_alpha_S5_2 = min_pos < second_min_pos ?  alpha_S5_second_min : alpha_S5_min;
+    assign o_flip_alpha_S7_1 = min_pos < second_min_pos ?  alpha_S7_min : alpha_S7_second_min;
+    assign o_flip_alpha_S7_2 = min_pos < second_min_pos ?  alpha_S7_second_min : alpha_S7_min;
+
+    assign o_flip_valid = o_odd_s_valid;
+
+    
+
+    // llr pos logic
+    always @(*) begin
+        case(i_code) // synopsys full_case
+            2'b00: begin
+                llr_pos0 = {(7'd7 - counter_next[6:0]), 3'b111};
+                llr_pos1 = {(7'd7 - counter_next[6:0]), 3'b110};
+                llr_pos2 = {(7'd7 - counter_next[6:0]), 3'b101};
+                llr_pos3 = {(7'd7 - counter_next[6:0]), 3'b100};
+                llr_pos4 = {(7'd7 - counter_next[6:0]), 3'b011};
+                llr_pos5 = {(7'd7 - counter_next[6:0]), 3'b010};
+                llr_pos6 = {(7'd7 - counter_next[6:0]), 3'b001};
+                llr_pos7 = {(7'd7 - counter_next[6:0]), 3'b000};
+            end
+            2'b01: begin
+                llr_pos0 = {(7'd31 - counter_next[6:0]), 3'b111};
+                llr_pos1 = {(7'd31 - counter_next[6:0]), 3'b110};
+                llr_pos2 = {(7'd31 - counter_next[6:0]), 3'b101};
+                llr_pos3 = {(7'd31 - counter_next[6:0]), 3'b100};
+                llr_pos4 = {(7'd31 - counter_next[6:0]), 3'b011};
+                llr_pos5 = {(7'd31 - counter_next[6:0]), 3'b010};
+                llr_pos6 = {(7'd31 - counter_next[6:0]), 3'b001};
+                llr_pos7 = {(7'd31 - counter_next[6:0]), 3'b000};
+            end
+            2'b10: begin
+                llr_pos0 = {(7'd127 - counter_next[6:0]), 3'b111};
+                llr_pos1 = {(7'd127 - counter_next[6:0]), 3'b110};
+                llr_pos2 = {(7'd127 - counter_next[6:0]), 3'b101};
+                llr_pos3 = {(7'd127 - counter_next[6:0]), 3'b100};
+                llr_pos4 = {(7'd127 - counter_next[6:0]), 3'b011};
+                llr_pos5 = {(7'd127 - counter_next[6:0]), 3'b010};
+                llr_pos6 = {(7'd127 - counter_next[6:0]), 3'b001};
+                llr_pos7 = {(7'd127 - counter_next[6:0]), 3'b000};
+            end
+        endcase
+    end
+
+    always @(*) begin
+        if (i_clear_and_wen) begin
+            case(i_code) // synopsys full_case
+                2'b00: begin
+                    S1_alpha0 = m6_alpha_n0;
+                    S1_alpha1 = m6_alpha_n1;
+                    S1_alpha2 = m6_alpha_n2;
+                    S1_alpha3 = m6_alpha_n3;
+                    S1_alpha4 = m6_alpha_n4;
+                    S1_alpha5 = m6_alpha_n5;
+                    S1_alpha6 = m6_alpha_n6;
+                    S1_alpha7 = m6_alpha_n7;
+
+                    S3_alpha0 = m6_alpha_n0;
+                    S3_alpha1 = m6_alpha_n3;
+                    S3_alpha2 = m6_alpha_n6;
+                    S3_alpha3 = m6_alpha_n9;
+                    S3_alpha4 = m6_alpha_n12;
+                    S3_alpha5 = m6_alpha_n15;
+                    S3_alpha6 = m6_alpha_n18;
+                    S3_alpha7 = m6_alpha_n21;
+
+                    S5_alpha0 = 10'b0;
+                    S5_alpha1 = 10'b0;
+                    S5_alpha2 = 10'b0;
+                    S5_alpha3 = 10'b0;
+                    S5_alpha4 = 10'b0;
+                    S5_alpha5 = 10'b0;
+                    S5_alpha6 = 10'b0;
+                    S5_alpha7 = 10'b0;
+
+                    S7_alpha0 = 10'b0;
+                    S7_alpha1 = 10'b0;
+                    S7_alpha2 = 10'b0;
+                    S7_alpha3 = 10'b0;
+                    S7_alpha4 = 10'b0;
+                    S7_alpha5 = 10'b0;
+                    S7_alpha6 = 10'b0;
+                    S7_alpha7 = 10'b0;
+                end
+                2'b01: begin
+                    S1_alpha0 = m8_alpha_n0;
+                    S1_alpha1 = m8_alpha_n1;
+                    S1_alpha2 = m8_alpha_n2;
+                    S1_alpha3 = m8_alpha_n3;
+                    S1_alpha4 = m8_alpha_n4;
+                    S1_alpha5 = m8_alpha_n5;
+                    S1_alpha6 = m8_alpha_n6;
+                    S1_alpha7 = m8_alpha_n7;
+
+                    S3_alpha0 = m8_alpha_n0;
+                    S3_alpha1 = m8_alpha_n3;
+                    S3_alpha2 = m8_alpha_n6;
+                    S3_alpha3 = m8_alpha_n9;
+                    S3_alpha4 = m8_alpha_n12;
+                    S3_alpha5 = m8_alpha_n15;
+                    S3_alpha6 = m8_alpha_n18;
+                    S3_alpha7 = m8_alpha_n21;
+
+                    S5_alpha0 = 10'b0;
+                    S5_alpha1 = 10'b0;
+                    S5_alpha2 = 10'b0;
+                    S5_alpha3 = 10'b0;
+                    S5_alpha4 = 10'b0;
+                    S5_alpha5 = 10'b0;
+                    S5_alpha6 = 10'b0;
+                    S5_alpha7 = 10'b0;
+
+                    S7_alpha0 = 10'b0;
+                    S7_alpha1 = 10'b0;
+                    S7_alpha2 = 10'b0;
+                    S7_alpha3 = 10'b0;
+                    S7_alpha4 = 10'b0;
+                    S7_alpha5 = 10'b0;
+                    S7_alpha6 = 10'b0;
+                    S7_alpha7 = 10'b0;
+
+                end
+                2'b10: begin
+                    S1_alpha0 = m10_alpha_n0;
+                    S1_alpha1 = m10_alpha_n1;
+                    S1_alpha2 = m10_alpha_n2;
+                    S1_alpha3 = m10_alpha_n3;
+                    S1_alpha4 = m10_alpha_n4;
+                    S1_alpha5 = m10_alpha_n5;
+                    S1_alpha6 = m10_alpha_n6;
+                    S1_alpha7 = m10_alpha_n7;
+
+                    S3_alpha0 = m10_alpha_n0;
+                    S3_alpha1 = m10_alpha_n3;
+                    S3_alpha2 = m10_alpha_n6;
+                    S3_alpha3 = m10_alpha_n9;
+                    S3_alpha4 = m10_alpha_n12;
+                    S3_alpha5 = m10_alpha_n15;
+                    S3_alpha6 = m10_alpha_n18;
+                    S3_alpha7 = m10_alpha_n21;
+
+                    S5_alpha0 = m10_alpha_n0;
+                    S5_alpha1 = m10_alpha_n5;
+                    S5_alpha2 = m10_alpha_n10;
+                    S5_alpha3 = m10_alpha_n15;
+                    S5_alpha4 = m10_alpha_n20;
+                    S5_alpha5 = m10_alpha_n25;
+                    S5_alpha6 = m10_alpha_n30;
+                    S5_alpha7 = m10_alpha_n35;
+
+                    S7_alpha0 = m10_alpha_n0;
+                    S7_alpha1 = m10_alpha_n7;
+                    S7_alpha2 = m10_alpha_n14;
+                    S7_alpha3 = m10_alpha_n21;
+                    S7_alpha4 = m10_alpha_n28;
+                    S7_alpha5 = m10_alpha_n35;
+                    S7_alpha6 = m10_alpha_n42;
+                    S7_alpha7 = m10_alpha_n49;
+                
+                end
+            endcase
+        end
+        else begin
+            S1_alpha0 = S1_poly_power[0];
+            S1_alpha1 = S1_poly_power[1];
+            S1_alpha2 = S1_poly_power[2];
+            S1_alpha3 = S1_poly_power[3];
+            S1_alpha4 = S1_poly_power[4];
+            S1_alpha5 = S1_poly_power[5];
+            S1_alpha6 = S1_poly_power[6];
+            S1_alpha7 = S1_poly_power[7];
+
+            S3_alpha0 = S3_poly_power[0];
+            S3_alpha1 = S3_poly_power[1];
+            S3_alpha2 = S3_poly_power[2];
+            S3_alpha3 = S3_poly_power[3];
+            S3_alpha4 = S3_poly_power[4];
+            S3_alpha5 = S3_poly_power[5];
+            S3_alpha6 = S3_poly_power[6];
+            S3_alpha7 = S3_poly_power[7];
+
+            S5_alpha0 = S5_poly_power[0];
+            S5_alpha1 = S5_poly_power[1];
+            S5_alpha2 = S5_poly_power[2];
+            S5_alpha3 = S5_poly_power[3];
+            S5_alpha4 = S5_poly_power[4];
+            S5_alpha5 = S5_poly_power[5];
+            S5_alpha6 = S5_poly_power[6];
+            S5_alpha7 = S5_poly_power[7];
+
+            S7_alpha0 = S7_poly_power[0];
+            S7_alpha1 = S7_poly_power[1];
+            S7_alpha2 = S7_poly_power[2];
+            S7_alpha3 = S7_poly_power[3];
+            S7_alpha4 = S7_poly_power[4];
+            S7_alpha5 = S7_poly_power[5];
+            S7_alpha6 = S7_poly_power[6];
+            S7_alpha7 = S7_poly_power[7];
+        end
+    end
+
+
+    // min and second min logic
+    always @(posedge i_clk) begin
+        if (!i_rst_n) begin
+            min_llr <= 7'b1111111;
+            second_min_llr <= 7'b1111111;
+            alpha_S1_min <= 10'b0;
+            alpha_S1_second_min <= 10'b0;
+            alpha_S3_min <= 10'b0;
+            alpha_S3_second_min <= 10'b0;
+            alpha_S5_min <= 10'b0;
+            alpha_S5_second_min <= 10'b0;
+            alpha_S7_min <= 10'b0;
+            alpha_S7_second_min <= 10'b0;
+            min_pos <= 10'b0;
+            second_min_pos <= 10'b0;
+        end
+        else begin
+            min_llr <= min_llr_next;
+            second_min_llr <= second_min_llr_next;
+            alpha_S1_min <= alpha_S1_min_next;
+            alpha_S1_second_min <= alpha_S1_second_min_next;
+            alpha_S3_min <= alpha_S3_min_next;
+            alpha_S3_second_min <= alpha_S3_second_min_next;
+            alpha_S5_min <= alpha_S5_min_next;
+            alpha_S5_second_min <= alpha_S5_second_min_next;
+            alpha_S7_min <= alpha_S7_min_next;
+            alpha_S7_second_min <= alpha_S7_second_min_next;
+            min_pos <= min_pos_next;
+            second_min_pos <= second_min_pos_next;
+        end
+    end
+
+    always @(*) begin
+        if (i_wen || i_clear_and_wen) begin
+            min_llr_next = top_2_min;
+            second_min_llr_next = top_2_second_min;
+            case (top_2_min_idx) // synopsys full_case
+                4'd0: begin
+                    alpha_S1_min_next = S1_alpha0;
+                    alpha_S3_min_next = S3_alpha0;
+                    alpha_S5_min_next = S5_alpha0;
+                    alpha_S7_min_next = S7_alpha0;
+                    min_pos_next = llr_pos0;
+                end
+                4'd1: begin
+                    alpha_S1_min_next = S1_alpha1;
+                    alpha_S3_min_next = S3_alpha1;
+                    alpha_S5_min_next = S5_alpha1;
+                    alpha_S7_min_next = S7_alpha1;
+                    min_pos_next = llr_pos1;
+                end
+                4'd2: begin
+                    alpha_S1_min_next = S1_alpha2;
+                    alpha_S3_min_next = S3_alpha2;
+                    alpha_S5_min_next = S5_alpha2;
+                    alpha_S7_min_next = S7_alpha2;
+                    min_pos_next = llr_pos2;
+                end
+                4'd3: begin
+                    alpha_S1_min_next = S1_alpha3;
+                    alpha_S3_min_next = S3_alpha3;
+                    alpha_S5_min_next = S5_alpha3;
+                    alpha_S7_min_next = S7_alpha3;
+                    min_pos_next = llr_pos3;
+                end
+                4'd4: begin
+                    alpha_S1_min_next = S1_alpha4;
+                    alpha_S3_min_next = S3_alpha4;
+                    alpha_S5_min_next = S5_alpha4;
+                    alpha_S7_min_next = S7_alpha4;
+                    min_pos_next = llr_pos4;
+                end
+                4'd5: begin
+                    alpha_S1_min_next = S1_alpha5;
+                    alpha_S3_min_next = S3_alpha5;
+                    alpha_S5_min_next = S5_alpha5;
+                    alpha_S7_min_next = S7_alpha5;
+                    min_pos_next = llr_pos5;
+                end
+                4'd6: begin
+                    alpha_S1_min_next = S1_alpha6;
+                    alpha_S3_min_next = S3_alpha6;
+                    alpha_S5_min_next = S5_alpha6;
+                    alpha_S7_min_next = S7_alpha6;
+                    min_pos_next = llr_pos6;
+                end
+                4'd7: begin
+                    alpha_S1_min_next = S1_alpha7;
+                    alpha_S3_min_next = S3_alpha7;
+                    alpha_S5_min_next = S5_alpha7;
+                    alpha_S7_min_next = S7_alpha7;
+                    min_pos_next = llr_pos7;
+                end
+                4'd8: begin
+                    alpha_S1_min_next = alpha_S1_min;
+                    alpha_S3_min_next = alpha_S3_min;
+                    alpha_S5_min_next = alpha_S5_min;
+                    alpha_S7_min_next = alpha_S7_min;
+                    min_pos_next = min_pos;
+                end
+                4'd9: begin
+                    alpha_S1_min_next = alpha_S1_second_min;
+                    alpha_S3_min_next = alpha_S3_second_min;
+                    alpha_S5_min_next = alpha_S5_second_min;
+                    alpha_S7_min_next = alpha_S7_second_min;
+                    min_pos_next = second_min_pos;
+                end
+            endcase
+
+            case (top_2_second_min_idx) // synopsys full_case
+                4'd0: begin
+                    alpha_S1_second_min_next = S1_alpha0;
+                    alpha_S3_second_min_next = S3_alpha0;
+                    alpha_S5_second_min_next = S5_alpha0;
+                    alpha_S7_second_min_next = S7_alpha0;
+                    second_min_pos_next = llr_pos0;
+                end
+                4'd1: begin
+                    alpha_S1_second_min_next = S1_alpha1;
+                    alpha_S3_second_min_next = S3_alpha1;
+                    alpha_S5_second_min_next = S5_alpha1;
+                    alpha_S7_second_min_next = S7_alpha1;
+                    second_min_pos_next = llr_pos1;
+                end
+                4'd2: begin
+                    alpha_S1_second_min_next = S1_alpha2;
+                    alpha_S3_second_min_next = S3_alpha2;
+                    alpha_S5_second_min_next = S5_alpha2;
+                    alpha_S7_second_min_next = S7_alpha2;
+                    second_min_pos_next = llr_pos2;
+                end
+                4'd3: begin
+                    alpha_S1_second_min_next = S1_alpha3;
+                    alpha_S3_second_min_next = S3_alpha3;
+                    alpha_S5_second_min_next = S5_alpha3;
+                    alpha_S7_second_min_next = S7_alpha3;
+                    second_min_pos_next = llr_pos3;
+                end
+                4'd4: begin
+                    alpha_S1_second_min_next = S1_alpha4;
+                    alpha_S3_second_min_next = S3_alpha4;
+                    alpha_S5_second_min_next = S5_alpha4;
+                    alpha_S7_second_min_next = S7_alpha4;
+                    second_min_pos_next = llr_pos4;
+                end
+                4'd5: begin
+                    alpha_S1_second_min_next = S1_alpha5;
+                    alpha_S3_second_min_next = S3_alpha5;
+                    alpha_S5_second_min_next = S5_alpha5;
+                    alpha_S7_second_min_next = S7_alpha5;
+                    second_min_pos_next = llr_pos5;
+                end
+                4'd6: begin
+                    alpha_S1_second_min_next = S1_alpha6;
+                    alpha_S3_second_min_next = S3_alpha6;
+                    alpha_S5_second_min_next = S5_alpha6;
+                    alpha_S7_second_min_next = S7_alpha6;
+                    second_min_pos_next = llr_pos6;
+                end
+                4'd7: begin
+                    alpha_S1_second_min_next = S1_alpha7;
+                    alpha_S3_second_min_next = S3_alpha7;
+                    alpha_S5_second_min_next = S5_alpha7;
+                    alpha_S7_second_min_next = S7_alpha7;
+                    second_min_pos_next = llr_pos7;
+                end
+                4'd8: begin
+                    alpha_S1_second_min_next = alpha_S1_min;
+                    alpha_S3_second_min_next = alpha_S3_min;
+                    alpha_S5_second_min_next = alpha_S5_min;
+                    alpha_S7_second_min_next = alpha_S7_min;
+                    second_min_pos_next = min_pos;
+                end 
+                4'd9: begin
+                    alpha_S1_second_min_next = alpha_S1_second_min;
+                    alpha_S3_second_min_next = alpha_S3_second_min;
+                    alpha_S5_second_min_next = alpha_S5_second_min;
+                    alpha_S7_second_min_next = alpha_S7_second_min;
+                    second_min_pos_next = second_min_pos;
+                end
+            endcase
+        end
+        else begin
+            min_llr_next = min_llr;
+            second_min_llr_next = second_min_llr;
+            alpha_S1_min_next = alpha_S1_min;
+            alpha_S1_second_min_next = alpha_S1_second_min;
+            alpha_S3_min_next = alpha_S3_min;
+            alpha_S3_second_min_next = alpha_S3_second_min;
+            alpha_S5_min_next = alpha_S5_min;
+            alpha_S5_second_min_next = alpha_S5_second_min;
+            alpha_S7_min_next = alpha_S7_min;
+            alpha_S7_second_min_next = alpha_S7_second_min;
+            min_pos_next = min_pos;
+            second_min_pos_next = second_min_pos;
         end
     end
 

@@ -175,6 +175,12 @@ class GF2mVector:
             y = self.mul_table(y, x)
             y = self.add(y, c)
         return y
+    
+    def bits_to_int(self, bits: List[int]) -> int:
+        v = 0
+        for i, b in enumerate(bits):
+            v |= (int(b) & 1) << i
+        return v
 
     # ---------- 產生 α 表（若沒有全域表時用） ----------
     # def build_alpha_table(self) -> List[List[int]]:

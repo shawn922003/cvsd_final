@@ -3,7 +3,7 @@ module  delay_n #(
     parameter BITS = 1
 )(
     input i_clk,
-    input i_rst,
+    input i_rst_n,
     input i_en,
     input [BITS-1:0] i_d,
     output [BITS-1:0] o_q
@@ -22,8 +22,8 @@ module  delay_n #(
         end
     end
 
-    always @(posedge i_clk or posedge i_rst) begin
-        if (i_rst) begin
+    always @(posedge i_clk ) begin
+        if (!i_rst_n) begin
             for (i = 0; i < N; i = i + 1) begin
                 shift_reg[i] <= {BITS{1'b0}};
             end

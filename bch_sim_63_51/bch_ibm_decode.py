@@ -99,6 +99,9 @@ class BCH63_51_Decoder:
                 t2 = self.gf.mul_table(phi0, Psi[i + 1])
                 newPhi[i] = self.gf.add(t1, t2)
 
+            # print new phi in hex
+            print("r =", r, "Φ' =", [f"{self.gf.bits_to_int(coef):03X}" for coef in newPhi])
+            
             # Ψ' and l'
             if (not self.gf.is_zero(phi0)) and (l >= 0):
                 newPsi = Phi[:]  # use previous Φ(r), not newPhi
@@ -240,35 +243,66 @@ def mul(a, b):
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
-    tx = [0]*51
+    # tx = [0]*51
     
-    # 編碼
-    rx = mul(tx, GENERATOR_POLY)
+    # # 編碼
+    # rx = mul(tx, GENERATOR_POLY)
     
-    hard_codeword = rx[:]
-    error0 = 10
-    error1 = 20
-    hard_codeword[error0] ^= 1
-    hard_codeword[error1] ^= 1
-    correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {correted == rx}")
-    print(f"硬判決：Chien 找到 roots = {roots}") 
+    # hard_codeword = rx[:]
+    # error0 = 10
+    # error1 = 20
+    # hard_codeword[error0] ^= 1
+    # hard_codeword[error1] ^= 1
+    # correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
+    # print(f"硬判決：是否修正回原碼字？ {correted == rx}")
+    # print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
-    # p=2：只在這兩個最不可靠位上枚舉 4 個候選
-    soft_decode_llr = []
-    errors =[10, 20, 30, 40]
-    for idx in range(N):
-        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+    # # p=2：只在這兩個最不可靠位上枚舉 4 個候選
+    # soft_decode_llr = []
+    # errors =[10, 20, 30, 40]
+    # for idx in range(N):
+    #     soft_decode_llr.append((1-2 *rx[idx]) * 127)
     
-    soft_decode_llr[errors[0]] = -20
-    soft_decode_llr[errors[1]] = -20
-    soft_decode_llr[errors[2]] = -10
-    soft_decode_llr[errors[3]] = -10
+    # soft_decode_llr[errors[0]] = -20
+    # soft_decode_llr[errors[1]] = -20
+    # soft_decode_llr[errors[2]] = -10
+    # soft_decode_llr[errors[3]] = -10
     
-    p = 2
-    soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
+    # p = 2
+    # soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
-    # 驗證與顯示
-    print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
-    print(f"軟判決：Chien 找到 roots = {roots}")
+    # # 驗證與顯示
+    # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
+    # print(f"軟判決：Chien 找到 roots = {roots}")
+    
+    bits = "00000000000000000000000000000000000000000000111000000011111100000000110000101010"
+    S1 = bits[9:3:-1]
+    S1 = [int(b) for b in S1]
+
+    S2 = bits[19:13:-1]
+    S2 = [int(b) for b in S2]
+
+    S3 = bits[29:23:-1]
+    S3 = [int(b) for b in S3]
+
+    S4 = bits[39:33:-1]
+    S4 = [int(b) for b in S4]
+
+    S5 = bits[49:43:-1]
+    S5 = [int(b) for b in S5]
+
+    S6 = bits[59:53:-1]
+    S6 = [int(b) for b in S6]
+
+    S7 = bits[69:63:-1]
+    S7 = [int(b) for b in S7]
+
+    S8 = bits[79:73:-1]
+    S8 = [int(b) for b in S8]
+
+    # sigma0_0, sigma0_1, sigma0_2 = dec.berlekamp_iBM(S1, S3)
+    sigma1_0, sigma1_1, sigma1_2 = dec.berlekamp_iBM(S5, S7)
+    # print(f"sigma0 = {[sigma0_0, sigma0_1, sigma0_2]}")
+    print(f"sigma1 = {[sigma1_0, sigma1_1, sigma1_2]}")
+    
