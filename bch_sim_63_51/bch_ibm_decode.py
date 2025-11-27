@@ -243,6 +243,11 @@ def mul(a, b):
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
+    sigma0 = [1, 1, 0, 0, 0, 0]
+    sigma1 = [0, 0, 1, 1, 0, 0]
+    sigma2 = [0, 0, 0, 0, 0, 0]
+    roots = dec.chien_search(sigma0, sigma1, sigma2)
+    print(f"roots = {roots}")
     # tx = [0]*51
     
     # # 編碼
@@ -276,33 +281,33 @@ if __name__ == "__main__":
     # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
     # print(f"軟判決：Chien 找到 roots = {roots}")
     
-    bits = "00000000000000000000000000000000000000000000111000000011111100000000110000101010"
-    S1 = bits[9:3:-1]
-    S1 = [int(b) for b in S1]
+    # bits = "00000000000000000000000000000000000000000000111000000011111100000000110000101010"
+    # S1 = bits[9:3:-1]
+    # S1 = [int(b) for b in S1]
 
-    S2 = bits[19:13:-1]
-    S2 = [int(b) for b in S2]
+    # S2 = bits[19:13:-1]
+    # S2 = [int(b) for b in S2]
 
-    S3 = bits[29:23:-1]
-    S3 = [int(b) for b in S3]
+    # S3 = bits[29:23:-1]
+    # S3 = [int(b) for b in S3]
 
-    S4 = bits[39:33:-1]
-    S4 = [int(b) for b in S4]
+    # S4 = bits[39:33:-1]
+    # S4 = [int(b) for b in S4]
 
-    S5 = bits[49:43:-1]
-    S5 = [int(b) for b in S5]
+    # S5 = bits[49:43:-1]
+    # S5 = [int(b) for b in S5]
 
-    S6 = bits[59:53:-1]
-    S6 = [int(b) for b in S6]
+    # S6 = bits[59:53:-1]
+    # S6 = [int(b) for b in S6]
 
-    S7 = bits[69:63:-1]
-    S7 = [int(b) for b in S7]
+    # S7 = bits[69:63:-1]
+    # S7 = [int(b) for b in S7]
 
-    S8 = bits[79:73:-1]
-    S8 = [int(b) for b in S8]
+    # S8 = bits[79:73:-1]
+    # S8 = [int(b) for b in S8]
 
-    # sigma0_0, sigma0_1, sigma0_2 = dec.berlekamp_iBM(S1, S3)
-    sigma1_0, sigma1_1, sigma1_2 = dec.berlekamp_iBM(S5, S7)
-    # print(f"sigma0 = {[sigma0_0, sigma0_1, sigma0_2]}")
-    print(f"sigma1 = {[sigma1_0, sigma1_1, sigma1_2]}")
+    # # sigma0_0, sigma0_1, sigma0_2 = dec.berlekamp_iBM(S1, S3)
+    # sigma1_0, sigma1_1, sigma1_2 = dec.berlekamp_iBM(S5, S7)
+    # # print(f"sigma0 = {[sigma0_0, sigma0_1, sigma0_2]}")
+    # print(f"sigma1 = {[sigma1_0, sigma1_1, sigma1_2]}")
     

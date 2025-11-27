@@ -1,6 +1,7 @@
 module  delay_n #(
     parameter N = 4,
-    parameter BITS = 1
+    parameter BITS = 1,
+    parameter INIT = {BITS{1'b0}}
 )(
     input i_clk,
     input i_rst_n,
@@ -25,7 +26,7 @@ module  delay_n #(
     always @(posedge i_clk ) begin
         if (!i_rst_n) begin
             for (i = 0; i < N; i = i + 1) begin
-                shift_reg[i] <= {BITS{1'b0}};
+                shift_reg[i] <= INIT;
             end
         end 
         else begin

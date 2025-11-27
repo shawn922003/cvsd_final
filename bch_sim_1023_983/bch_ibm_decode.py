@@ -14,6 +14,12 @@ from itertools import product
 from itertools import product
 import random
 
+def bits_to_int(bits: List[int]) -> int:
+    v = 0
+    for i, b in enumerate(bits):
+        if b:
+            v |= (1 << i)
+    return v & 0x3FF
 
 
 # -------------------------
@@ -132,6 +138,13 @@ class BCH1023_983_Decoder:
             x2 = ALPHA_POLY_BITS[(-2 * i) % N]   # (α^{-i})^2
             x3 = ALPHA_POLY_BITS[(-3 * i) % N]   # (α^{-i})^3
             x4 = ALPHA_POLY_BITS[(-4 * i) % N]   # (α^{-i})^4
+            
+            if i == 128:
+                print("debug")
+                
+                print(f"x={bits_to_int(self.gf.mul_table(sigma1, x)):x}, x2={bits_to_int(self.gf.mul_table(sigma2, x2)):x}, x3={bits_to_int(self.gf.mul_table(sigma3, x3)):x}, x4={bits_to_int(self.gf.mul_table(sigma4, x4)):x}")
+                print("debug end")
+            
             # Λ(α^{-i}) = σ0 + σ1 x + σ2 x^2
             val = self.gf.add(
                 sigma0,
@@ -253,36 +266,44 @@ def mul(a, b):
 # -------------------------
 if __name__ == "__main__":
     dec = BCH1023_983_Decoder()
-    tx = [0]*400 + [1]*583  # 983 bit 傳輸
+    sigma0 = [1, 0, 1, 1, 1, 0, 0, 0, 1 ,0]
+    sigma1 = [1, 1, 1, 0, 1, 0, 0, 0, 1, 1]
+    sigma2 = [1, 0, 0, 0, 1, 1, 0, 0, 1, 1]
+    sigma3 = [0, 1, 1, 1, 0, 0, 1, 1, 1, 0]
+    sigma4 = [0] * 10
+    roots = dec.chien_search(sigma0, sigma1, sigma2, sigma3, sigma4)
+    print(f"測試 Chien roots = {roots}")
     
-    # 編碼
-    rx = mul(tx, GENERATOR_POLY)
+    # tx = [0]*400 + [1]*583  # 983 bit 傳輸
     
-    hard_codeword = rx[:]
-    error0 = 100
-    error1 = 500
-    hard_codeword[error0] ^= 1
-    hard_codeword[error1] ^= 1
-    corrected, roots, _, _, _  = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {corrected == rx}")
-    print(f"硬判決：Chien 找到 roots = {roots}") 
+    # # 編碼
+    # rx = mul(tx, GENERATOR_POLY)
+    
+    # hard_codeword = rx[:]
+    # error0 = 100
+    # error1 = 500
+    # hard_codeword[error0] ^= 1
+    # hard_codeword[error1] ^= 1
+    # corrected, roots, _, _, _  = dec.hard_decode(hard_codeword)
+    # print(f"硬判決：是否修正回原碼字？ {corrected == rx}")
+    # print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
     
-    soft_decode_llr = []
-    # 模擬信道不確定性：降低某些位置的可靠性
-    errors = [100, 200, 500, 800]
-    for idx in range(N):
-        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+    # soft_decode_llr = []
+    # # 模擬信道不確定性：降低某些位置的可靠性
+    # errors = [100, 200, 500, 800]
+    # for idx in range(N):
+    #     soft_decode_llr.append((1-2 *rx[idx]) * 127)
 
-    soft_decode_llr[errors[0]] = soft_decode_llr[errors[0]] / 5
-    soft_decode_llr[errors[1]] = soft_decode_llr[errors[1]] / 10
-    soft_decode_llr[errors[2]] = soft_decode_llr[errors[2]] / 15
-    soft_decode_llr[errors[3]] = soft_decode_llr[errors[3]] / 20
+    # soft_decode_llr[errors[0]] = soft_decode_llr[errors[0]] / 5
+    # soft_decode_llr[errors[1]] = soft_decode_llr[errors[1]] / 10
+    # soft_decode_llr[errors[2]] = soft_decode_llr[errors[2]] / 15
+    # soft_decode_llr[errors[3]] = soft_decode_llr[errors[3]] / 20
 
-    p = 4  # 測試 4 個最不可靠的位
-    soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
+    # p = 4  # 測試 4 個最不可靠的位
+    # soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
-    # 驗證與顯示
-    print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
-    print(f"軟判決：找到錯誤位置 = {roots}")
+    # # 驗證與顯示
+    # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
+    # print(f"軟判決：找到錯誤位置 = {roots}")

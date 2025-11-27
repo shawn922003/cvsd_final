@@ -166,7 +166,7 @@ endmodule
 // Generated from CORRECTED Python bch_table.py
 // tuple_to_power module: sorted by POWER order (alpha^0, alpha^1, ...)
 
-module power_to_tuple_255(
+module power_to_tuple_255_239(
     input  [7:0] i_power,
     output reg [7:0] o_tuple
 );
@@ -435,7 +435,7 @@ module power_to_tuple_255(
 
 endmodule
 
-module tuple_to_power_255(
+module tuple_to_power_255_239(
     input  [7:0] i_tuple,
     output reg [7:0] o_power
 );
