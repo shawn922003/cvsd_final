@@ -401,24 +401,24 @@ module syndrome(
                 S3_poly_power[i] <= 10'b0;
             end
 
-            S5_poly_power_next[0] = m10_alpha_n40;
-            S5_poly_power_next[1] = m10_alpha_n45;
-            S5_poly_power_next[2] = m10_alpha_n50;
-            S5_poly_power_next[3] = m10_alpha_n55;
-            S5_poly_power_next[4] = m10_alpha_n60;
-            S5_poly_power_next[5] = m10_alpha_n65;
-            S5_poly_power_next[6] = m10_alpha_n70;
-            S5_poly_power_next[7] = m10_alpha_n75;
+            S5_poly_power[0] <= m10_alpha_n40;
+            S5_poly_power[1] <= m10_alpha_n45;
+            S5_poly_power[2] <= m10_alpha_n50;
+            S5_poly_power[3] <= m10_alpha_n55;
+            S5_poly_power[4] <= m10_alpha_n60;
+            S5_poly_power[5] <= m10_alpha_n65;
+            S5_poly_power[6] <= m10_alpha_n70;
+            S5_poly_power[7] <= m10_alpha_n75;
 
 
-            S7_poly_power_next[0] = m10_alpha_n56;
-            S7_poly_power_next[1] = m10_alpha_n63;
-            S7_poly_power_next[2] = m10_alpha_n70;
-            S7_poly_power_next[3] = m10_alpha_n77;
-            S7_poly_power_next[4] = m10_alpha_n84;
-            S7_poly_power_next[5] = m10_alpha_n91;
-            S7_poly_power_next[6] = m10_alpha_n98;
-            S7_poly_power_next[7] = m10_alpha_n105;
+            S7_poly_power[0] <= m10_alpha_n56;
+            S7_poly_power[1] <= m10_alpha_n63;
+            S7_poly_power[2] <= m10_alpha_n70;
+            S7_poly_power[3] <= m10_alpha_n77;
+            S7_poly_power[4] <= m10_alpha_n84;
+            S7_poly_power[5] <= m10_alpha_n91;
+            S7_poly_power[6] <= m10_alpha_n98;
+            S7_poly_power[7] <= m10_alpha_n105;
 
             S1_factor <= 10'b0;
             S3_factor <= 10'b0;
@@ -503,30 +503,32 @@ module syndrome(
                     S3_poly_power_next[6] = m10_alpha_n42;
                     S3_poly_power_next[7] = m10_alpha_n45;
 
-                    S5_poly_power_next[0] = m10_alpha_n40;
-                    S5_poly_power_next[1] = m10_alpha_n45;
-                    S5_poly_power_next[2] = m10_alpha_n50;
-                    S5_poly_power_next[3] = m10_alpha_n55;
-                    S5_poly_power_next[4] = m10_alpha_n60;
-                    S5_poly_power_next[5] = m10_alpha_n65;
-                    S5_poly_power_next[6] = m10_alpha_n70;
-                    S5_poly_power_next[7] = m10_alpha_n75;
 
-
-                    S7_poly_power_next[0] = m10_alpha_n56;
-                    S7_poly_power_next[1] = m10_alpha_n63;
-                    S7_poly_power_next[2] = m10_alpha_n70;
-                    S7_poly_power_next[3] = m10_alpha_n77;
-                    S7_poly_power_next[4] = m10_alpha_n84;
-                    S7_poly_power_next[5] = m10_alpha_n91;
-                    S7_poly_power_next[6] = m10_alpha_n98;
-                    S7_poly_power_next[7] = m10_alpha_n105;
 
 
                     S1_factor_next = m10_alpha_n8;
                     S3_factor_next = m10_alpha_n24;
                 end
             endcase
+
+            S5_poly_power_next[0] = m10_alpha_n40;
+            S5_poly_power_next[1] = m10_alpha_n45;
+            S5_poly_power_next[2] = m10_alpha_n50;
+            S5_poly_power_next[3] = m10_alpha_n55;
+            S5_poly_power_next[4] = m10_alpha_n60;
+            S5_poly_power_next[5] = m10_alpha_n65;
+            S5_poly_power_next[6] = m10_alpha_n70;
+            S5_poly_power_next[7] = m10_alpha_n75;
+
+
+            S7_poly_power_next[0] = m10_alpha_n56;
+            S7_poly_power_next[1] = m10_alpha_n63;
+            S7_poly_power_next[2] = m10_alpha_n70;
+            S7_poly_power_next[3] = m10_alpha_n77;
+            S7_poly_power_next[4] = m10_alpha_n84;
+            S7_poly_power_next[5] = m10_alpha_n91;
+            S7_poly_power_next[6] = m10_alpha_n98;
+            S7_poly_power_next[7] = m10_alpha_n105;
         end
         else begin
             S1_factor_next = S1_factor;

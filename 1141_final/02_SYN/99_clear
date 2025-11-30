@@ -1,0 +1,6 @@
+rm  *.pvl
+rm  *.syn
+rm  *.mr
+rm *.log
+rm *.svf 
+rm -r cksum_dir

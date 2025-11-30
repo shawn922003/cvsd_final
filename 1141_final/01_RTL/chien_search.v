@@ -732,107 +732,120 @@ module chien_search(
 
 endmodule
 
+
+
 module chien_search_pe #(
-    parameter ALPHA_BASE = 10'd0
+    parameter [9:0] ALPHA_BASE = 0
 )(
-    input [1:0] i_code,
+    input  [1:0] i_code,
 
-    input [9:0] i_sigma0,
-    input [9:0] i_sigma_alpha1,
-    input [9:0] i_sigma_alpha2,
-    input [9:0] i_sigma_alpha3,
-    input [9:0] i_sigma_alpha4,
+    input  [9:0] i_sigma0,
+    input  [9:0] i_sigma_alpha1,
+    input  [9:0] i_sigma_alpha2,
+    input  [9:0] i_sigma_alpha3,
+    input  [9:0] i_sigma_alpha4,
 
-    output o_is_root
+    output        o_is_root
 );
+    // ----------------------------
+    // pre-sized power indices (to avoid width mismatch)
+    // 63-domain (6-bit)
+    wire [9:0] ab_mod_63      = ALPHA_BASE % 10'd63;
+    wire [9:0] abx2_mod_63    = (ALPHA_BASE * 10'd2) % 10'd63;
+    wire [5:0] pwr63_a1       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - ab_mod_63[5:0])   % 6'd63);
+    wire [5:0] pwr63_a2       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - abx2_mod_63[5:0]) % 6'd63);
+    // (63,51) 僅用到 alpha^1、alpha^2，其餘設為 0
+    wire [5:0] pwr63_a3       = 6'd0;
+    wire [5:0] pwr63_a4       = 6'd0;
 
-    wire [9:0] alpha1_63;
-    wire [9:0] alpha2_63;
-    wire [9:0] alpha3_63;
-    wire [9:0] alpha4_63;
+    // 255-domain (8-bit)
+    wire [9:0] ab_mod_255     = ALPHA_BASE % 10'd255;
+    wire [9:0] abx2_mod_255   = (ALPHA_BASE * 10'd2) % 10'd255;
+    wire [7:0] pwr255_a1      = (8'd255 - ab_mod_255[7:0])    % 8'd255;
+    wire [7:0] pwr255_a2      = (8'd255 - abx2_mod_255[7:0])  % 8'd255;
+    wire [7:0] pwr255_a3      = 8'd0;
+    wire [7:0] pwr255_a4      = 8'd0;
 
-    wire [9:0] alpha1_255;
-    wire [9:0] alpha2_255;
-    wire [9:0] alpha3_255;
-    wire [9:0] alpha4_255;
+    // 1023-domain (10-bit)
+    wire [9:0] ab_mod_1023    = ALPHA_BASE % 10'd1023;
+    wire [9:0] abx2_mod_1023  = (ALPHA_BASE * 10'd2) % 10'd1023;
+    wire [9:0] abx3_mod_1023  = (ALPHA_BASE * 10'd3) % 10'd1023;
+    wire [9:0] abx4_mod_1023  = (ALPHA_BASE * 10'd4) % 10'd1023;
+    wire [9:0] pwr1023_a1     = (10'd1023 - ab_mod_1023)   % 10'd1023;
+    wire [9:0] pwr1023_a2     = (10'd1023 - abx2_mod_1023) % 10'd1023;
+    wire [9:0] pwr1023_a3     = (10'd1023 - abx3_mod_1023) % 10'd1023;
+    wire [9:0] pwr1023_a4     = (10'd1023 - abx4_mod_1023) % 10'd1023;
 
-    wire [9:0] alpha1_1023;
-    wire [9:0] alpha2_1023;
-    wire [9:0] alpha3_1023;
-    wire [9:0] alpha4_1023;
+    // ----------------------------
+    // alpha^k (tuple) from power index
+    wire [9:0] alpha1_63,  alpha2_63,  alpha3_63,  alpha4_63;
+    wire [9:0] alpha1_255, alpha2_255, alpha3_255, alpha4_255;
+    wire [9:0] alpha1_1023,alpha2_1023,alpha3_1023,alpha4_1023;
 
+    assign alpha1_63[9:6]  = 4'd0;
+    assign alpha2_63[9:6]  = 4'd0;
+    assign alpha1_255[9:8] = 2'd0;
+    assign alpha2_255[9:8] = 2'd0;
 
-    wire [9:0] mult1_alpha1;
-    wire [9:0] mult2_alpha2;
-    wire [9:0] mult3_alpha3;
-    wire [9:0] mult4_alpha4;
-
-    wire [9:0] mult_out1;
-    wire [9:0] mult_out2;
-    wire [9:0] mult_out3;
-    wire [9:0] mult_out4;
-
-    wire [9:0] sum_mult;
 
     power_to_tuple_63_51 u_power_to_tuple_63_51_alpha1 (
-        .i_power(ALPHA_BASE >= 63 ? 63 : (63 - ALPHA_BASE) % 63),
-        .o_tuple(alpha1_63)
+        .i_power(pwr63_a1),
+        .o_tuple(alpha1_63[5:0])
     );
-
     power_to_tuple_63_51 u_power_to_tuple_63_51_alpha2 (
-        .i_power(ALPHA_BASE >= 63 ? 63 : (63 - ((ALPHA_BASE * 2) % 63)) % 63),
-        .o_tuple(alpha2_63)
+        .i_power(pwr63_a2),
+        .o_tuple(alpha2_63[5:0])
     );
-
+    // 未用：直接給 0（tuple 0）
     assign alpha3_63 = 10'd0;
     assign alpha4_63 = 10'd0;
 
     power_to_tuple_255_239 u_power_to_tuple_255_239_alpha1 (
-        .i_power((255 - (ALPHA_BASE % 255)) % 255),
-        .o_tuple(alpha1_255)
+        .i_power(pwr255_a1),
+        .o_tuple(alpha1_255[7:0])
     );
-
     power_to_tuple_255_239 u_power_to_tuple_255_239_alpha2 (
-        .i_power((255 - ((ALPHA_BASE * 2) % 255)) % 255),
-        .o_tuple(alpha2_255)
+        .i_power(pwr255_a2),
+        .o_tuple(alpha2_255[7:0])
     );
-
     assign alpha3_255 = 10'd0;
     assign alpha4_255 = 10'd0;
 
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha1 (
-        .i_power((1023 - (ALPHA_BASE % 1023)) % 1023),
+        .i_power(pwr1023_a1),
         .o_tuple(alpha1_1023)
     );
-
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha2 (
-        .i_power((1023 - ((ALPHA_BASE * 2) % 1023)) % 1023),
+        .i_power(pwr1023_a2),
         .o_tuple(alpha2_1023)
     );
-
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha3 (
-        .i_power((1023 - ((ALPHA_BASE * 3) % 1023)) % 1023),
+        .i_power(pwr1023_a3),
         .o_tuple(alpha3_1023)
     );
-
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha4 (
-        .i_power((1023 - ((ALPHA_BASE * 4) % 1023)) % 1023),
+        .i_power(pwr1023_a4),
         .o_tuple(alpha4_1023)
     );
 
+    // ----------------------------
+    // select proper domain tuples for multiplication
+    wire [9:0] mult1_alpha1 = (i_code == 2'd0) ? alpha1_63   :
+                              (i_code == 2'd1) ? alpha1_255  :
+                                                 alpha1_1023;
+    wire [9:0] mult2_alpha2 = (i_code == 2'd0) ? alpha2_63   :
+                              (i_code == 2'd1) ? alpha2_255  :
+                                                 alpha2_1023;
+    wire [9:0] mult3_alpha3 = (i_code == 2'd0) ? alpha3_63   :
+                              (i_code == 2'd1) ? alpha3_255  :
+                                                 alpha3_1023;
+    wire [9:0] mult4_alpha4 = (i_code == 2'd0) ? alpha4_63   :
+                              (i_code == 2'd1) ? alpha4_255  :
+                                                 alpha4_1023;
 
-    assign mult1_alpha1 =   i_code == 2'd0 ? alpha1_63 :
-                            i_code == 2'd1 ? alpha1_255 :
-                                            alpha1_1023;
-    assign mult2_alpha2 =   i_code == 2'd0 ? alpha2_63 :
-                            i_code == 2'd1 ? alpha2_255 :
-                                            alpha2_1023;
-    assign mult3_alpha3 =   i_code == 2'd0 ? alpha3_63 :
-                            i_code == 2'd1 ? alpha3_255 :
-                                            alpha3_1023;
-    assign mult4_alpha4 =   i_code == 2'd0 ? alpha4_63 :
-                            i_code == 2'd1 ? alpha4_255 :
-                                            alpha4_1023;
+    // ----------------------------
+    // GF multiplications
+    wire [9:0] mult_out1, mult_out2, mult_out3, mult_out4;
 
     gf_mult u_gf_mult1 (
         .i_a(i_sigma_alpha1),
@@ -840,22 +853,18 @@ module chien_search_pe #(
         .i_code(i_code),
         .o_product(mult_out1)
     );
-
-
     gf_mult u_gf_mult2 (
         .i_a(i_sigma_alpha2),
         .i_b(mult2_alpha2),
         .i_code(i_code),
         .o_product(mult_out2)
     );
-
     gf_mult u_gf_mult3 (
         .i_a(i_sigma_alpha3),
         .i_b(mult3_alpha3),
         .i_code(i_code),
         .o_product(mult_out3)
     );
-
     gf_mult u_gf_mult4 (
         .i_a(i_sigma_alpha4),
         .i_b(mult4_alpha4),
@@ -863,9 +872,9 @@ module chien_search_pe #(
         .o_product(mult_out4)
     );
 
-    assign sum_mult = mult_out1 ^ mult_out2 ^ mult_out3 ^ mult_out4 ^ i_sigma0;
-
-    assign o_is_root = (sum_mult == 10'd0) ? 1'b1 : 1'b0;
+    // sigma(alpha^{-j}) = sigma0 ^ (sigma1*alpha^{-j}) ^ ...
+    wire [9:0] sum_mult = mult_out1 ^ mult_out2 ^ mult_out3 ^ mult_out4 ^ i_sigma0;
+    assign o_is_root = (sum_mult == 10'd0);
 
 endmodule
 

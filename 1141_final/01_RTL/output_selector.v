@@ -119,6 +119,7 @@ module output_selector(
                 err_loc3_buf_next = err_loc3_buf;
                 num_err_buf_next = num_err_buf;
             end
+            err_loc0 = 10'd1023;
             err_loc4_buf_next = err_loc4_buf;
             err_loc5_buf_next = err_loc5_buf;
         end

@@ -352,6 +352,11 @@ module error_bit_saver(
                 flip_pos2_adaptive = i_flip_pos2;
                 num_flip_adaptive = 2'd2;
             end
+            default: begin
+                flip_pos1_adaptive = {10{1'b1}};
+                flip_pos2_adaptive = {10{1'b1}};
+                num_flip_adaptive = 2'd0;
+            end
         endcase
     end
 
@@ -611,6 +616,10 @@ module error_bit_saver(
             2'd3: begin
                 valid_pos4_llr = i_llr_mem_pos4_llr;
                 valid_pos5_llr = i_llr_mem_pos5_llr;
+            end
+            default: begin
+                valid_pos4_llr = 7'd0;
+                valid_pos5_llr = 7'd0;
             end
         endcase
     end

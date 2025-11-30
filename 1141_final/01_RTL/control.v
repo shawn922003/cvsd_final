@@ -83,7 +83,7 @@ module control(
     end
 
     always @(*) begin
-        case (code_reg) // synthesis full_case
+        case (code_reg) // synopsys full_case
             2'd0: begin
                 if (counter < 8'd8) begin
                     o_core_ready = 1'b1;
@@ -121,7 +121,7 @@ module control(
     end
 
     always @(*) begin
-        case (code_reg) // synthesis full_case
+        case (code_reg) // synopsys full_case
             2'd0: begin
                 if (counter > 8'd0 && counter < 8'd9) begin
                     o_syndrome_wen = 1'b1;

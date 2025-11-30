@@ -1,2 +1,39 @@
 // list all paths to your design files
 `include "../01_RTL/bch.v"
+`include "../01_RTL/bch_table.v"
+`include "../01_RTL/chien_search.v"
+`include "../01_RTL/control.v"
+`include "../01_RTL/delay_n.v"
+`include "../01_RTL/error_bit_saver.v"
+`include "../01_RTL/find_1_idx.v"
+`include "../01_RTL/flip_syndrome.v"
+`include "../01_RTL/gf_mult.v"
+`include "../01_RTL/ibm.v"
+`include "../01_RTL/insertion_sort.v"
+`include "../01_RTL/llr_mem.v"
+`include "../01_RTL/merge_idx.v"
+`include "../01_RTL/output_selector.v"
+`include "../01_RTL/pulser.v"
+`include "../01_RTL/syndrome_switch.v"
+`include "../01_RTL/syndrome.v"
+`include "../01_RTL/top_2.v"
+
+
+// bch.v
+// bch_table.v
+// chien_search.v
+// control.v
+// delay_n.v
+// error_bit_saver.v
+// find_1_idx.v
+// flip_syndrome.v
+// gf_mult.v
+// ibm.v
+// insertion_sort.v
+// llr_mem.v
+// merge_idx.v
+// output_selector.v
+// pulser.v
+// syndrome_switch.v
+// syndrome.v
+// top_2.v
