@@ -14,10 +14,10 @@ module merge_idx #(
     input  [WIDTH-2:0] i_idx2_4,
     input  [2:0]       i_num2,
 
-    output [WIDTH-1:0] o_idx1,
-    output [WIDTH-1:0] o_idx2,
-    output [WIDTH-1:0] o_idx3,
-    output [WIDTH-1:0] o_idx4,
+    output [WIDTH-1-(1-IS_SHIFTED):0] o_idx1,
+    output [WIDTH-1-(1-IS_SHIFTED):0] o_idx2,
+    output [WIDTH-1-(1-IS_SHIFTED):0] o_idx3,
+    output [WIDTH-1-(1-IS_SHIFTED):0] o_idx4,
     output [2:0]       o_num
 );
     wire [WIDTH-1:0] idx1_1_full = {1'b0, i_idx1_1};

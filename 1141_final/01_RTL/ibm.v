@@ -43,7 +43,7 @@ module ibm(
 
     wire all_cen;
 
-    reg [2:0] counter, counter_next;
+    reg [3:0] counter, counter_next;
     reg first, first_next;
     
 
@@ -511,7 +511,7 @@ module ibm(
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            counter <= 3'd0;
+            counter <= 4'd0;
         end
         else begin
             counter <= counter_next;
@@ -520,10 +520,10 @@ module ibm(
 
     always @(*) begin
         if (i_clear_and_wen) begin
-            counter_next = 3'd0;
+            counter_next = 4'd0;
         end
-        else if (counter < 3'd7 && !first) begin
-            counter_next = counter + 3'd1;
+        else if (counter < 4'd15 && !first) begin
+            counter_next = counter + 4'd1;
         end
         else begin
             counter_next = counter;
@@ -532,12 +532,12 @@ module ibm(
 
     always @(*) begin
         if (i_code == 2'b10) begin
-            o_next_S = counter == 3'd6;
-            o_valid = counter >= 3'd7;
+            o_next_S = counter == 4'd6;
+            o_valid = counter == 4'd7;
         end
         else begin
-            o_next_S = counter == 3'd2;
-            o_valid = counter >= 3'd3;
+            o_next_S = counter == 4'd2;
+            o_valid = counter == 4'd3;
         end
     end
     

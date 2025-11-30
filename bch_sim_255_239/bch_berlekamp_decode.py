@@ -193,6 +193,8 @@ class BCH255_239_Decoder:
         best_correlation = float('-inf')
         best_decoded = None
         best_roots = None
+        
+        all_failed = True
 
         for pattern in product([0, 1], repeat=p):
             # 先從硬判決結果複製一份
@@ -208,6 +210,8 @@ class BCH255_239_Decoder:
             if not success:
                 # 解碼失敗的 candidate 丟掉，不算 correlation
                 continue
+            
+            all_failed = False
 
             # 計算 correlation
             correlation = sum(r[i] * (1 - 2 * corrected[i]) for i in range(len(r)))
@@ -225,7 +229,7 @@ class BCH255_239_Decoder:
                 # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
                 best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
 
-        return best_decoded, best_roots
+        return best_decoded, best_roots, all_failed
 
 
 def mul(a, b):

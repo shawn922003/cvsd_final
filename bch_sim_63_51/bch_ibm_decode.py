@@ -186,7 +186,8 @@ class BCH63_51_Decoder:
     def soft_decode(self, r: List[float], p: int = 2):
         # Step 1: 找出 p 個最不可靠位（|LLR| 最小）
         sorted_indices = sorted(range(len(r)), key=lambda i: abs(r[i]))[:p]
-
+        sorted_indices.sort()  # 方便後續處理
+        
         # 硬判決基準
         input_rx = [0 if val >= 0 else 1 for val in r]
 
@@ -194,13 +195,17 @@ class BCH63_51_Decoder:
         best_decoded = None
         best_roots = None
 
-        for pattern in product([0, 1], repeat=p):
+        if p == 2:
+            patterns = [(0,0), (1,0), (0,1), (1,1)]
+        else:
+            patterns = product([0, 1], repeat=p)
+        for pattern in patterns:
             # 先從硬判決結果複製一份
             rx = input_rx[:]
 
             # 依 pattern 覆寫/翻轉最不可靠的位
             for idx, bit in zip(sorted_indices, pattern):
-                rx[idx] = bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
+                rx[idx] ^= bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
 
             # 硬解碼
             corrected, roots, success, _, _ = self.hard_decode(rx)
@@ -238,16 +243,28 @@ def mul(a, b):
                     
     return result[:N]  # 截斷為 N 位
 
+def bits_to_signed_list(bit_str):
+    assert len(bit_str) % 8 == 0, "長度不是 8 的倍數"
+    vals = []
+    for i in range(0, len(bit_str), 8):
+        byte = bit_str[i:i+8]
+        u = int(byte, 2)       # 先當成 unsigned
+        if u >= 128:           # 轉成 signed 8-bit
+            u -= 256
+        vals.append(u)
+    return vals
+
+
 # -------------------------
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
-    sigma0 = [1, 1, 0, 0, 0, 0]
-    sigma1 = [0, 0, 1, 1, 0, 0]
-    sigma2 = [0, 0, 0, 0, 0, 0]
-    roots = dec.chien_search(sigma0, sigma1, sigma2)
-    print(f"roots = {roots}")
+    # sigma0 = [1, 1, 0, 0, 0, 0]
+    # sigma1 = [0, 0, 1, 1, 0, 0]
+    # sigma2 = [0, 0, 0, 0, 0, 0]
+    # roots = dec.chien_search(sigma0, sigma1, sigma2)
+    # print(f"roots = {roots}")
     # tx = [0]*51
     
     # # 編碼
@@ -281,33 +298,21 @@ if __name__ == "__main__":
     # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
     # print(f"軟判決：Chien 找到 roots = {roots}")
     
-    # bits = "00000000000000000000000000000000000000000000111000000011111100000000110000101010"
-    # S1 = bits[9:3:-1]
-    # S1 = [int(b) for b in S1]
-
-    # S2 = bits[19:13:-1]
-    # S2 = [int(b) for b in S2]
-
-    # S3 = bits[29:23:-1]
-    # S3 = [int(b) for b in S3]
-
-    # S4 = bits[39:33:-1]
-    # S4 = [int(b) for b in S4]
-
-    # S5 = bits[49:43:-1]
-    # S5 = [int(b) for b in S5]
-
-    # S6 = bits[59:53:-1]
-    # S6 = [int(b) for b in S6]
-
-    # S7 = bits[69:63:-1]
-    # S7 = [int(b) for b in S7]
-
-    # S8 = bits[79:73:-1]
-    # S8 = [int(b) for b in S8]
-
-    # # sigma0_0, sigma0_1, sigma0_2 = dec.berlekamp_iBM(S1, S3)
-    # sigma1_0, sigma1_1, sigma1_2 = dec.berlekamp_iBM(S5, S7)
-    # # print(f"sigma0 = {[sigma0_0, sigma0_1, sigma0_2]}")
-    # print(f"sigma1 = {[sigma1_0, sigma1_1, sigma1_2]}")
+    bits = """0000000010010001001000000101100111101101011010100001011100011001
+0111101000110100011101000101000111101111011001110011110001010111
+0110111110011011110010000010110110110101101001001001100111010100
+1101101001001111011011111010110010010000110000110101000101110110
+1000101011110101000100111011010100000010110001100101000110100000
+0100110001001111000110111110000001100010011001110100000100110110
+0111001000011101111010111010110101100001010111010001010111101000
+1001000110101000010100101010110110011110010001010011100010110101"""
     
+    bits = bits.replace("\n", "").replace(" ", "")
+    llrs = bits_to_signed_list(bits)
+    llrs = llrs[1:]
+    llrs = list(reversed(llrs))
+    
+    # input_rx = [0 if val >= 0 else 1 for val in llrs]
+    # result = dec.soft_decode(input_rx)
+    
+    result = dec.soft_decode(llrs, p=2)

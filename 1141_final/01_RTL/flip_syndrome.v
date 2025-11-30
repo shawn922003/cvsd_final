@@ -2,6 +2,7 @@ module flip_syndrome(
     input i_clk,
     input i_rst_n,
 
+    input i_mode,
     input [1:0] i_code,
 
     input [9:0] i_S1,
@@ -55,6 +56,9 @@ module flip_syndrome(
 
     output reg o_tp_valid
 );
+
+    wire gen;
+    assign gen = i_mode;
 
     wire [9:0] tp2_S1;
     wire [9:0] tp2_S2;
@@ -165,8 +169,8 @@ module flip_syndrome(
     );
 
     gf_mult u_gf_mult_S4 (
-        .i_a(i_flip_alpha_S2_1),
-        .i_b(i_flip_alpha_S2_1),
+        .i_a(i_flip_alpha_S2_1_next),
+        .i_b(i_flip_alpha_S2_1_next),
         .i_code(i_code),
         .o_product(i_flip_alpha_S4_1_next)
     );
@@ -179,8 +183,8 @@ module flip_syndrome(
     );
     
     gf_mult u_gf_mult_S8 (
-        .i_a(i_flip_alpha_S4_1),
-        .i_b(i_flip_alpha_S4_1),
+        .i_a(i_flip_alpha_S4_1_next),
+        .i_b(i_flip_alpha_S4_1_next),
         .i_code(i_code),
         .o_product(i_flip_alpha_S8_1_next)
     );
@@ -193,8 +197,8 @@ module flip_syndrome(
     );
 
     gf_mult u_gf_mult_S4_second (
-        .i_a(i_flip_alpha_S2_2),
-        .i_b(i_flip_alpha_S2_2),
+        .i_a(i_flip_alpha_S2_2_next),
+        .i_b(i_flip_alpha_S2_2_next),
         .i_code(i_code),
         .o_product(i_flip_alpha_S4_2_next)
     );
@@ -207,13 +211,13 @@ module flip_syndrome(
     );
 
     gf_mult u_gf_mult_S8_second (
-        .i_a(i_flip_alpha_S4_2),
-        .i_b(i_flip_alpha_S4_2),
+        .i_a(i_flip_alpha_S4_2_next),
+        .i_b(i_flip_alpha_S4_2_next),
         .i_code(i_code),
         .o_product(i_flip_alpha_S8_2_next)
     );
 
-    always @(posedge i_clk) begin
+        always @(posedge i_clk) begin
         if (!i_rst_n) begin
             i_flip_alpha_S2_1 <= 10'b0;
             i_flip_alpha_S4_1 <= 10'b0;
@@ -226,16 +230,20 @@ module flip_syndrome(
             i_flip_alpha_S8_2 <= 10'b0;
         end
         else begin
-            i_flip_alpha_S2_1 <= i_flip_alpha_S2_1_next;
-            i_flip_alpha_S4_1 <= i_flip_alpha_S4_1_next;
-            i_flip_alpha_S6_1 <= i_code == 2'b10 ? i_flip_alpha_S6_1_next : i_flip_alpha_S6_1;
-            i_flip_alpha_S8_1 <= i_code == 2'b10 ? i_flip_alpha_S8_1_next : i_flip_alpha_S8_1;
-            i_flip_alpha_S2_2 <= i_flip_alpha_S2_2_next;
-            i_flip_alpha_S4_2 <= i_flip_alpha_S4_2_next;
-            i_flip_alpha_S6_2 <= i_code == 2'b10 ? i_flip_alpha_S6_2_next : i_flip_alpha_S6_2;
-            i_flip_alpha_S8_2 <= i_code == 2'b10 ? i_flip_alpha_S8_2_next : i_flip_alpha_S8_2;
+            // 第一組 alpha：用 gen 做 clock enable
+            i_flip_alpha_S2_1 <= gen ? i_flip_alpha_S2_1_next : i_flip_alpha_S2_1;
+            i_flip_alpha_S4_1 <= gen ? i_flip_alpha_S4_1_next : i_flip_alpha_S4_1;
+            i_flip_alpha_S6_1 <= (gen && (i_code == 2'b10)) ? i_flip_alpha_S6_1_next : i_flip_alpha_S6_1;
+            i_flip_alpha_S8_1 <= (gen && (i_code == 2'b10)) ? i_flip_alpha_S8_1_next : i_flip_alpha_S8_1;
+
+            // 第二組 alpha：一樣用 gen gating
+            i_flip_alpha_S2_2 <= gen ? i_flip_alpha_S2_2_next : i_flip_alpha_S2_2;
+            i_flip_alpha_S4_2 <= gen ? i_flip_alpha_S4_2_next : i_flip_alpha_S4_2;
+            i_flip_alpha_S6_2 <= (gen && (i_code == 2'b10)) ? i_flip_alpha_S6_2_next : i_flip_alpha_S6_2;
+            i_flip_alpha_S8_2 <= (gen && (i_code == 2'b10)) ? i_flip_alpha_S8_2_next : i_flip_alpha_S8_2;
         end
     end
+
 
     reg [1:0] counter, counter_next;
     always @(posedge i_clk) begin
@@ -243,7 +251,7 @@ module flip_syndrome(
             counter <= 2'b0;
         end
         else begin
-            counter <= counter_next;
+            counter <= gen ? counter_next : counter;
         end
     end
 
@@ -261,10 +269,10 @@ module flip_syndrome(
 
     always @(*) begin
         if (i_code == 2'b10) begin
-            o_tp_valid = (counter == 2'd3) && i_syndrome_valid && i_flip_alpha_valid;
+            o_tp_valid = (counter == 2'd1) && i_syndrome_valid && i_flip_alpha_valid;
         end
         else begin
-            o_tp_valid = (counter == 2'd2) && i_syndrome_valid && i_flip_alpha_valid;
+            o_tp_valid = (counter == 2'd1) && i_syndrome_valid && i_flip_alpha_valid;
         end
     end
 

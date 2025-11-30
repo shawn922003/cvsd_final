@@ -2,6 +2,7 @@ module error_bit_saver(
     input i_clk,
     input i_rst_n,
 
+    input i_mode,
     input [1:0] i_code,
 
     input i_clear,
@@ -24,7 +25,6 @@ module error_bit_saver(
     output [9:0] o_tp1_err_loc4,
     output [9:0] o_tp1_err_loc5,
     output [2:0] o_tp1_num_err,
-    output o_tp1_correct,
 
     output [9:0] o_tp2_err_loc0,
     output [9:0] o_tp2_err_loc1,
@@ -33,7 +33,6 @@ module error_bit_saver(
     output [9:0] o_tp2_err_loc4,
     output [9:0] o_tp2_err_loc5,
     output [2:0] o_tp2_num_err,
-    output o_tp2_correct,
 
     output [9:0] o_tp3_err_loc0,
     output [9:0] o_tp3_err_loc1,
@@ -42,7 +41,6 @@ module error_bit_saver(
     output [9:0] o_tp3_err_loc4,
     output [9:0] o_tp3_err_loc5,
     output [2:0] o_tp3_num_err,
-    output o_tp3_correct,
 
     output [9:0] o_tp4_err_loc0,
     output [9:0] o_tp4_err_loc1,
@@ -51,7 +49,6 @@ module error_bit_saver(
     output [9:0] o_tp4_err_loc4,
     output [9:0] o_tp4_err_loc5,
     output [2:0] o_tp4_num_err,
-    output o_tp4_correct,
 
     output [2:0] mim_llr_tp,
 
@@ -73,6 +70,9 @@ module error_bit_saver(
     input [6:0] i_llr_mem_pos4_llr,
     input [6:0] i_llr_mem_pos5_llr
 );
+
+    wire gen;
+    assign gen = i_mode;
 
     reg [2:0] num_tp, num_tp_next;
     reg [2:0] num_valid_tp, num_valid_tp_next;
@@ -109,12 +109,6 @@ module error_bit_saver(
     reg [9:0] tp4_err_loc5_buf, tp4_err_loc5_buf_next;
     reg [2:0] tp4_num_err_buf, tp4_num_err_buf_next;
 
-    reg tp1_correct, tp1_correct_next;
-    reg tp2_correct, tp2_correct_next;
-    reg tp3_correct, tp3_correct_next;
-    reg tp4_correct, tp4_correct_next;
-
-
     reg [9:0] err_loc0_adaptive;
     reg [9:0] err_loc1_adaptive;
     reg [9:0] err_loc2_adaptive;
@@ -150,7 +144,6 @@ module error_bit_saver(
     assign o_tp1_err_loc4 = tp1_err_loc4_buf;
     assign o_tp1_err_loc5 = tp1_err_loc5_buf;
     assign o_tp1_num_err  = tp1_num_err_buf;
-    assign o_tp1_correct  = tp1_correct;
 
     assign o_tp2_err_loc0 = tp2_err_loc0_buf;
     assign o_tp2_err_loc1 = tp2_err_loc1_buf;
@@ -159,7 +152,6 @@ module error_bit_saver(
     assign o_tp2_err_loc4 = tp2_err_loc4_buf;
     assign o_tp2_err_loc5 = tp2_err_loc5_buf;
     assign o_tp2_num_err  = tp2_num_err_buf;
-    assign o_tp2_correct  = tp2_correct;
 
     assign o_tp3_err_loc0 = tp3_err_loc0_buf;
     assign o_tp3_err_loc1 = tp3_err_loc1_buf;
@@ -168,7 +160,6 @@ module error_bit_saver(
     assign o_tp3_err_loc4 = tp3_err_loc4_buf;
     assign o_tp3_err_loc5 = tp3_err_loc5_buf;
     assign o_tp3_num_err  = tp3_num_err_buf;
-    assign o_tp3_correct  = tp3_correct;
 
     assign o_tp4_err_loc0 = tp4_err_loc0_buf;
     assign o_tp4_err_loc1 = tp4_err_loc1_buf;
@@ -177,7 +168,6 @@ module error_bit_saver(
     assign o_tp4_err_loc4 = tp4_err_loc4_buf;
     assign o_tp4_err_loc5 = tp4_err_loc5_buf;
     assign o_tp4_num_err  = tp4_num_err_buf;
-    assign o_tp4_correct  = tp4_correct;
 
     assign o_valid = num_tp == 3'd4;
 
@@ -211,8 +201,8 @@ module error_bit_saver(
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            num_tp <= 3'd0;
-            num_valid_tp <= 3'd0;
+            num_tp        <= 3'd0;
+            num_valid_tp  <= 3'd0;
 
             tp1_err_loc0_buf <= 10'd0;
             tp1_err_loc1_buf <= 10'd0;
@@ -220,7 +210,7 @@ module error_bit_saver(
             tp1_err_loc3_buf <= 10'd0;
             tp1_err_loc4_buf <= 10'd0;
             tp1_err_loc5_buf <= 10'd0;
-            tp1_num_err_buf <= 3'd0;
+            tp1_num_err_buf  <= 3'd0;
 
             tp2_err_loc0_buf <= 10'd0;
             tp2_err_loc1_buf <= 10'd0;
@@ -228,7 +218,7 @@ module error_bit_saver(
             tp2_err_loc3_buf <= 10'd0;
             tp2_err_loc4_buf <= 10'd0;
             tp2_err_loc5_buf <= 10'd0;
-            tp2_num_err_buf <= 3'd0;
+            tp2_num_err_buf  <= 3'd0;
 
             tp3_err_loc0_buf <= 10'd0;
             tp3_err_loc1_buf <= 10'd0;
@@ -236,7 +226,7 @@ module error_bit_saver(
             tp3_err_loc3_buf <= 10'd0;
             tp3_err_loc4_buf <= 10'd0;
             tp3_err_loc5_buf <= 10'd0;
-            tp3_num_err_buf <= 3'd0;
+            tp3_num_err_buf  <= 3'd0;
 
             tp4_err_loc0_buf <= 10'd0;
             tp4_err_loc1_buf <= 10'd0;
@@ -244,56 +234,47 @@ module error_bit_saver(
             tp4_err_loc3_buf <= 10'd0;
             tp4_err_loc4_buf <= 10'd0;
             tp4_err_loc5_buf <= 10'd0;
-            tp4_num_err_buf <= 3'd0;
-
-            tp1_correct <= 1'b0;
-            tp2_correct <= 1'b0;
-            tp3_correct <= 1'b0;
-            tp4_correct <= 1'b0;
+            tp4_num_err_buf  <= 3'd0;
         end 
         else begin
-            num_tp <= num_tp_next;
-            num_valid_tp <= num_valid_tp_next;
+            // 加上 gen clock enable：gen=1 才更新，否則保持原值
+            num_tp        <= gen ? num_tp_next        : num_tp;
+            num_valid_tp  <= gen ? num_valid_tp_next  : num_valid_tp;
 
-            tp1_err_loc0_buf <= tp1_err_loc0_buf_next;
-            tp1_err_loc1_buf <= tp1_err_loc1_buf_next;
-            tp1_err_loc2_buf <= tp1_err_loc2_buf_next;
-            tp1_err_loc3_buf <= tp1_err_loc3_buf_next;
-            tp1_err_loc4_buf <= tp1_err_loc4_buf_next;
-            tp1_err_loc5_buf <= tp1_err_loc5_buf_next;
+            tp1_err_loc0_buf <= gen ? tp1_err_loc0_buf_next : tp1_err_loc0_buf;
+            tp1_err_loc1_buf <= gen ? tp1_err_loc1_buf_next : tp1_err_loc1_buf;
+            tp1_err_loc2_buf <= gen ? tp1_err_loc2_buf_next : tp1_err_loc2_buf;
+            tp1_err_loc3_buf <= gen ? tp1_err_loc3_buf_next : tp1_err_loc3_buf;
+            tp1_err_loc4_buf <= gen ? tp1_err_loc4_buf_next : tp1_err_loc4_buf;
+            tp1_err_loc5_buf <= gen ? tp1_err_loc5_buf_next : tp1_err_loc5_buf;
+            tp1_num_err_buf  <= gen ? tp1_num_err_buf_next  : tp1_num_err_buf;
 
-            tp2_err_loc0_buf <= tp2_err_loc0_buf_next;
-            tp2_err_loc1_buf <= tp2_err_loc1_buf_next;
-            tp2_err_loc2_buf <= tp2_err_loc2_buf_next;
-            tp2_err_loc3_buf <= tp2_err_loc3_buf_next;
-            tp2_err_loc4_buf <= tp2_err_loc4_buf_next;
-            tp2_err_loc5_buf <= tp2_err_loc5_buf_next;
+            tp2_err_loc0_buf <= gen ? tp2_err_loc0_buf_next : tp2_err_loc0_buf;
+            tp2_err_loc1_buf <= gen ? tp2_err_loc1_buf_next : tp2_err_loc1_buf;
+            tp2_err_loc2_buf <= gen ? tp2_err_loc2_buf_next : tp2_err_loc2_buf;
+            tp2_err_loc3_buf <= gen ? tp2_err_loc3_buf_next : tp2_err_loc3_buf;
+            tp2_err_loc4_buf <= gen ? tp2_err_loc4_buf_next : tp2_err_loc4_buf;
+            tp2_err_loc5_buf <= gen ? tp2_err_loc5_buf_next : tp2_err_loc5_buf;
+            tp2_num_err_buf  <= gen ? tp2_num_err_buf_next  : tp2_num_err_buf;
 
-            tp3_err_loc0_buf <= tp3_err_loc0_buf_next;
-            tp3_err_loc1_buf <= tp3_err_loc1_buf_next;
-            tp3_err_loc2_buf <= tp3_err_loc2_buf_next;
-            tp3_err_loc3_buf <= tp3_err_loc3_buf_next;
-            tp3_err_loc4_buf <= tp3_err_loc4_buf_next;
-            tp3_err_loc5_buf <= tp3_err_loc5_buf_next;
-            
-            tp4_err_loc0_buf <= tp4_err_loc0_buf_next;
-            tp4_err_loc1_buf <= tp4_err_loc1_buf_next;
-            tp4_err_loc2_buf <= tp4_err_loc2_buf_next;
-            tp4_err_loc3_buf <= tp4_err_loc3_buf_next;
-            tp4_err_loc4_buf <= tp4_err_loc4_buf_next;
-            tp4_err_loc5_buf <= tp4_err_loc5_buf_next;
+            tp3_err_loc0_buf <= gen ? tp3_err_loc0_buf_next : tp3_err_loc0_buf;
+            tp3_err_loc1_buf <= gen ? tp3_err_loc1_buf_next : tp3_err_loc1_buf;
+            tp3_err_loc2_buf <= gen ? tp3_err_loc2_buf_next : tp3_err_loc2_buf;
+            tp3_err_loc3_buf <= gen ? tp3_err_loc3_buf_next : tp3_err_loc3_buf;
+            tp3_err_loc4_buf <= gen ? tp3_err_loc4_buf_next : tp3_err_loc4_buf;
+            tp3_err_loc5_buf <= gen ? tp3_err_loc5_buf_next : tp3_err_loc5_buf;
+            tp3_num_err_buf  <= gen ? tp3_num_err_buf_next  : tp3_num_err_buf;
 
-            tp1_num_err_buf <= tp1_num_err_buf_next;
-            tp2_num_err_buf <= tp2_num_err_buf_next;
-            tp3_num_err_buf <= tp3_num_err_buf_next;
-            tp4_num_err_buf <= tp4_num_err_buf_next;
-
-            tp1_correct <= tp1_correct_next;
-            tp2_correct <= tp2_correct_next;
-            tp3_correct <= tp3_correct_next;
-            tp4_correct <= tp4_correct_next;
+            tp4_err_loc0_buf <= gen ? tp4_err_loc0_buf_next : tp4_err_loc0_buf;
+            tp4_err_loc1_buf <= gen ? tp4_err_loc1_buf_next : tp4_err_loc1_buf;
+            tp4_err_loc2_buf <= gen ? tp4_err_loc2_buf_next : tp4_err_loc2_buf;
+            tp4_err_loc3_buf <= gen ? tp4_err_loc3_buf_next : tp4_err_loc3_buf;
+            tp4_err_loc4_buf <= gen ? tp4_err_loc4_buf_next : tp4_err_loc4_buf;
+            tp4_err_loc5_buf <= gen ? tp4_err_loc5_buf_next : tp4_err_loc5_buf;
+            tp4_num_err_buf  <= gen ? tp4_num_err_buf_next  : tp4_num_err_buf;
         end
     end
+
     
 
     always @(*) begin
@@ -581,57 +562,6 @@ module error_bit_saver(
     end
     
 
-    always @(*) begin
-        if (i_clear) begin
-            tp1_correct_next = 1'b0;
-            tp2_correct_next = 1'b0;
-            tp3_correct_next = 1'b0;
-            tp4_correct_next = 1'b0;
-        end
-        else begin
-            if (i_correct && i_err_valid_pulse && i_flip_valid) begin
-                case (num_valid_tp) 
-                    3'd0: begin
-                        tp1_correct_next = 1'b1;
-                        tp2_correct_next = tp2_correct;
-                        tp3_correct_next = tp3_correct;
-                        tp4_correct_next = tp4_correct;
-                    end
-                    3'd1: begin
-                        tp1_correct_next = tp1_correct;
-                        tp2_correct_next = 1'b1;
-                        tp3_correct_next = tp3_correct;
-                        tp4_correct_next = tp4_correct;
-                    end
-                    3'd2: begin
-                        tp1_correct_next = tp1_correct;
-                        tp2_correct_next = tp2_correct;
-                        tp3_correct_next = 1'b1;
-                        tp4_correct_next = tp4_correct;
-                    end
-                    3'd3: begin
-                        tp1_correct_next = tp1_correct;
-                        tp2_correct_next = tp2_correct;
-                        tp3_correct_next = tp3_correct;
-                        tp4_correct_next = 1'b1;
-                    end
-                    default: begin
-                        tp1_correct_next = tp1_correct;
-                        tp2_correct_next = tp2_correct;
-                        tp3_correct_next = tp3_correct;
-                        tp4_correct_next = tp4_correct;
-                    end
-                endcase
-            end
-            else begin
-                tp1_correct_next = tp1_correct;
-                tp2_correct_next = tp2_correct;
-                tp3_correct_next = tp3_correct;
-                tp4_correct_next = tp4_correct;
-            end
-        end
-    end
-
 
     always @(*) begin
         if (i_num_err == 3'd0) begin
@@ -688,14 +618,15 @@ module error_bit_saver(
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            mim_tp <= 3'd0;
+            mim_tp     <= 3'd0;
             mim_llr_sum <= {10{1'b1}};
         end
         else begin
-            mim_tp <= mim_tp_next;
-            mim_llr_sum <= mim_llr_sum_next;
+            mim_tp     <= gen ? mim_tp_next     : mim_tp;
+            mim_llr_sum <= gen ? mim_llr_sum_next : mim_llr_sum;
         end
     end
+
 
     always @(*) begin
         if (i_clear) begin

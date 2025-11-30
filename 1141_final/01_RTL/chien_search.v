@@ -33,6 +33,11 @@ module chien_search(
     localparam m10_alpha_n384 = 10'b1010010011; // alpha^(-384) = alpha^(639)
     localparam m10_alpha_n512 = 10'b0100001010; // alpha^(-512) = alpha^(511)
 
+    wire sigma2_gen;
+    assign sigma2_gen = i_mode == 1'b1 && i_code != 2'b10;
+
+
+
     reg [9:0] sigma0;
     reg [9:0] sigma_alpha1;
     reg [9:0] sigma_alpha2;
@@ -313,7 +318,7 @@ module chien_search(
                     sigma_alpha1 = i_sigma1_1;
                     sigma_alpha2 = i_sigma1_2;
                 end
-                else if (counter_pe == 4'd1) begin
+                else if (counter_pe == 4'd1 && sigma2_gen) begin
                     sigma0 = sigma2_0_buf;
                     sigma_alpha1 = sigma2_1_buf;
                     sigma_alpha2 = sigma2_2_buf;
@@ -338,12 +343,12 @@ module chien_search(
                     sigma_alpha1 = sigma_alpha_product1_reg;
                     sigma_alpha2 = sigma_alpha_product2_reg;
                 end
-                else if (counter_pe == 4'd1) begin
+                else if (counter_pe == 4'd1 && sigma2_gen) begin
                     sigma0 = sigma2_0_buf;
                     sigma_alpha1 = sigma2_1_buf;
                     sigma_alpha2 = sigma2_2_buf;
                 end
-                else if (counter_pe == 4'd2) begin
+                else if (counter_pe == 4'd2 && sigma2_gen) begin
                     sigma0 = sigma2_0_buf;
                     sigma_alpha1 = sigma_alpha_product1_reg;
                     sigma_alpha2 = sigma_alpha_product2_reg;
@@ -404,9 +409,10 @@ module chien_search(
         end
         else begin
             sigma1_0_buf <= sigma1_0_buf_next;
-            sigma2_0_buf <= sigma2_0_buf_next;
-            sigma2_1_buf <= sigma2_1_buf_next;
-            sigma2_2_buf <= sigma2_2_buf_next;
+            sigma2_0_buf <= sigma2_gen ? sigma2_0_buf_next : sigma2_0_buf;
+            sigma2_1_buf <= sigma2_gen ? sigma2_1_buf_next : sigma2_1_buf;
+            sigma2_2_buf <= sigma2_gen ? sigma2_2_buf_next : sigma2_2_buf;
+
         end
     end
 
@@ -639,30 +645,36 @@ module chien_search(
     end
 
     always @(*) begin
-        if (i_sigma1_4 != 10'd0) begin
-            num_S_degree1_1_next = 3'd4;
-        end
-        else if (i_sigma1_3 != 10'd0) begin
-            num_S_degree1_1_next = 3'd3;
-        end
-        else if (i_sigma1_2 != 10'd0) begin
-            num_S_degree1_1_next = 3'd2;
-        end
-        else if (i_sigma1_1 != 10'd0) begin
-            num_S_degree1_1_next = 3'd1;
-        end
-        else begin
-            num_S_degree1_1_next = 3'd0;
-        end
+        if (i_clear_and_wen) begin
+            if (i_sigma1_4 != 10'd0 && i_code == 2'b10) begin
+                num_S_degree1_1_next = 3'd4;
+            end
+            else if (i_sigma1_3 != 10'd0 && i_code == 2'b10) begin
+                num_S_degree1_1_next = 3'd3;
+            end
+            else if (i_sigma1_2 != 10'd0) begin
+                num_S_degree1_1_next = 3'd2;
+            end
+            else if (i_sigma1_1 != 10'd0) begin
+                num_S_degree1_1_next = 3'd1;
+            end
+            else begin
+                num_S_degree1_1_next = 3'd0;
+            end
 
-        if (i_sigma2_2 != 10'd0) begin
-            num_S_degree1_2_next = 3'd2;
-        end
-        else if (i_sigma2_1 != 10'd0) begin
-            num_S_degree1_2_next = 3'd1;
+            if (i_sigma2_2 != 10'd0) begin
+                num_S_degree1_2_next = 3'd2;
+            end
+            else if (i_sigma2_1 != 10'd0) begin
+                num_S_degree1_2_next = 3'd1;
+            end
+            else begin
+                num_S_degree1_2_next = 3'd0;
+            end
         end
         else begin
-            num_S_degree1_2_next = 3'd0;
+            num_S_degree1_1_next = num_S_degree1_1;
+            num_S_degree1_2_next = num_S_degree1_2;
         end
     end
 
@@ -678,16 +690,16 @@ module chien_search(
         case(i_code) // synopsys full_case
             2'd0: begin // (63,51)
                 if (counter_find_1_idx_pipe == 4'd0) begin
-                        o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                        o_valid = 1'b1;
+                    o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_valid = 1'b1;
                 end
                 else if (counter_find_1_idx_pipe == 4'd2 && i_mode == 1'b1) begin
-                        o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
-                        o_valid = 1'b1;
+                    o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_valid = 1'b1;
                 end 
                 else begin
-                        o_correct = 1'b0;
-                        o_valid = 1'b0;
+                    o_correct = 1'b0;
+                    o_valid = 1'b0;
                 end
             end
             2'd1: begin // (255,239)
@@ -763,7 +775,7 @@ module chien_search_pe #(
     wire [9:0] sum_mult;
 
     power_to_tuple_63_51 u_power_to_tuple_63_51_alpha1 (
-        .i_power(ALPHA_BASE >= 63 ? 63 : 63 - ALPHA_BASE),
+        .i_power(ALPHA_BASE >= 63 ? 63 : (63 - ALPHA_BASE) % 63),
         .o_tuple(alpha1_63)
     );
 

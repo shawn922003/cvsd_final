@@ -62,7 +62,9 @@ module syndrome_switch(
     // 這裡改成 reg，因為下面 always @(*) 裡要對它們 assign
     reg [9:0] S1, S2, S3, S4, S5, S6, S7, S8;
 
-    wire valid;
+    wire valid, valid_dly;
+    reg next_tp_valid_pulse;
+    wire input_valid_pulse;
 
     // ---- delay stage for S1~S8 ----
     delay_n #(
@@ -161,12 +163,28 @@ module syndrome_switch(
         .i_rst_n(i_rst_n),
         .i_en  (1'b1),
         .i_d   (valid),
-        .o_q   (o_valid)
+        .o_q   (valid_dly)
+    );
+
+    pulser u_pulser_valid (
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_in    (valid_dly),
+        .i_clear (1'b0),
+        .o_pulse (o_valid)
+    );
+
+    pulser u_pulser_input_valid (
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_in    (i_code == 2'b10 ? i_tp1_valid : i_all_tp_valid && i_tp1_valid),
+        .i_clear (1'b0),
+        .o_pulse (input_valid_pulse)
     );
 
 
     // valid 一樣：mode=0 用 tp1_valid，mode=1 要 all_tp_valid & tp1_valid
-    assign valid = (i_mode == 1'b0) ? i_tp1_valid : (i_all_tp_valid && i_tp1_valid);
+    assign valid = (i_mode == 1'b0) ? i_tp1_valid : (input_valid_pulse || next_tp_valid_pulse);
 
     reg [1:0] state, state_next;
 
@@ -183,7 +201,7 @@ module syndrome_switch(
         if (i_tp1_valid == 1'b0) begin
             state_next = 2'b00;
         end
-        else if (i_next_tp) begin
+        else if (i_next_tp && i_mode == 1'b1) begin
             if (i_code == 2'b10) begin
                 state_next = state + 2'd1;
             end
@@ -277,6 +295,36 @@ module syndrome_switch(
                 endcase
             end 
         end
+    end
+
+
+    always @(*) begin
+        if (i_code != 2'b10) begin
+            case ({i_next_tp, state[1]})
+                2'b10: begin
+                    next_tp_valid_pulse = 1'b1;
+                end
+                2'b01, 2'b00, 2'b11: begin
+                    next_tp_valid_pulse = 1'b0;
+                end
+            endcase
+        end
+        else begin
+            case ({i_next_tp, state})
+                3'b100: begin
+                    next_tp_valid_pulse = 1'b1;
+                end
+                3'b101: begin
+                    next_tp_valid_pulse = 1'b1;
+                end
+                3'b110: begin
+                    next_tp_valid_pulse = 1'b1;
+                end 
+                default: begin
+                    next_tp_valid_pulse = 1'b0;
+                end
+            endcase
+        end 
     end
 
 endmodule

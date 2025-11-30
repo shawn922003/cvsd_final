@@ -198,14 +198,19 @@ class BCH63_51_Decoder:
         best_correlation = float('-inf')
         best_decoded = None
         best_roots = None
+        all_failed = True
 
-        for pattern in product([0, 1], repeat=p):
+        if p == 2:
+            patterns = [(0,0), (1,0), (0,1), (1,1)]
+        else:
+            patterns = product([0, 1], repeat=p)
+        for pattern in patterns:
             # 先從硬判決結果複製一份
             rx = input_rx[:]
 
             # 依 pattern 覆寫/翻轉最不可靠的位
             for idx, bit in zip(sorted_indices, pattern):
-                rx[idx] = bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
+                rx[idx] ^= bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
 
             # 硬解碼
             corrected, roots, success, _, _ = self.hard_decode(rx)
@@ -213,6 +218,8 @@ class BCH63_51_Decoder:
             if not success:
                 # 解碼失敗的 candidate 丟掉，不算 correlation
                 continue
+            
+            all_failed = False
 
             # 計算 correlation
             correlation = sum(r[i] * (1 - 2 * corrected[i]) for i in range(len(r)))
@@ -230,7 +237,7 @@ class BCH63_51_Decoder:
                 # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
                 best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
 
-        return best_decoded, best_roots
+        return best_decoded, best_roots, all_failed
 
 
 def mul(a, b):
@@ -243,19 +250,30 @@ def mul(a, b):
                     
     return result[:N]  # 截斷為 N 位
 
+def bits_to_signed_list(bit_str):
+    assert len(bit_str) % 8 == 0, "長度不是 8 的倍數"
+    vals = []
+    for i in range(0, len(bit_str), 8):
+        byte = bit_str[i:i+8]
+        u = int(byte, 2)       # 先當成 unsigned
+        if u >= 128:           # 轉成 signed 8-bit
+            u -= 256
+        vals.append(u)
+    return vals
+
 # -------------------------
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
 if __name__ == "__main__":
     dec = BCH63_51_Decoder()
     
-    rx_int = int("0102_0304_0506_0708", base=16)
-    rx = [(rx_int >> i) & 1 for i in range(63)]
+    # rx_int = int("0102_0304_0506_0708", base=16)
+    # rx = [(rx_int >> i) & 1 for i in range(63)]
     
-    s1, s3 = dec.syndromes(rx)
+    # s1, s3 = dec.syndromes(rx)
     
-    print("S1:", BITS_TO_ALPHA_EXP[tuple(s1)] if not dec.gf.is_zero(s1) else "0")
-    print("S3:", BITS_TO_ALPHA_EXP[tuple(s3)] if not dec.gf.is_zero(s3) else "0")
+    # print("S1:", BITS_TO_ALPHA_EXP[tuple(s1)] if not dec.gf.is_zero(s1) else "0")
+    # print("S3:", BITS_TO_ALPHA_EXP[tuple(s3)] if not dec.gf.is_zero(s3) else "0")
     
     # tx = [0]*51
     
@@ -290,3 +308,22 @@ if __name__ == "__main__":
     # # 驗證與顯示
     # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
     # print(f"軟判決：Chien 找到 roots = {roots}")
+    
+    bits = """0000000010010001001000000101100111101101011010100001011100011001
+0111101000110100011101000101000111101111011001110011110001010111
+0110111110011011110010000010110110110101101001001001100111010100
+1101101001001111011011111010110010010000110000110101000101110110
+1000101011110101000100111011010100000010110001100101000110100000
+0100110001001111000110111110000001100010011001110100000100110110
+0111001000011101111010111010110101100001010111010001010111101000
+1001000110101000010100101010110110011110010001010011100010110101"""
+    
+    bits = bits.replace("\n", "").replace(" ", "")
+    llrs = bits_to_signed_list(bits)
+    llrs = llrs[1:]
+    llrs = list(reversed(llrs))
+    
+    input_rx = [0 if val >= 0 else 1 for val in llrs]
+    # _,hard_result,_,_,_ = dec.soft_decode(input_rx)
+    
+    _,soft_result = dec.soft_decode(llrs, p=2)

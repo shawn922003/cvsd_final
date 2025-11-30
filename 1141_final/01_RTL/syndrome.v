@@ -2,6 +2,7 @@ module syndrome(
     input i_clk,
     input i_rst_n, // synchronous reset, active low
 
+    input i_mode,
     input [1:0] i_code, // 00: bch (63,51), 01: bch (255, 239), 10: bch (1023, 983)
     input i_clear_and_wen,
     input i_wen,
@@ -314,8 +315,8 @@ module syndrome(
     );
 
     gf_mult u_gf_mult_S4 (
-        .i_a(S2),
-        .i_b(S2),
+        .i_a(S2_next),
+        .i_b(S2_next),
         .i_code(i_code),
         .o_product(S4_next)
     );
@@ -328,8 +329,8 @@ module syndrome(
     );
 
     gf_mult u_gf_mult_S8 (
-        .i_a(S4),
-        .i_b(S4),
+        .i_a(S4_next),
+        .i_b(S4_next),
         .i_code(2'b10),
         .o_product(S8_next)
     );
@@ -376,15 +377,15 @@ module syndrome(
         case(i_code) // synopsys full_case
             2'b00: begin
                 o_odd_s_valid = counter >= 8'd7 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd9 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd8 && !i_clear_and_wen;
             end
             2'b01: begin
                 o_odd_s_valid = counter >= 8'd31 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd33 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd32 && !i_clear_and_wen;
             end
             2'b10: begin
                 o_odd_s_valid = counter >= 8'd127 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd130 && !i_clear_and_wen;
+                o_all_s_valid = counter >= 8'd128 && !i_clear_and_wen;
             end
         endcase
     end
@@ -715,6 +716,10 @@ module syndrome(
 
 
     // -------------------------- flip alpha logic ------------------------------------
+    wire flip_alpha_logic_gen;
+    assign flip_alpha_logic_gen = i_mode;
+
+
     wire [6:0] abs_llr0;
     wire [6:0] abs_llr1;    
     wire [6:0] abs_llr2;
@@ -1030,34 +1035,36 @@ module syndrome(
 
 
     // min and second min logic
+        // min and second min logic
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            min_llr <= 7'b1111111;
-            second_min_llr <= 7'b1111111;
-            alpha_S1_min <= 10'b0;
+            min_llr             <= 7'b1111111;
+            second_min_llr      <= 7'b1111111;
+            alpha_S1_min        <= 10'b0;
             alpha_S1_second_min <= 10'b0;
-            alpha_S3_min <= 10'b0;
+            alpha_S3_min        <= 10'b0;
             alpha_S3_second_min <= 10'b0;
-            alpha_S5_min <= 10'b0;
+            alpha_S5_min        <= 10'b0;
             alpha_S5_second_min <= 10'b0;
-            alpha_S7_min <= 10'b0;
+            alpha_S7_min        <= 10'b0;
             alpha_S7_second_min <= 10'b0;
-            min_pos <= 10'b0;
-            second_min_pos <= 10'b0;
+            min_pos             <= 10'b0;
+            second_min_pos      <= 10'b0;
         end
         else begin
-            min_llr <= min_llr_next;
-            second_min_llr <= second_min_llr_next;
-            alpha_S1_min <= alpha_S1_min_next;
-            alpha_S1_second_min <= alpha_S1_second_min_next;
-            alpha_S3_min <= alpha_S3_min_next;
-            alpha_S3_second_min <= alpha_S3_second_min_next;
-            alpha_S5_min <= alpha_S5_min_next;
-            alpha_S5_second_min <= alpha_S5_second_min_next;
-            alpha_S7_min <= alpha_S7_min_next;
-            alpha_S7_second_min <= alpha_S7_second_min_next;
-            min_pos <= min_pos_next;
-            second_min_pos <= second_min_pos_next;
+            // clock gating by flip_alpha_logic_gen (clock enable style)
+            min_llr             <= flip_alpha_logic_gen ? min_llr_next             : min_llr;
+            second_min_llr      <= flip_alpha_logic_gen ? second_min_llr_next      : second_min_llr;
+            alpha_S1_min        <= flip_alpha_logic_gen ? alpha_S1_min_next        : alpha_S1_min;
+            alpha_S1_second_min <= flip_alpha_logic_gen ? alpha_S1_second_min_next : alpha_S1_second_min;
+            alpha_S3_min        <= flip_alpha_logic_gen ? alpha_S3_min_next        : alpha_S3_min;
+            alpha_S3_second_min <= flip_alpha_logic_gen ? alpha_S3_second_min_next : alpha_S3_second_min;
+            alpha_S5_min        <= flip_alpha_logic_gen ? alpha_S5_min_next        : alpha_S5_min;
+            alpha_S5_second_min <= flip_alpha_logic_gen ? alpha_S5_second_min_next : alpha_S5_second_min;
+            alpha_S7_min        <= flip_alpha_logic_gen ? alpha_S7_min_next        : alpha_S7_min;
+            alpha_S7_second_min <= flip_alpha_logic_gen ? alpha_S7_second_min_next : alpha_S7_second_min;
+            min_pos             <= flip_alpha_logic_gen ? min_pos_next             : min_pos;
+            second_min_pos      <= flip_alpha_logic_gen ? second_min_pos_next      : second_min_pos;
         end
     end
 
