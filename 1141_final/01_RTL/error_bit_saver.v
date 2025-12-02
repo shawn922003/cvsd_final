@@ -488,22 +488,22 @@ module error_bit_saver(
 
 
         case (num_tp) 
-            2'd0: begin
+            3'd0: begin
                 flip_pos1_adaptive = {10{1'b1}};
                 flip_pos2_adaptive = {10{1'b1}};
                 num_flip_adaptive = 2'd0;
             end
-            2'd1: begin
+            3'd1: begin
                 flip_pos1_adaptive = i_flip_pos1;
                 flip_pos2_adaptive = {10{1'b1}};
                 num_flip_adaptive = 2'd1;
             end
-            2'd2: begin
+            3'd2: begin
                 flip_pos1_adaptive = {10{1'b1}};
                 flip_pos2_adaptive = i_flip_pos2;
                 num_flip_adaptive = 2'd1;
             end
-            2'd3: begin
+            3'd3: begin
                 flip_pos1_adaptive = i_flip_pos1;
                 flip_pos2_adaptive = i_flip_pos2;
                 num_flip_adaptive = 2'd2;
@@ -757,19 +757,19 @@ module error_bit_saver(
         end
 
         case (num_tp_dly) 
-            2'd0: begin
+            3'd0: begin
                 valid_pos4_llr = 7'd0;
                 valid_pos5_llr = 7'd0;
             end
-            2'd1: begin
+            3'd1: begin
                 valid_pos4_llr = i_llr_mem_pos4_llr;
                 valid_pos5_llr = 7'd0;
             end
-            2'd2: begin
+            3'd2: begin
                 valid_pos4_llr = 7'd0;
                 valid_pos5_llr = i_llr_mem_pos5_llr;
             end
-            2'd3: begin
+            3'd3: begin
                 valid_pos4_llr = i_llr_mem_pos4_llr;
                 valid_pos5_llr = i_llr_mem_pos5_llr;
             end

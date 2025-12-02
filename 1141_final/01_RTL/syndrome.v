@@ -34,7 +34,7 @@ module syndrome(
     output [9:0] o_flip_pos1,
     output [9:0] o_flip_pos2,
 
-    output reg o_flip_valid
+    output o_flip_valid
 );
     localparam m6_alpha_n0  = 10'b0000000001; // alpha^(0)  = 1
     localparam m6_alpha_n1  = 10'b0000100001; // alpha^(-1)  = alpha^(62)

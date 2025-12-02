@@ -47,7 +47,7 @@ module chien_search(
 
     reg [127:0] root_mask;
 
-    reg [127:0] is_root_reg;
+    wire [127:0] is_root_reg;
 
     
 
