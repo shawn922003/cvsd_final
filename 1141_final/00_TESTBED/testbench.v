@@ -143,6 +143,7 @@ initial begin
 end
 always @(negedge clk) begin
 	if (ready === 1) begin
+		// $display("Input data = %64b\n", idata);
 		idata = testdata[i1];
 		i1 = i1 + 1;
 	end

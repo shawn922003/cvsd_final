@@ -25,7 +25,7 @@ module ibm(
     output [9:0] o_sigma2_1,
     output [9:0] o_sigma2_2,
 
-    output reg o_valid,
+    output o_valid,
     output reg o_next_S
 );
 
@@ -45,6 +45,8 @@ module ibm(
 
     reg [3:0] counter, counter_next;
     reg first, first_next;
+
+    reg valid;
     
 
     assign pe7_12_active = i_mode == 1'b1 || i_code == 2'b10;
@@ -53,6 +55,18 @@ module ibm(
     assign single_double = i_code != 2'b10;
 
     assign all_cen = i_clear_and_wen || (i_code == 2'b10 && counter < 3'd7) || (i_code != 2'b10 && counter < 3'd3);
+
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_valid (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (1'b1),
+        .i_d   (valid),
+        .o_q   (o_valid)
+    );
 
     // PE0 to PE6 initialization
     ibm_pe u_pe0 (
@@ -533,11 +547,11 @@ module ibm(
     always @(*) begin
         if (i_code == 2'b10) begin
             o_next_S = counter == 4'd6;
-            o_valid = counter == 4'd7;
+            valid = counter == 4'd6;
         end
         else begin
             o_next_S = counter == 4'd2;
-            o_valid = counter == 4'd3;
+            valid = counter == 4'd2;
         end
     end
     

@@ -750,31 +750,28 @@ module chien_search_pe #(
     // ----------------------------
     // pre-sized power indices (to avoid width mismatch)
     // 63-domain (6-bit)
-    wire [9:0] ab_mod_63      = ALPHA_BASE % 10'd63;
-    wire [9:0] abx2_mod_63    = (ALPHA_BASE * 10'd2) % 10'd63;
-    wire [5:0] pwr63_a1       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - ab_mod_63[5:0])   % 6'd63);
-    wire [5:0] pwr63_a2       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - abx2_mod_63[5:0]) % 6'd63);
-    // (63,51) 僅用到 alpha^1、alpha^2，其餘設為 0
-    wire [5:0] pwr63_a3       = 6'd0;
-    wire [5:0] pwr63_a4       = 6'd0;
+    localparam ab_mod_63      = ALPHA_BASE % 10'd63;
+    localparam abx2_mod_63    = (ALPHA_BASE * 10'd2) % 10'd63;
+    localparam pwr63_a1       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - ab_mod_63[5:0])   % 6'd63);
+    localparam pwr63_a2       = (ALPHA_BASE >= 10'd63) ? 6'd63 : ((6'd63 - abx2_mod_63[5:0]) % 6'd63);
+
 
     // 255-domain (8-bit)
-    wire [9:0] ab_mod_255     = ALPHA_BASE % 10'd255;
-    wire [9:0] abx2_mod_255   = (ALPHA_BASE * 10'd2) % 10'd255;
-    wire [7:0] pwr255_a1      = (8'd255 - ab_mod_255[7:0])    % 8'd255;
-    wire [7:0] pwr255_a2      = (8'd255 - abx2_mod_255[7:0])  % 8'd255;
-    wire [7:0] pwr255_a3      = 8'd0;
-    wire [7:0] pwr255_a4      = 8'd0;
+    localparam ab_mod_255     = ALPHA_BASE % 10'd255;
+    localparam abx2_mod_255   = (ALPHA_BASE * 10'd2) % 10'd255;
+    localparam pwr255_a1      = (8'd255 - ab_mod_255[7:0])    % 8'd255;
+    localparam pwr255_a2      = (8'd255 - abx2_mod_255[7:0])  % 8'd255;
+
 
     // 1023-domain (10-bit)
-    wire [9:0] ab_mod_1023    = ALPHA_BASE % 10'd1023;
-    wire [9:0] abx2_mod_1023  = (ALPHA_BASE * 10'd2) % 10'd1023;
-    wire [9:0] abx3_mod_1023  = (ALPHA_BASE * 10'd3) % 10'd1023;
-    wire [9:0] abx4_mod_1023  = (ALPHA_BASE * 10'd4) % 10'd1023;
-    wire [9:0] pwr1023_a1     = (10'd1023 - ab_mod_1023)   % 10'd1023;
-    wire [9:0] pwr1023_a2     = (10'd1023 - abx2_mod_1023) % 10'd1023;
-    wire [9:0] pwr1023_a3     = (10'd1023 - abx3_mod_1023) % 10'd1023;
-    wire [9:0] pwr1023_a4     = (10'd1023 - abx4_mod_1023) % 10'd1023;
+    localparam ab_mod_1023    = ALPHA_BASE % 10'd1023;
+    localparam abx2_mod_1023  = (ALPHA_BASE * 10'd2) % 10'd1023;
+    localparam abx3_mod_1023  = (ALPHA_BASE * 10'd3) % 10'd1023;
+    localparam abx4_mod_1023  = (ALPHA_BASE * 10'd4) % 10'd1023;
+    localparam pwr1023_a1     = (10'd1023 - ab_mod_1023)   % 10'd1023;
+    localparam pwr1023_a2     = (10'd1023 - abx2_mod_1023) % 10'd1023;
+    localparam pwr1023_a3     = (10'd1023 - abx3_mod_1023) % 10'd1023;
+    localparam pwr1023_a4     = (10'd1023 - abx4_mod_1023) % 10'd1023;
 
     // ----------------------------
     // alpha^k (tuple) from power index
@@ -789,11 +786,11 @@ module chien_search_pe #(
 
 
     power_to_tuple_63_51 u_power_to_tuple_63_51_alpha1 (
-        .i_power(pwr63_a1),
+        .i_power(pwr63_a1[5:0]),
         .o_tuple(alpha1_63[5:0])
     );
     power_to_tuple_63_51 u_power_to_tuple_63_51_alpha2 (
-        .i_power(pwr63_a2),
+        .i_power(pwr63_a2[5:0]),
         .o_tuple(alpha2_63[5:0])
     );
     // 未用：直接給 0（tuple 0）
@@ -801,30 +798,30 @@ module chien_search_pe #(
     assign alpha4_63 = 10'd0;
 
     power_to_tuple_255_239 u_power_to_tuple_255_239_alpha1 (
-        .i_power(pwr255_a1),
+        .i_power(pwr255_a1[7:0]),
         .o_tuple(alpha1_255[7:0])
     );
     power_to_tuple_255_239 u_power_to_tuple_255_239_alpha2 (
-        .i_power(pwr255_a2),
+        .i_power(pwr255_a2[7:0]),
         .o_tuple(alpha2_255[7:0])
     );
     assign alpha3_255 = 10'd0;
     assign alpha4_255 = 10'd0;
 
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha1 (
-        .i_power(pwr1023_a1),
+        .i_power(pwr1023_a1[9:0]),
         .o_tuple(alpha1_1023)
     );
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha2 (
-        .i_power(pwr1023_a2),
+        .i_power(pwr1023_a2[9:0]),
         .o_tuple(alpha2_1023)
     );
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha3 (
-        .i_power(pwr1023_a3),
+        .i_power(pwr1023_a3[9:0]),
         .o_tuple(alpha3_1023)
     );
     power_to_tuple_1023_983 u_power_to_tuple_1023_983_alpha4 (
-        .i_power(pwr1023_a4),
+        .i_power(pwr1023_a4[9:0]),
         .o_tuple(alpha4_1023)
     );
 

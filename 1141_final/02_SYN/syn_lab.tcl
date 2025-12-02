@@ -1,7 +1,7 @@
 # Setting environment
 sh mkdir -p Netlist
 sh mkdir -p Report
-
+set_host_options -max_cores 47
 set company {NTUGIEE}
 set designer {Student}
 
@@ -46,15 +46,6 @@ source -echo -verbose ./bch_dc.sdc
 
 
 
-# 取得 reset port 和所有暫存器
-set rstn_port [get_ports rstn]
-set all_regs  [all_registers]
-
-# setup 多 10 個 clock
-set_multicycle_path 10 -from $rstn_port -to $all_regs -setup
-
-# hold 要配成 N-1，避免變成超嚴苛的 hold 要求
-set_multicycle_path 9  -from $rstn_port -to $all_regs -hold
 
 
 
@@ -71,22 +62,52 @@ check_design > Report/check_design.txt
 check_timing > Report/check_timing.txt
 #set high_fanout_net_threshold 0
 
-set_clock_gating_style -pos integrated  -control_point before -control_signal scan_enable -max_fanout 10
+set_clock_gating_style -pos integrated  -control_point before -control_signal scan_enable -max_fanout 20
 
 
-# ungroup -all
+ungroup -all
 # uniquify
-ungroup
+# ungroup
 set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
-compile_ultra    -gate_clock -no_autoungroup
+compile_ultra    -gate_clock 
 
 # ungroup -all -flatten
 
 
-optimize_registers -no_compile
-compile_ultra -inc   -gate_clock -no_autoungroup
+# optimize_registers -no_compile
+# compile_ultra -inc   -gate_clock
 
+# optimize_netlist -area
+
+# 取得 reset port 和所有暫存器
+set rstn_port [get_ports rstn]
+set all_regs  [all_registers]
+
+# setup 多 10 個 clock
+set_multicycle_path 10 -from $rstn_port -to $all_regs -setup
+
+# hold 要配成 N-1，避免變成超嚴苛的 hold 要求
+set_multicycle_path 9  -from $rstn_port -to $all_regs -hold
+
+
+set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
+compile_ultra    -gate_clock 
 optimize_netlist -area
+
+# 取得 reset port 和所有暫存器
+# set rstn_port [get_ports rstn]
+# set all_regs  [all_registers]
+
+# # setup 多 10 個 clock
+# set_multicycle_path 10 -from $rstn_port -to $all_regs -setup
+
+# # hold 要配成 N-1，避免變成超嚴苛的 hold 要求
+# set_multicycle_path 9  -from $rstn_port -to $all_regs -hold
+
+# ungroup -all
+# set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
+# compile_ultra    -gate_clock 
+# optimize_netlist -area
 
 # Report Output
 current_design [get_designs ${DESIGN}]
@@ -106,4 +127,3 @@ write_sdf -version 2.1 -context verilog -load_delay cell ./Netlist/${DESIGN}_syn
 report_timing
 report_area -hierarchy
 check_design
-exit

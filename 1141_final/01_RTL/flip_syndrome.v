@@ -161,63 +161,114 @@ module flip_syndrome(
 
 
 
-    gf_mult u_gf_mult_S2 (
-        .i_a(i_flip_alpha_S1_1),
-        .i_b(i_flip_alpha_S1_1),
-        .i_code(i_code),
-        .o_product(i_flip_alpha_S2_1_next)
-    );
+    // gf_mult u_gf_mult_S2 (
+    //     .i_a(i_flip_alpha_S1_1),
+    //     .i_b(i_flip_alpha_S1_1),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S2_1_next)
+    // );
 
-    gf_mult u_gf_mult_S4 (
-        .i_a(i_flip_alpha_S2_1_next),
-        .i_b(i_flip_alpha_S2_1_next),
-        .i_code(i_code),
-        .o_product(i_flip_alpha_S4_1_next)
-    );
+    // gf_mult u_gf_mult_S4 (
+    //     .i_a(i_flip_alpha_S2_1_next),
+    //     .i_b(i_flip_alpha_S2_1_next),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S4_1_next)
+    // );
 
-    gf_mult u_gf_mult_S6 (
-        .i_a(i_flip_alpha_S3_1),
-        .i_b(i_flip_alpha_S3_1),
-        .i_code(i_code),
-        .o_product(i_flip_alpha_S6_1_next)
-    );
+    // gf_mult u_gf_mult_S6 (
+    //     .i_a(i_flip_alpha_S3_1),
+    //     .i_b(i_flip_alpha_S3_1),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S6_1_next)
+    // );
     
-    gf_mult u_gf_mult_S8 (
-        .i_a(i_flip_alpha_S4_1_next),
-        .i_b(i_flip_alpha_S4_1_next),
+    // gf_mult u_gf_mult_S8 (
+    //     .i_a(i_flip_alpha_S4_1_next),
+    //     .i_b(i_flip_alpha_S4_1_next),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S8_1_next)
+    // );
+
+    // gf_mult u_gf_mult_S2_second (
+    //     .i_a(i_flip_alpha_S1_2),
+    //     .i_b(i_flip_alpha_S1_2),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S2_2_next)
+    // );
+
+    // gf_mult u_gf_mult_S4_second (
+    //     .i_a(i_flip_alpha_S2_2_next),
+    //     .i_b(i_flip_alpha_S2_2_next),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S4_2_next)
+    // );
+
+    // gf_mult u_gf_mult_S6_second (
+    //     .i_a(i_flip_alpha_S3_2),
+    //     .i_b(i_flip_alpha_S3_2),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S6_2_next)
+    // );
+
+    // gf_mult u_gf_mult_S8_second (
+    //     .i_a(i_flip_alpha_S4_2_next),
+    //     .i_b(i_flip_alpha_S4_2_next),
+    //     .i_code(i_code),
+    //     .o_product(i_flip_alpha_S8_2_next)
+    // );
+
+    gf_square u_gf_square_S2_1 (
+        .i_in(i_flip_alpha_S1_1),
         .i_code(i_code),
-        .o_product(i_flip_alpha_S8_1_next)
+        .o_out(i_flip_alpha_S2_1_next)
     );
 
-    gf_mult u_gf_mult_S2_second (
-        .i_a(i_flip_alpha_S1_2),
-        .i_b(i_flip_alpha_S1_2),
+    gf_square u_gf_square_S4_1 (
+        .i_in(i_flip_alpha_S2_1_next),
         .i_code(i_code),
-        .o_product(i_flip_alpha_S2_2_next)
+        .o_out(i_flip_alpha_S4_1_next)
     );
 
-    gf_mult u_gf_mult_S4_second (
-        .i_a(i_flip_alpha_S2_2_next),
-        .i_b(i_flip_alpha_S2_2_next),
+    gf_square u_gf_square_S6_1 (
+        .i_in(i_flip_alpha_S3_1),
         .i_code(i_code),
-        .o_product(i_flip_alpha_S4_2_next)
+        .o_out(i_flip_alpha_S6_1_next)
     );
 
-    gf_mult u_gf_mult_S6_second (
-        .i_a(i_flip_alpha_S3_2),
-        .i_b(i_flip_alpha_S3_2),
+    gf_square u_gf_square_S8_1 (
+        .i_in(i_flip_alpha_S4_1_next),
         .i_code(i_code),
-        .o_product(i_flip_alpha_S6_2_next)
+        .o_out(i_flip_alpha_S8_1_next)
     );
 
-    gf_mult u_gf_mult_S8_second (
-        .i_a(i_flip_alpha_S4_2_next),
-        .i_b(i_flip_alpha_S4_2_next),
+    gf_square u_gf_square_S2_2 (
+        .i_in(i_flip_alpha_S1_2),
         .i_code(i_code),
-        .o_product(i_flip_alpha_S8_2_next)
+        .o_out(i_flip_alpha_S2_2_next)
     );
 
-        always @(posedge i_clk) begin
+    gf_square u_gf_square_S4_2 (
+        .i_in(i_flip_alpha_S2_2_next),
+        .i_code(i_code),
+        .o_out(i_flip_alpha_S4_2_next)
+    );
+
+    gf_square u_gf_square_S6_2 (
+        .i_in(i_flip_alpha_S3_2),
+        .i_code(i_code),
+        .o_out(i_flip_alpha_S6_2_next)
+    );
+
+    gf_square u_gf_square_S8_2 (
+        .i_in(i_flip_alpha_S4_2_next),
+        .i_code(i_code),
+        .o_out(i_flip_alpha_S8_2_next)
+    );
+
+    
+
+
+    always @(posedge i_clk) begin
         if (!i_rst_n) begin
             i_flip_alpha_S2_1 <= 10'b0;
             i_flip_alpha_S4_1 <= 10'b0;

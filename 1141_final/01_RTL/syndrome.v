@@ -36,99 +36,99 @@ module syndrome(
 
     output reg o_flip_valid
 );
-    localparam m6_alpha_n0  = 6'b000001; // alpha^(0)  = 1
-    localparam m6_alpha_n1  = 6'b100001; // alpha^(-1)  = alpha^(62)
-    localparam m6_alpha_n2  = 6'b110001; // alpha^(-2)  = alpha^(61)
-    localparam m6_alpha_n3  = 6'b111001; // alpha^(-3)  = alpha^(60)
-    localparam m6_alpha_n4  = 6'b111101; // alpha^(-4)  = alpha^(59)
-    localparam m6_alpha_n5  = 6'b111111; // alpha^(-5)  = alpha^(58)
-    localparam m6_alpha_n6  = 6'b111110; // alpha^(-6)  = alpha^(57)
-    localparam m6_alpha_n7  = 6'b011111; // alpha^(-7)  = alpha^(56)
-    localparam m6_alpha_n8  = 6'b101110; // alpha^(-8)  = alpha^(55)
-    localparam m6_alpha_n9  = 6'b010111; // alpha^(-9)  = alpha^(54)
-    localparam m6_alpha_n10 = 6'b101010; // alpha^(-10) = alpha^(53)
-    localparam m6_alpha_n11 = 6'b010101; // alpha^(-11) = alpha^(52)
-    localparam m6_alpha_n12 = 6'b101011; // alpha^(-12) = alpha^(51)
-    localparam m6_alpha_n13 = 6'b110100; // alpha^(-13) = alpha^(50)
-    localparam m6_alpha_n14 = 6'b011010; // alpha^(-14) = alpha^(49)
-    localparam m6_alpha_n15 = 6'b001101; // alpha^(-15) = alpha^(48)
-    localparam m6_alpha_n16 = 6'b100111; // alpha^(-16) = alpha^(47)
-    localparam m6_alpha_n17 = 6'b110010; // alpha^(-17) = alpha^(46)
-    localparam m6_alpha_n18 = 6'b011001; // alpha^(-18) = alpha^(45)
-    localparam m6_alpha_n19 = 6'b101101; // alpha^(-19) = alpha^(44)
-    localparam m6_alpha_n20 = 6'b110111; // alpha^(-20) = alpha^(43)
-    localparam m6_alpha_n21 = 6'b111010; // alpha^(-21) = alpha^(42)
-    localparam m6_alpha_n22 = 6'b011101; // alpha^(-22) = alpha^(41)
-    localparam m6_alpha_n23 = 6'b101111; // alpha^(-23) = alpha^(40)
-    localparam m6_alpha_n24 = 6'b110110; // alpha^(-24) = alpha^(39)
-    localparam m6_alpha_n25 = 6'b011011; // alpha^(-25) = alpha^(38)
-    localparam m6_alpha_n26 = 6'b101100; // alpha^(-26) = alpha^(37)
-    localparam m6_alpha_n27 = 6'b010110; // alpha^(-27) = alpha^(36)
-    localparam m6_alpha_n28 = 6'b001011; // alpha^(-28) = alpha^(35)
-    localparam m6_alpha_n29 = 6'b100100; // alpha^(-29) = alpha^(34)
-    localparam m6_alpha_n30 = 6'b010010; // alpha^(-30) = alpha^(33)
-    localparam m6_alpha_n31 = 6'b001001; // alpha^(-31) = alpha^(32)
-    localparam m6_alpha_n32 = 6'b100101; // alpha^(-32) = alpha^(31)
-    localparam m6_alpha_n33 = 6'b110011; // alpha^(-33) = alpha^(30)
-    localparam m6_alpha_n34 = 6'b111000; // alpha^(-34) = alpha^(29)
-    localparam m6_alpha_n35 = 6'b011100; // alpha^(-35) = alpha^(28)
-    localparam m6_alpha_n36 = 6'b001110; // alpha^(-36) = alpha^(27)
-    localparam m6_alpha_n37 = 6'b000111; // alpha^(-37) = alpha^(26)
-    localparam m6_alpha_n38 = 6'b100010; // alpha^(-38) = alpha^(25)
-    localparam m6_alpha_n39 = 6'b010001; // alpha^(-39) = alpha^(24)
-    localparam m6_alpha_n40 = 6'b101001; // alpha^(-40) = alpha^(23)
-    localparam m6_alpha_n41 = 6'b110101; // alpha^(-41) = alpha^(22)
-    localparam m6_alpha_n42 = 6'b111011; // alpha^(-42) = alpha^(21)
-    localparam m6_alpha_n43 = 6'b111100; // alpha^(-43) = alpha^(20)
-    localparam m6_alpha_n44 = 6'b011110; // alpha^(-44) = alpha^(19)
-    localparam m6_alpha_n45 = 6'b001111; // alpha^(-45) = alpha^(18)
+    localparam m6_alpha_n0  = 10'b0000000001; // alpha^(0)  = 1
+    localparam m6_alpha_n1  = 10'b0000100001; // alpha^(-1)  = alpha^(62)
+    localparam m6_alpha_n2  = 10'b0000110001; // alpha^(-2)  = alpha^(61)
+    localparam m6_alpha_n3  = 10'b0000111001; // alpha^(-3)  = alpha^(60)
+    localparam m6_alpha_n4  = 10'b0000111101; // alpha^(-4)  = alpha^(59)
+    localparam m6_alpha_n5  = 10'b0000111111; // alpha^(-5)  = alpha^(58)
+    localparam m6_alpha_n6  = 10'b0000111110; // alpha^(-6)  = alpha^(57)
+    localparam m6_alpha_n7  = 10'b0000011111; // alpha^(-7)  = alpha^(56)
+    localparam m6_alpha_n8  = 10'b0000101110; // alpha^(-8)  = alpha^(55)
+    localparam m6_alpha_n9  = 10'b0000010111; // alpha^(-9)  = alpha^(54)
+    localparam m6_alpha_n10 = 10'b0000101010; // alpha^(-10) = alpha^(53)
+    localparam m6_alpha_n11 = 10'b0000010101; // alpha^(-11) = alpha^(52)
+    localparam m6_alpha_n12 = 10'b0000101011; // alpha^(-12) = alpha^(51)
+    localparam m6_alpha_n13 = 10'b0000110100; // alpha^(-13) = alpha^(50)
+    localparam m6_alpha_n14 = 10'b0000011010; // alpha^(-14) = alpha^(49)
+    localparam m6_alpha_n15 = 10'b0000001101; // alpha^(-15) = alpha^(48)
+    localparam m6_alpha_n16 = 10'b0000100111; // alpha^(-16) = alpha^(47)
+    localparam m6_alpha_n17 = 10'b0000110010; // alpha^(-17) = alpha^(46)
+    localparam m6_alpha_n18 = 10'b0000011001; // alpha^(-18) = alpha^(45)
+    localparam m6_alpha_n19 = 10'b0000101101; // alpha^(-19) = alpha^(44)
+    localparam m6_alpha_n20 = 10'b0000110111; // alpha^(-20) = alpha^(43)
+    localparam m6_alpha_n21 = 10'b0000111010; // alpha^(-21) = alpha^(42)
+    localparam m6_alpha_n22 = 10'b0000011101; // alpha^(-22) = alpha^(41)
+    localparam m6_alpha_n23 = 10'b0000101111; // alpha^(-23) = alpha^(40)
+    localparam m6_alpha_n24 = 10'b0000110110; // alpha^(-24) = alpha^(39)
+    localparam m6_alpha_n25 = 10'b0000011011; // alpha^(-25) = alpha^(38)
+    localparam m6_alpha_n26 = 10'b0000101100; // alpha^(-26) = alpha^(37)
+    localparam m6_alpha_n27 = 10'b0000010110; // alpha^(-27) = alpha^(36)
+    localparam m6_alpha_n28 = 10'b0000001011; // alpha^(-28) = alpha^(35)
+    localparam m6_alpha_n29 = 10'b0000100100; // alpha^(-29) = alpha^(34)
+    localparam m6_alpha_n30 = 10'b0000010010; // alpha^(-30) = alpha^(33)
+    localparam m6_alpha_n31 = 10'b0000001001; // alpha^(-31) = alpha^(32)
+    localparam m6_alpha_n32 = 10'b0000100101; // alpha^(-32) = alpha^(31)
+    localparam m6_alpha_n33 = 10'b0000110011; // alpha^(-33) = alpha^(30)
+    localparam m6_alpha_n34 = 10'b0000111000; // alpha^(-34) = alpha^(29)
+    localparam m6_alpha_n35 = 10'b0000011100; // alpha^(-35) = alpha^(28)
+    localparam m6_alpha_n36 = 10'b0000001110; // alpha^(-36) = alpha^(27)
+    localparam m6_alpha_n37 = 10'b0000000111; // alpha^(-37) = alpha^(26)
+    localparam m6_alpha_n38 = 10'b0000100010; // alpha^(-38) = alpha^(25)
+    localparam m6_alpha_n39 = 10'b0000010001; // alpha^(-39) = alpha^(24)
+    localparam m6_alpha_n40 = 10'b0000101001; // alpha^(-40) = alpha^(23)
+    localparam m6_alpha_n41 = 10'b0000110101; // alpha^(-41) = alpha^(22)
+    localparam m6_alpha_n42 = 10'b0000111011; // alpha^(-42) = alpha^(21)
+    localparam m6_alpha_n43 = 10'b0000111100; // alpha^(-43) = alpha^(20)
+    localparam m6_alpha_n44 = 10'b0000011110; // alpha^(-44) = alpha^(19)
+    localparam m6_alpha_n45 = 10'b0000001111; // alpha^(-45) = alpha^(18)
 
-    localparam m8_alpha_n0 = 8'b00000001; // alpha^(0) = 1
-    localparam m8_alpha_n1 = 8'b10001110; // alpha^(-1) = alpha^(254)
-    localparam m8_alpha_n2 = 8'b01000111; // alpha^(-2) = alpha^(253)
-    localparam m8_alpha_n3 = 8'b10101101; // alpha^(-3) = alpha^(252)
-    localparam m8_alpha_n4 = 8'b11011000; // alpha^(-4) = alpha^(251)
-    localparam m8_alpha_n5 = 8'b01101100; // alpha^(-5) = alpha^(250)
-    localparam m8_alpha_n6 = 8'b00110110; // alpha^(-6) = alpha^(249)
-    localparam m8_alpha_n7 = 8'b00011011; // alpha^(-7) = alpha^(248)
-    localparam m8_alpha_n8 = 8'b10000011; // alpha^(-8) = alpha^(247)
-    localparam m8_alpha_n9 = 8'b11001111; // alpha^(-9) = alpha^(246)
-    localparam m8_alpha_n10 = 8'b11101001; // alpha^(-10) = alpha^(245)
-    localparam m8_alpha_n11 = 8'b11111010; // alpha^(-11) = alpha^(244)
-    localparam m8_alpha_n12 = 8'b01111101; // alpha^(-12) = alpha^(243)
-    localparam m8_alpha_n13 = 8'b10110000; // alpha^(-13) = alpha^(242)
-    localparam m8_alpha_n14 = 8'b01011000; // alpha^(-14) = alpha^(241)
-    localparam m8_alpha_n15 = 8'b00101100; // alpha^(-15) = alpha^(240)
-    localparam m8_alpha_n16 = 8'b00001011; // alpha^(-16) = alpha^(239)
-    localparam m8_alpha_n17 = 8'b10001011; // alpha^(-17) = alpha^(238)
-    localparam m8_alpha_n18 = 8'b10001011; // alpha^(-18) = alpha^(237)
-    localparam m8_alpha_n19 = 8'b11001011; // alpha^(-19) = alpha^(236)
-    localparam m8_alpha_n20 = 8'b11101011; // alpha^(-20) = alpha^(235)
-    localparam m8_alpha_n21 = 8'b11111011; // alpha^(-21) = alpha^(234)
-    localparam m8_alpha_n22 = 8'b11110011; // alpha^(-22) = alpha^(233)
-    localparam m8_alpha_n23 = 8'b11110111; // alpha^(-23) = alpha^(232)
-    localparam m8_alpha_n24 = 8'b11110101; // alpha^(-24) = alpha^(231)
-    localparam m8_alpha_n25 = 8'b11110100; // alpha^(-25) = alpha^(230)
-    localparam m8_alpha_n26 = 8'b01111010; // alpha^(-26) = alpha^(229)
-    localparam m8_alpha_n27 = 8'b00111101; // alpha^(-27) = alpha^(228)
-    localparam m8_alpha_n28 = 8'b10010000; // alpha^(-28) = alpha^(227)
-    localparam m8_alpha_n29 = 8'b01001000; // alpha^(-29) = alpha^(226)
-    localparam m8_alpha_n30 = 8'b00100100; // alpha^(-30) = alpha^(225)
-    localparam m8_alpha_n31 = 8'b00010010; // alpha^(-31) = alpha^(224)
-    localparam m8_alpha_n32 = 8'b00001001; // alpha^(-32) = alpha^(223)
-    localparam m8_alpha_n33 = 8'b10001010; // alpha^(-33) = alpha^(222)
-    localparam m8_alpha_n34 = 8'b01000101; // alpha^(-34) = alpha^(221)
-    localparam m8_alpha_n35 = 8'b10101100; // alpha^(-35) = alpha^(220)
-    localparam m8_alpha_n36 = 8'b01010110; // alpha^(-36) = alpha^(219)
-    localparam m8_alpha_n37 = 8'b00101011; // alpha^(-37) = alpha^(218)
-    localparam m8_alpha_n38 = 8'b10011011; // alpha^(-38) = alpha^(217)
-    localparam m8_alpha_n39 = 8'b11000011; // alpha^(-39) = alpha^(216)
-    localparam m8_alpha_n40 = 8'b11101111; // alpha^(-40) = alpha^(215)
-    localparam m8_alpha_n41 = 8'b11111001; // alpha^(-41) = alpha^(214)
-    localparam m8_alpha_n42 = 8'b11110010; // alpha^(-42) = alpha^(213)
-    localparam m8_alpha_n43 = 8'b01111001; // alpha^(-43) = alpha^(212)
-    localparam m8_alpha_n44 = 8'b10110010; // alpha^(-44) = alpha^(211)
-    localparam m8_alpha_n45 = 8'b01011001; // alpha^(-45) = alpha^(210)
+    localparam m8_alpha_n0 = 10'b0000000001; // alpha^(0) = 1
+    localparam m8_alpha_n1 = 10'b0010001110; // alpha^(-1) = alpha^(254)
+    localparam m8_alpha_n2 = 10'b0001000111; // alpha^(-2) = alpha^(253)
+    localparam m8_alpha_n3 = 10'b0010101101; // alpha^(-3) = alpha^(252)
+    localparam m8_alpha_n4 = 10'b0011011000; // alpha^(-4) = alpha^(251)
+    localparam m8_alpha_n5 = 10'b0001101100; // alpha^(-5) = alpha^(250)
+    localparam m8_alpha_n6 = 10'b0000110110; // alpha^(-6) = alpha^(249)
+    localparam m8_alpha_n7 = 10'b0000011011; // alpha^(-7) = alpha^(248)
+    localparam m8_alpha_n8 = 10'b0010000011; // alpha^(-8) = alpha^(247)
+    localparam m8_alpha_n9 = 10'b0011001111; // alpha^(-9) = alpha^(246)
+    localparam m8_alpha_n10 = 10'b0011101001; // alpha^(-10) = alpha^(245)
+    localparam m8_alpha_n11 = 10'b0011111010; // alpha^(-11) = alpha^(244)
+    localparam m8_alpha_n12 = 10'b0001111101; // alpha^(-12) = alpha^(243)
+    localparam m8_alpha_n13 = 10'b0010110000; // alpha^(-13) = alpha^(242)
+    localparam m8_alpha_n14 = 10'b0001011000; // alpha^(-14) = alpha^(241)
+    localparam m8_alpha_n15 = 10'b0000101100; // alpha^(-15) = alpha^(240)
+    localparam m8_alpha_n16 = 10'b0000001011; // alpha^(-16) = alpha^(239)
+    localparam m8_alpha_n17 = 10'b0010001011; // alpha^(-17) = alpha^(238)
+    localparam m8_alpha_n18 = 10'b0010001011; // alpha^(-18) = alpha^(237)
+    localparam m8_alpha_n19 = 10'b0011001011; // alpha^(-19) = alpha^(236)
+    localparam m8_alpha_n20 = 10'b0011101011; // alpha^(-20) = alpha^(235)
+    localparam m8_alpha_n21 = 10'b0011111011; // alpha^(-21) = alpha^(234)
+    localparam m8_alpha_n22 = 10'b0011110011; // alpha^(-22) = alpha^(233)
+    localparam m8_alpha_n23 = 10'b0011110111; // alpha^(-23) = alpha^(232)
+    localparam m8_alpha_n24 = 10'b0011110101; // alpha^(-24) = alpha^(231)
+    localparam m8_alpha_n25 = 10'b0011110100; // alpha^(-25) = alpha^(230)
+    localparam m8_alpha_n26 = 10'b0001111010; // alpha^(-26) = alpha^(229)
+    localparam m8_alpha_n27 = 10'b0000111101; // alpha^(-27) = alpha^(228)
+    localparam m8_alpha_n28 = 10'b0010010000; // alpha^(-28) = alpha^(227)
+    localparam m8_alpha_n29 = 10'b0001001000; // alpha^(-29) = alpha^(226)
+    localparam m8_alpha_n30 = 10'b0000100100; // alpha^(-30) = alpha^(225)
+    localparam m8_alpha_n31 = 10'b0000010010; // alpha^(-31) = alpha^(224)
+    localparam m8_alpha_n32 = 10'b0000001001; // alpha^(-32) = alpha^(223)
+    localparam m8_alpha_n33 = 10'b0010001010; // alpha^(-33) = alpha^(222)
+    localparam m8_alpha_n34 = 10'b0001000101; // alpha^(-34) = alpha^(221)
+    localparam m8_alpha_n35 = 10'b0010101100; // alpha^(-35) = alpha^(220)
+    localparam m8_alpha_n36 = 10'b0001010110; // alpha^(-36) = alpha^(219)
+    localparam m8_alpha_n37 = 10'b0000101011; // alpha^(-37) = alpha^(218)
+    localparam m8_alpha_n38 = 10'b0010011011; // alpha^(-38) = alpha^(217)
+    localparam m8_alpha_n39 = 10'b0011000011; // alpha^(-39) = alpha^(216)
+    localparam m8_alpha_n40 = 10'b0011101111; // alpha^(-40) = alpha^(215)
+    localparam m8_alpha_n41 = 10'b0011111001; // alpha^(-41) = alpha^(214)
+    localparam m8_alpha_n42 = 10'b0011110010; // alpha^(-42) = alpha^(213)
+    localparam m8_alpha_n43 = 10'b0001111001; // alpha^(-43) = alpha^(212)
+    localparam m8_alpha_n44 = 10'b0010110010; // alpha^(-44) = alpha^(211)
+    localparam m8_alpha_n45 = 10'b0001011001; // alpha^(-45) = alpha^(210)
 
     localparam m10_alpha_n0 = 10'b0000000001; // alpha^(0) = 1 = alpha^0
     localparam m10_alpha_n1 = 10'b1000000100; // alpha^(-1) = alpha^1022
@@ -267,10 +267,51 @@ module syndrome(
     reg [7:0] counter, counter_next;
 
     wire [7:0] rx_bit;
+    wire [7:0] rx_bit_dly;
+
+    wire clear_and_wen_dly;
+    wire wen_dly;
+
 
     assign rx_bit = {i_data[63], i_data[55], i_data[47], i_data[39], i_data[31], i_data[23], i_data[15], i_data[7]};
 
     integer i;
+
+    delay_n #(
+        .N(1),
+        .BITS(8),
+        .INIT(8'b0)
+    ) u_delay_n_rx_bit (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(rx_bit),
+        .o_q(rx_bit_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1),
+        .INIT(1'b0)
+    ) u_delay_n_clear_and_wen (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(i_clear_and_wen),
+        .o_q(clear_and_wen_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1),
+        .INIT(1'b0)
+    ) u_delay_n_wen (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(i_wen),
+        .o_q(wen_dly)
+    );
 
 
     // generate gf mult
@@ -307,32 +348,57 @@ module syndrome(
         end
     endgenerate
 
-    gf_mult u_gf_mult_S2 (
-        .i_a(S1),
-        .i_b(S1),
+    // gf_mult u_gf_mult_S2 (
+    //     .i_a(S1),
+    //     .i_b(S1),
+    //     .i_code(i_code),
+    //     .o_product(S2_next)
+    // );
+
+    // gf_mult u_gf_mult_S4 (
+    //     .i_a(S2_next),
+    //     .i_b(S2_next),
+    //     .i_code(i_code),
+    //     .o_product(S4_next)
+    // );
+
+    // gf_mult u_gf_mult_S6 (
+    //     .i_a(S3),
+    //     .i_b(S3),
+    //     .i_code(2'b10),
+    //     .o_product(S6_next)
+    // );
+
+    // gf_mult u_gf_mult_S8 (
+    //     .i_a(S4_next),
+    //     .i_b(S4_next),
+    //     .i_code(2'b10),
+    //     .o_product(S8_next)
+    // );
+
+
+    gf_square u_gf_square_S2 (
+        .i_in(S1),
         .i_code(i_code),
-        .o_product(S2_next)
+        .o_out(S2_next)
     );
 
-    gf_mult u_gf_mult_S4 (
-        .i_a(S2_next),
-        .i_b(S2_next),
+    gf_square u_gf_square_S4 (
+        .i_in(S2_next),
         .i_code(i_code),
-        .o_product(S4_next)
+        .o_out(S4_next)
     );
 
-    gf_mult u_gf_mult_S6 (
-        .i_a(S3),
-        .i_b(S3),
+    gf_square u_gf_square_S6 (
+        .i_in(S3),
         .i_code(2'b10),
-        .o_product(S6_next)
+        .o_out(S6_next)
     );
 
-    gf_mult u_gf_mult_S8 (
-        .i_a(S4_next),
-        .i_b(S4_next),
+    gf_square u_gf_square_S8 (
+        .i_in(S4_next),
         .i_code(2'b10),
-        .o_product(S8_next)
+        .o_out(S8_next)
     );
 
 
@@ -358,13 +424,13 @@ module syndrome(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (clear_and_wen_dly) begin
             counter_next = 8'b0;
         end
         else if (counter == 8'd131) begin
             counter_next = counter;
         end
-        else if (i_wen || counter >= 8'd7) begin
+        else if (wen_dly || counter >= 8'd7) begin
             counter_next = counter + 8'b1;
         end
         else begin
@@ -376,16 +442,16 @@ module syndrome(
     always @(*) begin
         case(i_code) // synopsys full_case
             2'b00: begin
-                o_odd_s_valid = counter >= 8'd7 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd8 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd7 && !clear_and_wen_dly;
+                o_all_s_valid = counter >= 8'd8 && !clear_and_wen_dly;
             end
             2'b01: begin
-                o_odd_s_valid = counter >= 8'd31 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd32 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd31 && !clear_and_wen_dly;
+                o_all_s_valid = counter >= 8'd32 && !clear_and_wen_dly;
             end
             2'b10: begin
-                o_odd_s_valid = counter >= 8'd127 && !i_clear_and_wen;
-                o_all_s_valid = counter >= 8'd128 && !i_clear_and_wen;
+                o_odd_s_valid = counter >= 8'd127 && !clear_and_wen_dly;
+                o_all_s_valid = counter >= 8'd128 && !clear_and_wen_dly;
             end
         endcase
     end
@@ -438,7 +504,7 @@ module syndrome(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (clear_and_wen_dly) begin
             case(i_code) // synopsys full_case
                 2'b00: begin
                     S1_poly_power_next[0] = m6_alpha_n8;
@@ -535,7 +601,7 @@ module syndrome(
             S3_factor_next = S3_factor;
 
             for (i = 0; i < 8; i = i + 1) begin
-                if (i_wen) begin
+                if (wen_dly) begin
                     S1_poly_power_next[i] = S1_poly_power_next_wire[i];
                     S3_poly_power_next[i] = S3_poly_power_next_wire[i];
                     if (i_code == 2'b10) begin
@@ -582,126 +648,126 @@ module syndrome(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (clear_and_wen_dly) begin
             case(i_code) // synopsys full_case
                 2'b00: begin
-                    S1_next = (m6_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m6_alpha_n1 & {10{rx_bit[6]}}) ^
-                              (m6_alpha_n2 & {10{rx_bit[5]}}) ^
-                              (m6_alpha_n3 & {10{rx_bit[4]}}) ^
-                              (m6_alpha_n4 & {10{rx_bit[3]}}) ^
-                              (m6_alpha_n5 & {10{rx_bit[2]}}) ^
-                              (m6_alpha_n6 & {10{rx_bit[1]}}) ^
-                              (m6_alpha_n7 & {10{rx_bit[0]}});
-                    S3_next =   (m6_alpha_n0 & {10{rx_bit[7]}}) ^
-                                (m6_alpha_n3 & {10{rx_bit[6]}}) ^
-                                (m6_alpha_n6 & {10{rx_bit[5]}}) ^
-                                (m6_alpha_n9 & {10{rx_bit[4]}}) ^
-                                (m6_alpha_n12 & {10{rx_bit[3]}}) ^
-                                (m6_alpha_n15 & {10{rx_bit[2]}}) ^
-                                (m6_alpha_n18 & {10{rx_bit[1]}}) ^
-                                (m6_alpha_n21 & {10{rx_bit[0]}});
+                    S1_next = (m6_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m6_alpha_n1 & {10{rx_bit_dly[6]}}) ^
+                              (m6_alpha_n2 & {10{rx_bit_dly[5]}}) ^
+                              (m6_alpha_n3 & {10{rx_bit_dly[4]}}) ^
+                              (m6_alpha_n4 & {10{rx_bit_dly[3]}}) ^
+                              (m6_alpha_n5 & {10{rx_bit_dly[2]}}) ^
+                              (m6_alpha_n6 & {10{rx_bit_dly[1]}}) ^
+                              (m6_alpha_n7 & {10{rx_bit_dly[0]}});
+                    S3_next =   (m6_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                                (m6_alpha_n3 & {10{rx_bit_dly[6]}}) ^
+                                (m6_alpha_n6 & {10{rx_bit_dly[5]}}) ^
+                                (m6_alpha_n9 & {10{rx_bit_dly[4]}}) ^
+                                (m6_alpha_n12 & {10{rx_bit_dly[3]}}) ^
+                                (m6_alpha_n15 & {10{rx_bit_dly[2]}}) ^
+                                (m6_alpha_n18 & {10{rx_bit_dly[1]}}) ^
+                                (m6_alpha_n21 & {10{rx_bit_dly[0]}});
                     S5_next = S5;
                     S7_next = S7;
                 end
                 2'b01: begin
-                    S1_next = (m8_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m8_alpha_n1 & {10{rx_bit[6]}}) ^
-                              (m8_alpha_n2 & {10{rx_bit[5]}}) ^
-                              (m8_alpha_n3 & {10{rx_bit[4]}}) ^
-                              (m8_alpha_n4 & {10{rx_bit[3]}}) ^
-                              (m8_alpha_n5 & {10{rx_bit[2]}}) ^
-                              (m8_alpha_n6 & {10{rx_bit[1]}}) ^
-                              (m8_alpha_n7 & {10{rx_bit[0]}});
-                    S3_next = (m8_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m8_alpha_n3 & {10{rx_bit[6]}}) ^
-                              (m8_alpha_n6 & {10{rx_bit[5]}}) ^
-                              (m8_alpha_n9 & {10{rx_bit[4]}}) ^
-                              (m8_alpha_n12 & {10{rx_bit[3]}}) ^
-                              (m8_alpha_n15 & {10{rx_bit[2]}}) ^
-                              (m8_alpha_n18 & {10{rx_bit[1]}}) ^
-                              (m8_alpha_n21 & {10{rx_bit[0]}});
+                    S1_next = (m8_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m8_alpha_n1 & {10{rx_bit_dly[6]}}) ^
+                              (m8_alpha_n2 & {10{rx_bit_dly[5]}}) ^
+                              (m8_alpha_n3 & {10{rx_bit_dly[4]}}) ^
+                              (m8_alpha_n4 & {10{rx_bit_dly[3]}}) ^
+                              (m8_alpha_n5 & {10{rx_bit_dly[2]}}) ^
+                              (m8_alpha_n6 & {10{rx_bit_dly[1]}}) ^
+                              (m8_alpha_n7 & {10{rx_bit_dly[0]}});
+                    S3_next = (m8_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m8_alpha_n3 & {10{rx_bit_dly[6]}}) ^
+                              (m8_alpha_n6 & {10{rx_bit_dly[5]}}) ^
+                              (m8_alpha_n9 & {10{rx_bit_dly[4]}}) ^
+                              (m8_alpha_n12 & {10{rx_bit_dly[3]}}) ^
+                              (m8_alpha_n15 & {10{rx_bit_dly[2]}}) ^
+                              (m8_alpha_n18 & {10{rx_bit_dly[1]}}) ^
+                              (m8_alpha_n21 & {10{rx_bit_dly[0]}});
                     S5_next = S5;
                     S7_next = S7;
                 end
                 2'b10: begin
-                    S1_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m10_alpha_n1 & {10{rx_bit[6]}}) ^
-                              (m10_alpha_n2 & {10{rx_bit[5]}}) ^
-                              (m10_alpha_n3 & {10{rx_bit[4]}}) ^
-                              (m10_alpha_n4 & {10{rx_bit[3]}}) ^
-                              (m10_alpha_n5 & {10{rx_bit[2]}}) ^
-                              (m10_alpha_n6 & {10{rx_bit[1]}}) ^
-                              (m10_alpha_n7 & {10{rx_bit[0]}});
-                    S3_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m10_alpha_n3 & {10{rx_bit[6]}}) ^
-                              (m10_alpha_n6 & {10{rx_bit[5]}}) ^
-                              (m10_alpha_n9 & {10{rx_bit[4]}}) ^
-                              (m10_alpha_n12 & {10{rx_bit[3]}}) ^
-                              (m10_alpha_n15 & {10{rx_bit[2]}}) ^
-                              (m10_alpha_n18 & {10{rx_bit[1]}}) ^
-                              (m10_alpha_n21 & {10{rx_bit[0]}});
-                    S5_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m10_alpha_n5 & {10{rx_bit[6]}}) ^
-                              (m10_alpha_n10 & {10{rx_bit[5]}}) ^
-                              (m10_alpha_n15 & {10{rx_bit[4]}}) ^
-                              (m10_alpha_n20 & {10{rx_bit[3]}}) ^
-                              (m10_alpha_n25 & {10{rx_bit[2]}}) ^
-                              (m10_alpha_n30 & {10{rx_bit[1]}}) ^
-                              (m10_alpha_n35 & {10{rx_bit[0]}});
-                    S7_next = (m10_alpha_n0 & {10{rx_bit[7]}}) ^
-                              (m10_alpha_n7 & {10{rx_bit[6]}}) ^
-                              (m10_alpha_n14 & {10{rx_bit[5]}}) ^
-                              (m10_alpha_n21 & {10{rx_bit[4]}}) ^
-                              (m10_alpha_n28 & {10{rx_bit[3]}}) ^
-                              (m10_alpha_n35 & {10{rx_bit[2]}}) ^
-                              (m10_alpha_n42 & {10{rx_bit[1]}}) ^
-                              (m10_alpha_n49 & {10{rx_bit[0]}});
+                    S1_next = (m10_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m10_alpha_n1 & {10{rx_bit_dly[6]}}) ^
+                              (m10_alpha_n2 & {10{rx_bit_dly[5]}}) ^
+                              (m10_alpha_n3 & {10{rx_bit_dly[4]}}) ^
+                              (m10_alpha_n4 & {10{rx_bit_dly[3]}}) ^
+                              (m10_alpha_n5 & {10{rx_bit_dly[2]}}) ^
+                              (m10_alpha_n6 & {10{rx_bit_dly[1]}}) ^
+                              (m10_alpha_n7 & {10{rx_bit_dly[0]}});
+                    S3_next = (m10_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m10_alpha_n3 & {10{rx_bit_dly[6]}}) ^
+                              (m10_alpha_n6 & {10{rx_bit_dly[5]}}) ^
+                              (m10_alpha_n9 & {10{rx_bit_dly[4]}}) ^
+                              (m10_alpha_n12 & {10{rx_bit_dly[3]}}) ^
+                              (m10_alpha_n15 & {10{rx_bit_dly[2]}}) ^
+                              (m10_alpha_n18 & {10{rx_bit_dly[1]}}) ^
+                              (m10_alpha_n21 & {10{rx_bit_dly[0]}});
+                    S5_next = (m10_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m10_alpha_n5 & {10{rx_bit_dly[6]}}) ^
+                              (m10_alpha_n10 & {10{rx_bit_dly[5]}}) ^
+                              (m10_alpha_n15 & {10{rx_bit_dly[4]}}) ^
+                              (m10_alpha_n20 & {10{rx_bit_dly[3]}}) ^
+                              (m10_alpha_n25 & {10{rx_bit_dly[2]}}) ^
+                              (m10_alpha_n30 & {10{rx_bit_dly[1]}}) ^
+                              (m10_alpha_n35 & {10{rx_bit_dly[0]}});
+                    S7_next = (m10_alpha_n0 & {10{rx_bit_dly[7]}}) ^
+                              (m10_alpha_n7 & {10{rx_bit_dly[6]}}) ^
+                              (m10_alpha_n14 & {10{rx_bit_dly[5]}}) ^
+                              (m10_alpha_n21 & {10{rx_bit_dly[4]}}) ^
+                              (m10_alpha_n28 & {10{rx_bit_dly[3]}}) ^
+                              (m10_alpha_n35 & {10{rx_bit_dly[2]}}) ^
+                              (m10_alpha_n42 & {10{rx_bit_dly[1]}}) ^
+                              (m10_alpha_n49 & {10{rx_bit_dly[0]}});
                 end
 
             endcase
         end
-        else if (i_wen) begin
+        else if (wen_dly) begin
             S1_next = S1 ^
-                      (S1_poly_power[0] & {10{rx_bit[7]}}) ^
-                      (S1_poly_power[1] & {10{rx_bit[6]}}) ^
-                      (S1_poly_power[2] & {10{rx_bit[5]}}) ^
-                      (S1_poly_power[3] & {10{rx_bit[4]}}) ^
-                      (S1_poly_power[4] & {10{rx_bit[3]}}) ^
-                      (S1_poly_power[5] & {10{rx_bit[2]}}) ^
-                      (S1_poly_power[6] & {10{rx_bit[1]}}) ^
-                      (S1_poly_power[7] & {10{rx_bit[0]}});
+                      (S1_poly_power[0] & {10{rx_bit_dly[7]}}) ^
+                      (S1_poly_power[1] & {10{rx_bit_dly[6]}}) ^
+                      (S1_poly_power[2] & {10{rx_bit_dly[5]}}) ^
+                      (S1_poly_power[3] & {10{rx_bit_dly[4]}}) ^
+                      (S1_poly_power[4] & {10{rx_bit_dly[3]}}) ^
+                      (S1_poly_power[5] & {10{rx_bit_dly[2]}}) ^
+                      (S1_poly_power[6] & {10{rx_bit_dly[1]}}) ^
+                      (S1_poly_power[7] & {10{rx_bit_dly[0]}});
 
             S3_next =   S3 ^
-                        (S3_poly_power[0] & {10{rx_bit[7]}}) ^
-                        (S3_poly_power[1] & {10{rx_bit[6]}}) ^
-                        (S3_poly_power[2] & {10{rx_bit[5]}}) ^
-                        (S3_poly_power[3] & {10{rx_bit[4]}}) ^
-                        (S3_poly_power[4] & {10{rx_bit[3]}}) ^
-                        (S3_poly_power[5] & {10{rx_bit[2]}}) ^
-                        (S3_poly_power[6] & {10{rx_bit[1]}}) ^
-                        (S3_poly_power[7] & {10{rx_bit[0]}});
+                        (S3_poly_power[0] & {10{rx_bit_dly[7]}}) ^
+                        (S3_poly_power[1] & {10{rx_bit_dly[6]}}) ^
+                        (S3_poly_power[2] & {10{rx_bit_dly[5]}}) ^
+                        (S3_poly_power[3] & {10{rx_bit_dly[4]}}) ^
+                        (S3_poly_power[4] & {10{rx_bit_dly[3]}}) ^
+                        (S3_poly_power[5] & {10{rx_bit_dly[2]}}) ^
+                        (S3_poly_power[6] & {10{rx_bit_dly[1]}}) ^
+                        (S3_poly_power[7] & {10{rx_bit_dly[0]}});
 
             if (i_code == 2'b10) begin
                 S5_next =   S5 ^
-                            (S5_poly_power[0] & {10{rx_bit[7]}}) ^
-                            (S5_poly_power[1] & {10{rx_bit[6]}}) ^
-                            (S5_poly_power[2] & {10{rx_bit[5]}}) ^
-                            (S5_poly_power[3] & {10{rx_bit[4]}}) ^
-                            (S5_poly_power[4] & {10{rx_bit[3]}}) ^
-                            (S5_poly_power[5] & {10{rx_bit[2]}}) ^
-                            (S5_poly_power[6] & {10{rx_bit[1]}}) ^
-                            (S5_poly_power[7] & {10{rx_bit[0]}});
+                            (S5_poly_power[0] & {10{rx_bit_dly[7]}}) ^
+                            (S5_poly_power[1] & {10{rx_bit_dly[6]}}) ^
+                            (S5_poly_power[2] & {10{rx_bit_dly[5]}}) ^
+                            (S5_poly_power[3] & {10{rx_bit_dly[4]}}) ^
+                            (S5_poly_power[4] & {10{rx_bit_dly[3]}}) ^
+                            (S5_poly_power[5] & {10{rx_bit_dly[2]}}) ^
+                            (S5_poly_power[6] & {10{rx_bit_dly[1]}}) ^
+                            (S5_poly_power[7] & {10{rx_bit_dly[0]}});
 
                 S7_next =   S7 ^
-                            (S7_poly_power[0] & {10{rx_bit[7]}}) ^
-                            (S7_poly_power[1] & {10{rx_bit[6]}}) ^
-                            (S7_poly_power[2] & {10{rx_bit[5]}}) ^
-                            (S7_poly_power[3] & {10{rx_bit[4]}}) ^
-                            (S7_poly_power[4] & {10{rx_bit[3]}}) ^
-                            (S7_poly_power[5] & {10{rx_bit[2]}}) ^
-                            (S7_poly_power[6] & {10{rx_bit[1]}}) ^
-                            (S7_poly_power[7] & {10{rx_bit[0]}});
+                            (S7_poly_power[0] & {10{rx_bit_dly[7]}}) ^
+                            (S7_poly_power[1] & {10{rx_bit_dly[6]}}) ^
+                            (S7_poly_power[2] & {10{rx_bit_dly[5]}}) ^
+                            (S7_poly_power[3] & {10{rx_bit_dly[4]}}) ^
+                            (S7_poly_power[4] & {10{rx_bit_dly[3]}}) ^
+                            (S7_poly_power[5] & {10{rx_bit_dly[2]}}) ^
+                            (S7_poly_power[6] & {10{rx_bit_dly[1]}}) ^
+                            (S7_poly_power[7] & {10{rx_bit_dly[0]}});
             end
             else begin
                 S5_next = S5;
@@ -796,6 +862,9 @@ module syndrome(
     wire [3:0] top_2_min_idx;
     wire [3:0] top_2_second_min_idx;
 
+    wire [3:0] top_2_min_idx_dly;
+    wire [3:0] top_2_second_min_idx_dly;
+
     top_2 u_top_2_llr_min (
         .i_0(abs_llr0),
         .i_1(abs_llr1),
@@ -815,7 +884,31 @@ module syndrome(
         .o_1_idx(top_2_second_min_idx)
     );
 
+    
 
+    delay_n #(
+        .N(1),
+        .BITS(4),
+        .INIT(4'b1111)
+    ) u_delay_min_llr_idx (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(top_2_min_idx),
+        .o_q(top_2_min_idx_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(4),
+        .INIT(4'b1111)
+    ) u_delay_second_min_llr_idx (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(top_2_second_min_idx),
+        .o_q(top_2_second_min_idx_dly)
+    );
 
     assign abs_llr0 = i_clear_and_wen ? 7'b1111111 : (i_data[63] ? (~i_data[62:56] + 7'b1) : i_data[62:56]);
     assign abs_llr1 = i_data[55] ? (~i_data[54:48] + 7'b1) : i_data[54:48];
@@ -879,7 +972,7 @@ module syndrome(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (clear_and_wen_dly) begin
             case(i_code) // synopsys full_case
                 2'b00: begin
                     S1_alpha0 = m6_alpha_n0;
@@ -1074,7 +1167,16 @@ module syndrome(
         if (i_wen || i_clear_and_wen) begin
             min_llr_next = top_2_min;
             second_min_llr_next = top_2_second_min;
-            case (top_2_min_idx) // synopsys full_case
+        end
+        else begin
+            min_llr_next = min_llr;
+            second_min_llr_next = second_min_llr;
+        end
+    end
+
+    always @(*) begin
+        if (wen_dly || clear_and_wen_dly) begin
+            case (top_2_min_idx_dly) // synopsys full_case
                 4'd0: begin
                     alpha_S1_min_next = S1_alpha0;
                     alpha_S3_min_next = S3_alpha0;
@@ -1147,7 +1249,7 @@ module syndrome(
                 end
             endcase
 
-            case (top_2_second_min_idx) // synopsys full_case
+            case (top_2_second_min_idx_dly) // synopsys full_case
                 4'd0: begin
                     alpha_S1_second_min_next = S1_alpha0;
                     alpha_S3_second_min_next = S3_alpha0;
@@ -1221,8 +1323,6 @@ module syndrome(
             endcase
         end
         else begin
-            min_llr_next = min_llr;
-            second_min_llr_next = second_min_llr;
             alpha_S1_min_next = alpha_S1_min;
             alpha_S1_second_min_next = alpha_S1_second_min;
             alpha_S3_min_next = alpha_S3_min;

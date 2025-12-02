@@ -17,6 +17,7 @@
 `include "../01_RTL/syndrome_switch.v"
 `include "../01_RTL/syndrome.v"
 `include "../01_RTL/top_2.v"
+`include "../01_RTL/gf_square.v"
 
 
 // bch.v
