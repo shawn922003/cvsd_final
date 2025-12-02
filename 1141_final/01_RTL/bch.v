@@ -23,8 +23,8 @@ module bch(
 
 	wire error_bit_saver_clear;
 
-	wire [9:0] llr_mem_pos[0:5];
-	wire [6:0] llr_mem_pos_llr[0:5];
+	wire [9:0] llr_mem_pos[0:1];
+	wire [6:0] llr_mem_pos_llr[0:1];
 
 	wire [9:0] syndrome_tp1_S[1:8];
 	wire [9:0] syndrome_tp2_S[1:8];
@@ -127,17 +127,9 @@ module bch(
 
 		.i_pos0(llr_mem_pos[0]),   // 10 bits
 		.i_pos1(llr_mem_pos[1]),   // 10 bits
-		.i_pos2(llr_mem_pos[2]),   // 10 bits
-		.i_pos3(llr_mem_pos[3]),   // 10 bits
-		.i_pos4(llr_mem_pos[4]),   // 10 bits
-		.i_pos5(llr_mem_pos[5]),   // 10 bits
 
 		.o_data0(llr_mem_pos_llr[0]),  // 7 bits
-		.o_data1(llr_mem_pos_llr[1]),  // 7 bits
-		.o_data2(llr_mem_pos_llr[2]),  // 7 bits
-		.o_data3(llr_mem_pos_llr[3]),  // 7 bits
-		.o_data4(llr_mem_pos_llr[4]),  // 7 bits
-		.o_data5(llr_mem_pos_llr[5])   // 7 bits
+		.o_data1(llr_mem_pos_llr[1])  // 7 bits
 	);
 
 	//====================================================
@@ -443,17 +435,9 @@ module bch(
 		// interaction with llr_mem
 		.o_llr_mem_pos0(llr_mem_pos[0]),      // 10 bits
 		.o_llr_mem_pos1(llr_mem_pos[1]),      // 10 bits
-		.o_llr_mem_pos2(llr_mem_pos[2]),      // 10 bits
-		.o_llr_mem_pos3(llr_mem_pos[3]),      // 10 bits
-		.o_llr_mem_pos4(llr_mem_pos[4]),      // 10 bits
-		.o_llr_mem_pos5(llr_mem_pos[5]),      // 10 bits
 
 		.i_llr_mem_pos0_llr(llr_mem_pos_llr[0]),  // 7 bits
-		.i_llr_mem_pos1_llr(llr_mem_pos_llr[1]),  // 7 bits
-		.i_llr_mem_pos2_llr(llr_mem_pos_llr[2]),  // 7 bits
-		.i_llr_mem_pos3_llr(llr_mem_pos_llr[3]),  // 7 bits
-		.i_llr_mem_pos4_llr(llr_mem_pos_llr[4]),  // 7 bits
-		.i_llr_mem_pos5_llr(llr_mem_pos_llr[5])   // 7 bits
+		.i_llr_mem_pos1_llr(llr_mem_pos_llr[1])  // 7 bits
 	);
 
 
