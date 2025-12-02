@@ -1,4 +1,4 @@
-test.v
+../00_TESTBED/testbench.v
 
 // Your design files
 bch.v

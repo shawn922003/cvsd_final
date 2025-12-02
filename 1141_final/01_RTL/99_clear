@@ -1,0 +1,10 @@
+rm  *.pvl
+rm  *.syn
+rm  *.mr
+rm *.log
+rm *.svf 
+rm -r cksum_dir
+rm simv
+rm *.key
+rm *.rc
+rm *.conf

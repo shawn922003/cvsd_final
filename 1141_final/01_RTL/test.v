@@ -24,7 +24,7 @@ wire [9:0] odata;
 reg [63:0] testdata [0:8191];
 reg [9:0] testa [0:511];
 integer i1, i2, i3;
-integer errcnt;
+integer errcnt, correctcnt;
 
 // --------------------------
 // read files and dump files
@@ -82,6 +82,7 @@ initial begin
 	i2 = 0;
 	i3 = 0;
 	errcnt = 0;
+	correctcnt = 0;
 
 	rstn = 0;
 	mode = 0;
@@ -135,6 +136,7 @@ always @(negedge clk) begin
 			errcnt = errcnt + 1;
 			$write("design output = %4d, golden output = %4d. Error\n", odata, testa[i3]);
 		end else begin
+			correctcnt = correctcnt + 1;
 			$write("design output = %4d, golden output = %4d\n", odata, testa[i3]);
 		end
 		i3 = i3 + 1;
@@ -142,6 +144,7 @@ always @(negedge clk) begin
 end
 initial begin
 	wait(i2 == NTEST);
+	$write("Correct count = %0d\n", correctcnt);
 	$write("Error count = %0d\n", errcnt);
 	$write("Time = %0d\n", $time - CYCLE * 5);
 	#(CYCLE*5);
