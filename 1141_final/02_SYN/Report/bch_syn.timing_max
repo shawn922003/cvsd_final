@@ -1,0 +1,338 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'bch' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 5
+Design : bch
+Version: V-2023.12
+Date   : Wed Dec  3 19:11:29 2025
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: u_chien_search/u_delay_n_is_root/shift_reg_reg[0][88]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: u_chien_search/err_loc3_buf_reg[3]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  bch                tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][88]/CK (DFFQX4)
+                                                          0.00 #     0.00 r
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][88]/Q (DFFQX4)
+                                                          0.33       0.33 r
+  U199141/Y (CLKINVX1)                                    0.30       0.62 f
+  U209666/Y (OAI22X2)                                     0.35       0.97 r
+  U118355/Y (INVX2)                                       0.14       1.11 f
+  U98213/Y (CLKXOR2X4)                                    0.31       1.42 f
+  U82995/Y (XOR2X4)                                       0.23       1.65 f
+  U209667/Y (AOI2BB2X4)                                   0.29       1.95 f
+  U196427/Y (NAND2X2)                                     0.20       2.15 r
+  U209668/Y (OAI21X2)                                     0.16       2.31 f
+  U115928/Y (INVX3)                                       0.11       2.42 r
+  U89552/Y (XOR2X1)                                       0.40       2.81 r
+  U140677/Y (INVXL)                                       0.25       3.07 f
+  U199142/Y (NOR2X1)                                      0.66       3.73 r
+  U102605/Y (XOR2X1)                                      0.55       4.28 r
+  U140676/Y (CLKINVX1)                                    0.46       4.74 f
+  U210145/Y (AOI222X2)                                    0.36       5.10 r
+  U121021/Y (INVX3)                                       0.11       5.21 f
+  U104841/Y (XOR2X2)                                      0.15       5.36 r
+  U104840/Y (CLKXOR2X2)                                   0.38       5.74 f
+  U195755/Y (XOR2X4)                                      0.22       5.96 r
+  U100767/Y (XOR2X4)                                      0.33       6.30 r
+  U190820/Y (CLKINVX1)                                    0.45       6.75 f
+  U209430/Y (NOR3X4)                                      0.44       7.19 r
+  U210095/Y (CLKINVX1)                                    0.44       7.63 f
+  U204368/Y (OAI22XL)                                     0.56       8.19 r
+  U204093/Y (AOI211X4)                                    0.35       8.54 f
+  U210609/Y (OAI22X1)                                     0.27       8.81 r
+  U210610/Y (NOR4X2)                                      0.25       9.06 f
+  U210611/Y (OAI22X2)                                     0.25       9.31 r
+  U210618/Y (AOI211X1)                                    0.16       9.47 f
+  U196451/Y (NOR2X1)                                      0.24       9.71 r
+  u_chien_search/err_loc3_buf_reg[3]/D (DFFHQX2)          0.00       9.71 r
+  data arrival time                                                  9.71
+
+  clock clk (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -0.10       9.90
+  u_chien_search/err_loc3_buf_reg[3]/CK (DFFHQX2)         0.00       9.90 r
+  library setup time                                     -0.19       9.71
+  data required time                                                 9.71
+  --------------------------------------------------------------------------
+  data required time                                                 9.71
+  data arrival time                                                 -9.71
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: u_control/mode_reg_reg
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: u_chien_search/u_delay_n_is_root/shift_reg_reg[0][34]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  bch                tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_control/mode_reg_reg/CK (DFFHQX4)                     0.00 #     0.00 r
+  u_control/mode_reg_reg/Q (DFFHQX4)                      0.23       0.23 f
+  U193293/Y (BUFX12)                                      0.25       0.47 f
+  U195723/Y (NOR2X4)                                      0.14       0.61 r
+  U194958/Y (INVX4)                                       0.08       0.69 f
+  U195722/Y (NAND2X8)                                     0.10       0.79 r
+  U192501/Y (AND2X8)                                      0.19       0.98 r
+  U207515/Y (INVX16)                                      0.10       1.08 f
+  U195745/Y (NAND2X4)                                     0.08       1.17 r
+  U195744/Y (AND3X8)                                      0.43       1.60 r
+  U194705/Y (OR2X6)                                       0.46       2.05 r
+  U191135/Y (INVX8)                                       0.41       2.46 f
+  U193042/Y (NOR2X4)                                      0.70       3.16 r
+  U213612/Y (AOI2BB1X1)                                   0.25       3.41 f
+  U191589/Y (AOI31XL)                                     0.78       4.19 r
+  U99926/Y (XOR2X1)                                       0.79       4.97 r
+  U196990/Y (INVXL)                                       0.53       5.50 f
+  U234671/Y (OAI22XL)                                     0.92       6.42 r
+  U234672/Y (NAND2X1)                                     0.24       6.66 f
+  U234673/Y (OAI211X1)                                    0.24       6.90 r
+  U200167/Y (OAI211XL)                                    0.28       7.18 f
+  U128133/Y (INVXL)                                       0.33       7.52 r
+  U78978/Y (XOR2X1)                                       0.28       7.80 r
+  U78974/Y (XOR2X1)                                       0.30       8.11 r
+  U78972/Y (XOR2X1)                                       0.30       8.40 r
+  U207596/Y (XOR2X1)                                      0.29       8.69 f
+  U202122/Y (AOI211XL)                                    0.59       9.28 r
+  U207619/Y (NAND4X2)                                     0.25       9.53 f
+  U207620/Y (NOR3X2)                                      0.22       9.75 r
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][34]/D (DFFQX1)
+                                                          0.00       9.75 r
+  data arrival time                                                  9.75
+
+  clock clk (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -0.10       9.90
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][34]/CK (DFFQX1)
+                                                          0.00       9.90 r
+  library setup time                                     -0.15       9.75
+  data required time                                                 9.75
+  --------------------------------------------------------------------------
+  data required time                                                 9.75
+  data arrival time                                                 -9.75
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: u_control/code_reg_reg[0]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: u_chien_search/u_delay_n_is_root/shift_reg_reg[0][2]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  bch                tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_control/code_reg_reg[0]/CK (DFFHQX8)                  0.00 #     0.00 r
+  u_control/code_reg_reg[0]/Q (DFFHQX8)                   0.27       0.27 f
+  U193297/Y (INVX6)                                       0.08       0.36 r
+  U196209/Y (NAND2X8)                                     0.12       0.47 f
+  U195760/Y (NOR2X8)                                      0.32       0.79 r
+  U207520/Y (INVX16)                                      0.19       0.98 f
+  U191306/Y (NAND2BX1)                                    0.29       1.27 f
+  U193157/Y (AND3X6)                                      0.25       1.52 f
+  U208253/Y (BUFX4)                                       0.41       1.92 f
+  U209091/Y (MXI2X4)                                      0.46       2.38 r
+  U195699/Y (NAND2X6)                                     0.41       2.80 f
+  U195698/Y (NAND2X2)                                     0.36       3.16 r
+  U205727/Y (CLKINVX1)                                    0.42       3.58 f
+  U211798/Y (NOR2X1)                                      0.61       4.19 r
+  U119876/Y (INVX1)                                       0.21       4.40 f
+  U102357/Y (XOR2X1)                                      0.25       4.65 r
+  U102355/Y (XOR2X1)                                      0.32       4.97 r
+  U102354/Y (XOR2X2)                                      0.45       5.42 r
+  U89554/Y (XOR2X1)                                       0.62       6.04 r
+  U123833/Y (CLKINVX1)                                    0.35       6.39 f
+  U191730/Y (NOR2XL)                                      0.42       6.81 r
+  U197605/Y (AOI211XL)                                    0.24       7.06 f
+  U234751/Y (AOI211X1)                                    0.36       7.42 r
+  U93141/Y (XOR2X1)                                       0.31       7.73 r
+  U93138/Y (XOR2X1)                                       0.29       8.02 r
+  U93136/Y (XOR2X1)                                       0.38       8.40 f
+  U234722/Y (OAI22XL)                                     0.56       8.96 r
+  U234723/Y (AOI221X1)                                    0.24       9.20 f
+  U234733/Y (NAND4X1)                                     0.26       9.46 r
+  U234734/Y (AOI211X1)                                    0.15       9.61 f
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][2]/D (DFFQX1)
+                                                          0.00       9.61 f
+  data arrival time                                                  9.61
+
+  clock clk (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -0.10       9.90
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][2]/CK (DFFQX1)
+                                                          0.00       9.90 r
+  library setup time                                     -0.29       9.61
+  data required time                                                 9.61
+  --------------------------------------------------------------------------
+  data required time                                                 9.61
+  data arrival time                                                 -9.61
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: u_control/code_reg_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: u_chien_search/u_delay_n_is_root/shift_reg_reg[0][16]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  bch                tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.24       0.24 r
+  U196434/Y (INVX20)                                      0.07       0.31 f
+  U207507/Y (AND2X8)                                      0.17       0.48 f
+  U204018/Y (CLKBUFX3)                                    0.59       1.07 f
+  U191165/Y (CLKBUFX8)                                    0.81       1.88 f
+  U211438/Y (NOR2X1)                                      0.55       2.43 r
+  U213239/Y (INVX3)                                       0.28       2.71 f
+  U191113/Y (INVX3)                                       0.61       3.32 r
+  U232632/Y (XNOR2X1)                                     0.48       3.80 f
+  U232633/Y (OAI21XL)                                     0.54       4.34 r
+  U196961/Y (XOR2X1)                                      0.40       4.74 f
+  U115954/Y (INVXL)                                       0.32       5.06 r
+  U89714/Y (XOR2X1)                                       0.40       5.46 r
+  U106520/Y (XOR2X1)                                      0.47       5.93 r
+  U240372/Y (NAND2X1)                                     0.20       6.13 f
+  U240373/Y (OAI211XL)                                    0.30       6.43 r
+  U240375/Y (OAI211XL)                                    0.32       6.76 f
+  U125705/Y (INVXL)                                       0.33       7.09 r
+  U94341/Y (XOR2X1)                                       0.28       7.37 r
+  U94338/Y (XOR2X1)                                       0.31       7.69 r
+  U94337/Y (XOR2X1)                                       0.39       8.08 f
+  U192031/Y (OAI21XL)                                     0.59       8.67 r
+  U208342/Y (AOI211X2)                                    0.23       8.90 f
+  U206363/Y (OAI21X1)                                     0.23       9.14 r
+  U208343/Y (AOI211X2)                                    0.19       9.32 f
+  U196380/Y (NAND3X2)                                     0.17       9.50 r
+  U208348/Y (NOR3X2)                                      0.13       9.63 f
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][16]/D (DFFQX1)
+                                                          0.00       9.63 f
+  data arrival time                                                  9.63
+
+  clock clk (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -0.10       9.90
+  u_chien_search/u_delay_n_is_root/shift_reg_reg[0][16]/CK (DFFQX1)
+                                                          0.00       9.90 r
+  library setup time                                     -0.27       9.63
+  data required time                                                 9.63
+  --------------------------------------------------------------------------
+  data required time                                                 9.63
+  data arrival time                                                 -9.63
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+  Startpoint: u_syndrome/second_min_pos_reg[1]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: u_error_bit_saver/tp4_err_loc4_buf_reg[2]
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  bch                tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.00       0.00
+  u_syndrome/second_min_pos_reg[1]/CK (DFFQX2)            0.00 #     0.00 r
+  u_syndrome/second_min_pos_reg[1]/Q (DFFQX2)             0.46       0.46 r
+  U211372/Y (CLKINVX1)                                    0.27       0.73 f
+  U211373/Y (AOI2BB2X2)                                   0.29       1.02 f
+  U199265/Y (OAI21X2)                                     0.14       1.16 r
+  U211375/Y (NAND3X2)                                     0.13       1.29 f
+  U204529/Y (AOI2BB1X2)                                   0.27       1.56 f
+  U211376/Y (OAI2BB1X4)                                   0.10       1.66 r
+  U211378/Y (OAI2BB1X4)                                   0.17       1.83 r
+  U211380/Y (NAND2X6)                                     0.12       1.95 f
+  U211578/Y (BUFX20)                                      0.18       2.14 f
+  U193160/Y (NOR2X6)                                      0.19       2.32 r
+  U211591/Y (NAND2X2)                                     0.16       2.48 f
+  U211593/Y (NAND2X6)                                     0.24       2.72 r
+  U200324/Y (INVXL)                                       0.28       3.00 f
+  U196386/Y (OAI22XL)                                     0.55       3.55 r
+  U211609/Y (OAI21X1)                                     0.29       3.83 f
+  U211611/Y (AOI2BB2X2)                                   0.22       4.05 r
+  U211614/Y (OA21X4)                                      0.17       4.22 r
+  U197247/Y (OAI22XL)                                     0.18       4.40 f
+  U211616/Y (OAI2BB1X4)                                   0.24       4.64 f
+  U194220/Y (NAND2X6)                                     0.14       4.79 r
+  U190892/Y (NAND2X2)                                     0.36       5.14 f
+  U238317/Y (OAI2BB2XL)                                   0.80       5.94 r
+  U212855/Y (CLKINVX1)                                    0.50       6.44 f
+  U212856/Y (AOI2BB2X1)                                   0.41       6.85 f
+  U199552/Y (AOI21XL)                                     0.43       7.28 r
+  U193539/Y (AOI2BB1X1)                                   0.31       7.59 r
+  U212858/Y (AOI2BB1X2)                                   0.25       7.83 r
+  U193490/Y (OAI21X2)                                     0.15       7.99 f
+  U193460/Y (NAND2X6)                                     0.27       8.26 r
+  U240055/Y (NOR2X4)                                      0.26       8.52 f
+  U206602/Y (NAND2XL)                                     0.35       8.86 r
+  U240100/Y (NAND3X2)                                     0.30       9.16 f
+  U240102/Y (AO22X1)                                      0.46       9.63 f
+  u_error_bit_saver/tp4_err_loc4_buf_reg[2]/D (DFFQX1)
+                                                          0.00       9.63 f
+  data arrival time                                                  9.63
+
+  clock clk (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.00      10.00
+  clock uncertainty                                      -0.10       9.90
+  u_error_bit_saver/tp4_err_loc4_buf_reg[2]/CK (DFFQX1)
+                                                          0.00       9.90 r
+  library setup time                                     -0.27       9.63
+  data required time                                                 9.63
+  --------------------------------------------------------------------------
+  data required time                                                 9.63
+  data arrival time                                                 -9.63
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1

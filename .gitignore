@@ -7,8 +7,6 @@
 *.nfs*
 *alib*
 *cksum*
-*Netlist*
-*Report*
 *.mr*
 *.svf*
 *.fsdb*
