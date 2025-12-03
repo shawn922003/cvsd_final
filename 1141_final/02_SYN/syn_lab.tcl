@@ -69,7 +69,7 @@ ungroup -all
 # uniquify
 # ungroup
 set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
-compile_ultra    -gate_clock 
+compile_ultra    
 
 # ungroup -all -flatten
 
@@ -91,7 +91,7 @@ set_multicycle_path 9  -from $rstn_port -to $all_regs -hold
 
 
 set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
-compile_ultra    -gate_clock 
+compile_ultra    
 optimize_netlist -area
 
 # 取得 reset port 和所有暫存器

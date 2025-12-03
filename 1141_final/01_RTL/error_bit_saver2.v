@@ -14,13 +14,8 @@ module error_bit_saver(
     input [2:0] i_num_err,
     input i_correct,
 
-    input [8:0] i_llr_sum,
-    input i_llr_sum_valid,
-
     input [9:0] i_flip_pos1,
     input [9:0] i_flip_pos2,
-    input [6:0] i_flip_llr1,
-    input [6:0] i_flip_llr2,
     input i_flip_valid, // i_flip_valid need to be high before i_err_valid_pulse at least 1 cycle
 
     output [9:0] o_tp1_err_loc0,
@@ -55,9 +50,15 @@ module error_bit_saver(
     output [9:0] o_tp4_err_loc5,
     output [2:0] o_tp4_num_err,
 
-    output [2:0] o_min_llr_tp,
+    output [2:0] mim_llr_tp,
 
-    output reg o_valid
+    output o_valid,
+
+
+    // interaction with llr_mem
+    output [9:0] o_llr_mem_pos,
+
+    input [6:0] i_llr_mem_pos_llr
 );
 
     wire gen;
@@ -113,9 +114,44 @@ module error_bit_saver(
     wire [9:0] sort_out4;
     wire [9:0] sort_out5;
 
+    reg [6:0] valid_pos0_llr;
+    reg [6:0] valid_pos1_llr;
+    reg [6:0] valid_pos2_llr;
+    reg [6:0] valid_pos3_llr;
+    reg [6:0] valid_pos4_llr;
+    reg [6:0] valid_pos5_llr;
+    wire [9:0] llr_sum;
 
+
+    reg [2:0] mim_tp, mim_tp_next;
+    reg [9:0] mim_llr_sum, mim_llr_sum_next;
+
+    wire [2:0] num_err_dly2;
+    wire [2:0] num_err_dly3;
+    wire [2:0] num_tp_dly2;
+    wire [2:0] num_tp_dly3;
+    wire [2:0] num_valid_tp_dly2;
+    wire [2:0] num_valid_tp_dly3;
+    wire err_valid_pulse_dly1;
+    wire err_valid_pulse_dly2;
+    wire err_valid_pulse_dly3;
+    wire correct_dly2;
+    wire correct_dly3;
     wire valid;
 
+    reg [9:0] llr_mem_pos;
+
+    reg [6:0] flip_pos1_llr, flip_pos1_llr_next;
+    reg [6:0] flip_pos2_llr, flip_pos2_llr_next;
+    wire flip_pos_llr_valid; // 這會提早一個cycle拉起來
+    wire flip_pos_llr_valid_pulse;
+
+    wire [9:0] err_loc2_dly;
+    wire [9:0] err_loc3_dly;
+
+    wire [6:0] llr_mem_pos_llr_dly1;
+    wire [6:0] llr_mem_pos_llr_dly2;
+    wire [6:0] llr_mem_pos_llr_dly3;
 
 
     assign o_tp1_err_loc0 = tp1_err_loc0_buf;
@@ -153,6 +189,196 @@ module error_bit_saver(
     assign valid = num_tp == 3'd4;
 
 
+
+    
+
+    assign llr_sum = valid_pos0_llr + valid_pos1_llr + valid_pos2_llr + valid_pos3_llr + valid_pos4_llr + valid_pos5_llr;
+
+    assign mim_llr_tp = mim_tp;
+
+
+    delay_n #(
+        .N(2),
+        .BITS(3)
+    ) delay_num_err (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_num_err),
+        .o_q   (num_err_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(3)
+    ) delay_num_err_3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (num_err_dly2),
+        .o_q   (num_err_dly3)
+    );
+
+
+    delay_n #(
+        .N(2),
+        .BITS(3)
+    ) delay_num_tp (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (num_tp),
+        .o_q   (num_tp_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(3)
+    ) delay_num_tp_3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (num_tp_dly2),
+        .o_q   (num_tp_dly3)
+    );
+
+    delay_n #(
+        .N(3),
+        .BITS(3)
+    ) delay_num_valid_tp (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (num_valid_tp),
+        .o_q   (num_valid_tp_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(3)
+    ) delay_num_valid_tp_3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (num_valid_tp_dly2),
+        .o_q   (num_valid_tp_dly3)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_err_valid_pulse (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_err_valid_pulse),
+        .o_q   (err_valid_pulse_dly1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_err_valid_pulse_2 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (err_valid_pulse_dly1),
+        .o_q   (err_valid_pulse_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_err_valid_pulse_3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (err_valid_pulse_dly2),
+        .o_q   (err_valid_pulse_dly3)
+    );
+
+    delay_n #(
+        .N(2),
+        .BITS(1)
+    ) delay_correct (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_correct),
+        .o_q   (correct_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_correct_3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (correct_dly2),
+        .o_q   (correct_dly3)
+    );
+
+    delay_n #(
+        .N(3),
+        .BITS(1)
+    ) delay_valid (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (valid),
+        .o_q   (o_valid)
+    );
+
+
+    delay_n #(
+        .N(1),
+        .BITS(10)
+    ) delay_llr_pos0 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (llr_mem_pos),
+        .o_q   (o_llr_mem_pos)
+    );
+
+
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_llr_mem_pos0_llr (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_llr_mem_pos_llr),
+        .o_q   (llr_mem_pos_llr_dly1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_llr_mem_pos1_llr (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (llr_mem_pos_llr_dly1),
+        .o_q   (llr_mem_pos_llr_dly2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_llr_mem_pos2_llr (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (llr_mem_pos_llr_dly2),
+        .o_q   (llr_mem_pos_llr_dly3)
+    );
+
+
+
     insertion_sort u_insertion_sort (
         .i_data1_0(err_loc0_adaptive),
         .i_data1_1(err_loc1_adaptive),
@@ -168,6 +394,48 @@ module error_bit_saver(
         .o_data_5(sort_out5)
     );
 
+
+    delay_n #(
+        .N(2),
+        .BITS(1)
+    ) delay_flip_pos0_llr (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_flip_valid),
+        .o_q   (flip_pos_llr_valid)
+    );
+
+    pulser u_pulser_flip_pos0_llr (
+        .i_clk   (i_clk),
+        .i_rst_n (i_rst_n),
+        .i_clear (gen),
+        .i_in    (flip_pos_llr_valid),
+        .o_pulse  (flip_pos_llr_valid_pulse)
+    );
+
+
+    delay_n #(
+        .N(1),
+        .BITS(10)
+    ) delay_err_loc2 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_err_loc2),
+        .o_q   (err_loc2_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(10)
+    ) delay_err_loc3 (
+        .i_clk (i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en  (gen),
+        .i_d   (i_err_loc3),
+        .o_q   (err_loc3_dly)
+    );
 
 
 
@@ -542,107 +810,191 @@ module error_bit_saver(
 
     // ------------------  llr logic ---------------------------
 
-    wire [2:0] num_tp_dly;
-    wire [2:0] num_valid_tp_dly;
-
-    reg [9:0] all_llr_sum;
-
-    reg [9:0] min_llr, min_llr_next;
-    reg [2:0] min_llr_tp, min_llr_tp_next;
-
-    wire correct_dly;
-
-    delay_n #(
-        .N(1),
-        .BITS(3),
-        .INIT(3'd0)
-    ) u_delay_num_tp (
-        .i_clk   (i_clk),
-        .i_rst_n (i_rst_n),
-        .i_en    (gen),
-        .i_d     (num_tp),
-        .o_q     (num_tp_dly)
-    );
-
-    delay_n #(
-        .N(1),
-        .BITS(3),
-        .INIT(3'd0)
-    ) u_delay_num_valid_tp (
-        .i_clk   (i_clk),
-        .i_rst_n (i_rst_n),
-        .i_en    (gen),
-        .i_d     (num_valid_tp),
-        .o_q     (num_valid_tp_dly)
-    );
-
-
-    delay_n #(
-        .N(1),
-        .BITS(1),
-        .INIT(1'd0)
-    ) u_delay_valid (
-        .i_clk   (i_clk),
-        .i_rst_n (i_rst_n),
-        .i_en    (gen),
-        .i_d     (valid),
-        .o_q     (o_valid)
-    );
-
-    delay_n #(
-        .N(1),
-        .BITS(1),
-        .INIT(1'd0)
-    ) u_delay_correct (
-        .i_clk   (i_clk),
-        .i_rst_n (i_rst_n),
-        .i_en    (gen),
-        .i_d     (i_correct),
-        .o_q     (correct_dly)
-    );
-
-    assign o_min_llr_tp = min_llr_tp;
-
-    always @(*) begin
-        case (num_tp_dly)
-            3'd0: all_llr_sum = i_llr_sum;
-            3'd1: all_llr_sum = i_llr_sum + i_flip_llr1;
-            3'd2: all_llr_sum = i_llr_sum + i_flip_llr2;
-            3'd3: all_llr_sum = i_llr_sum + i_flip_llr1 + i_flip_llr2;
-            default: all_llr_sum = 10'd0;
-        endcase
-    end 
+    // schedule of getting llr:
+    // cycle 0: sent pos0 and pos1 to llr_mem_pos0 and llr_mem_pos1
+    // cycle 1: wait
+    // cycle 2: get llr values from i_llr_mem_pos0_llr and i_llr_mem_pos1_llr
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            min_llr     <= 10'd1023;
-            min_llr_tp  <= 3'd0;
+            flip_pos1_llr <= 7'd0;
+            flip_pos2_llr <= 7'd0;
         end
         else begin
-            min_llr     <= gen ? min_llr_next    : min_llr;
-            min_llr_tp  <= gen ? min_llr_tp_next : min_llr_tp;
+            flip_pos1_llr <= gen ? flip_pos1_llr_next : flip_pos1_llr;
+            flip_pos2_llr <= gen ? flip_pos2_llr_next : flip_pos2_llr;
+        end
+    end
+
+    always @(*) begin
+        if (flip_pos_llr_valid_pulse) begin
+            flip_pos1_llr_next = i_llr_mem_pos0_llr;
+            flip_pos2_llr_next = i_llr_mem_pos1_llr;
+        end
+        else begin
+            flip_pos1_llr_next = flip_pos1_llr;
+            flip_pos2_llr_next = flip_pos2_llr;
+        end
+    end
+
+
+    always @(*) begin
+        if (i_flip_valid && !i_err_valid_pulse && !err_valid_pulse_dly1) begin
+            llr_mem_pos0 = i_flip_pos1;
+            llr_mem_pos1 = i_flip_pos2;
+        end
+        else if (i_err_valid_pulse) begin
+            llr_mem_pos0 = i_err_loc0;
+            llr_mem_pos1 = i_err_loc1;
+        end
+        else begin
+            llr_mem_pos0 = err_loc2_dly;
+            llr_mem_pos1 = err_loc3_dly;
+        end
+    end
+
+    always @(*) begin
+        if (i_code == 2'b10) begin
+            if (num_err_dly3 == 3'd0) begin
+                valid_pos0_llr = 7'd0;
+                valid_pos1_llr = 7'd0;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+            else if (num_err_dly3 == 3'd1) begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = 7'd0;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+            else if (num_err_dly3 == 3'd2) begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = llr_mem_pos1_llr_dly;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+            else if (num_err_dly3 == 3'd3) begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = llr_mem_pos1_llr_dly;
+                valid_pos2_llr = i_llr_mem_pos0_llr;
+                valid_pos3_llr = 7'd0;
+            end
+            else begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = llr_mem_pos1_llr_dly;
+                valid_pos2_llr = i_llr_mem_pos0_llr;
+                valid_pos3_llr = i_llr_mem_pos1_llr;
+            end
+
+            case (num_tp_dly3) 
+                3'd0: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = 7'd0;
+                end
+                3'd1: begin
+                    valid_pos4_llr = flip_pos1_llr;
+                    valid_pos5_llr = 7'd0;
+                end
+                3'd2: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = flip_pos2_llr;
+                end
+                3'd3: begin
+                    valid_pos4_llr = flip_pos1_llr;
+                    valid_pos5_llr = flip_pos2_llr;
+                end
+                default: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = 7'd0;
+                end
+            endcase
+        end
+        else begin
+            if (num_err_dly2 == 3'd0) begin
+                valid_pos0_llr = 7'd0;
+                valid_pos1_llr = 7'd0;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+            else if (num_err_dly2 == 3'd1) begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = 7'd0;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+            else begin
+                valid_pos0_llr = llr_mem_pos0_llr_dly;
+                valid_pos1_llr = llr_mem_pos1_llr_dly;
+                valid_pos2_llr = 7'd0;
+                valid_pos3_llr = 7'd0;
+            end
+
+            case (num_tp_dly2) 
+                3'd0: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = 7'd0;
+                end
+                3'd1: begin
+                    valid_pos4_llr = flip_pos1_llr;
+                    valid_pos5_llr = 7'd0;
+                end
+                3'd2: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = flip_pos2_llr;
+                end
+                3'd3: begin
+                    valid_pos4_llr = flip_pos1_llr;
+                    valid_pos5_llr = flip_pos2_llr;
+                end
+                default: begin
+                    valid_pos4_llr = 7'd0;
+                    valid_pos5_llr = 7'd0;
+                end
+            endcase
+        end
+    end
+
+
+    always @(posedge i_clk) begin
+        if (!i_rst_n) begin
+            mim_tp     <= 3'd0;
+            mim_llr_sum <= {10{1'b1}};
+        end
+        else begin
+            mim_tp     <= gen ? mim_tp_next     : mim_tp;
+            mim_llr_sum <= gen ? mim_llr_sum_next : mim_llr_sum;
         end
     end
 
 
     always @(*) begin
         if (i_clear) begin
-            min_llr_next    = 10'd1023;
-            min_llr_tp_next = 3'd0;
+            mim_tp_next = 3'd0;
+            mim_llr_sum_next = {10{1'b1}};
         end
-        else if (i_llr_sum_valid && correct_dly) begin
-            if (all_llr_sum < min_llr) begin
-                min_llr_next    = all_llr_sum;
-                min_llr_tp_next = num_valid_tp_dly + 4'd1;
+        else if (i_code == 2'b10 && correct_dly3 && err_valid_pulse_dly3 && flip_pos_llr_valid) begin
+            if (llr_sum < mim_llr_sum) begin
+                mim_tp_next = {1'b0, num_valid_tp_dly3} + 4'd1;
+                mim_llr_sum_next = llr_sum;
             end
             else begin
-                min_llr_next    = min_llr;
-                min_llr_tp_next = min_llr_tp;
+                mim_tp_next = mim_tp;
+                mim_llr_sum_next = mim_llr_sum;
+            end
+        end
+        else if (i_code != 2'b10 && correct_dly2 && err_valid_pulse_dly2 && flip_pos_llr_valid) begin
+            if (llr_sum < mim_llr_sum) begin
+                mim_tp_next = {1'b0, num_valid_tp_dly2} + 4'd1;
+                mim_llr_sum_next = llr_sum;
+            end
+            else begin
+                mim_tp_next = mim_tp;
+                mim_llr_sum_next = mim_llr_sum;
             end
         end
         else begin
-            min_llr_next    = min_llr;
-            min_llr_tp_next = min_llr_tp;
+            mim_tp_next = mim_tp;
+            mim_llr_sum_next = mim_llr_sum;
         end
     end
 

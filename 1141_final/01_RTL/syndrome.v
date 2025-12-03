@@ -34,6 +34,9 @@ module syndrome(
     output [9:0] o_flip_pos1,
     output [9:0] o_flip_pos2,
 
+    output [6:0] o_flip_llr1,
+    output [6:0] o_flip_llr2,
+
     output o_flip_valid
 );
     localparam m6_alpha_n0  = 10'b0000000001; // alpha^(0)  = 1
@@ -811,6 +814,8 @@ module syndrome(
 
     reg [9:0] min_pos, min_pos_next;
     reg [9:0] second_min_pos, second_min_pos_next;
+    reg [6:0] abs_llr_min, abs_llr_min_next;
+    reg [6:0] abs_llr_second_min, abs_llr_second_min_next;
 
     reg [9:0] llr_pos0;
     reg [9:0] llr_pos1;
@@ -865,6 +870,15 @@ module syndrome(
     wire [3:0] top_2_min_idx_dly;
     wire [3:0] top_2_second_min_idx_dly;
 
+    wire [6:0] abs_llr0_dly;
+    wire [6:0] abs_llr1_dly;
+    wire [6:0] abs_llr2_dly;
+    wire [6:0] abs_llr3_dly;
+    wire [6:0] abs_llr4_dly;
+    wire [6:0] abs_llr5_dly;
+    wire [6:0] abs_llr6_dly;
+    wire [6:0] abs_llr7_dly;
+
     top_2 u_top_2_llr_min (
         .i_0(abs_llr0),
         .i_1(abs_llr1),
@@ -889,11 +903,11 @@ module syndrome(
     delay_n #(
         .N(1),
         .BITS(4),
-        .INIT(4'b1111)
+        .INIT(4'b0)
     ) u_delay_min_llr_idx (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_en(1'b1),
+        .i_en(flip_alpha_logic_gen),
         .i_d(top_2_min_idx),
         .o_q(top_2_min_idx_dly)
     );
@@ -901,13 +915,109 @@ module syndrome(
     delay_n #(
         .N(1),
         .BITS(4),
-        .INIT(4'b1111)
+        .INIT(4'b0)
     ) u_delay_second_min_llr_idx (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_en(1'b1),
+        .i_en(flip_alpha_logic_gen),
         .i_d(top_2_second_min_idx),
         .o_q(top_2_second_min_idx_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr0 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr0),
+        .o_q(abs_llr0_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr1 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr1),
+        .o_q(abs_llr1_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr2),
+        .o_q(abs_llr2_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr3 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr3),
+        .o_q(abs_llr3_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr4 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr4),
+        .o_q(abs_llr4_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr5 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr5),
+        .o_q(abs_llr5_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr6 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr6),
+        .o_q(abs_llr6_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7),
+        .INIT(7'b1111111)
+    ) u_delay_abs_llr7 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(flip_alpha_logic_gen),
+        .i_d(abs_llr7),
+        .o_q(abs_llr7_dly)
     );
 
     assign abs_llr0 = i_clear_and_wen ? 7'b1111111 : (i_data[63] ? (~i_data[62:56] + 7'b1) : i_data[62:56]);
@@ -930,6 +1040,9 @@ module syndrome(
     assign o_flip_alpha_S5_2 = min_pos < second_min_pos ?  alpha_S5_second_min : alpha_S5_min;
     assign o_flip_alpha_S7_1 = min_pos < second_min_pos ?  alpha_S7_min : alpha_S7_second_min;
     assign o_flip_alpha_S7_2 = min_pos < second_min_pos ?  alpha_S7_second_min : alpha_S7_min;
+    assign o_flip_llr1 = min_pos < second_min_pos ? abs_llr_min : abs_llr_second_min;
+    assign o_flip_llr2 = min_pos < second_min_pos ? abs_llr_second_min : abs_llr_min;
+
 
     assign o_flip_valid = o_odd_s_valid;
 
@@ -1145,6 +1258,9 @@ module syndrome(
             alpha_S7_second_min <= 10'b0;
             min_pos             <= 10'b0;
             second_min_pos      <= 10'b0;
+            abs_llr_min         <= 7'b0;
+            abs_llr_second_min  <= 7'b0;
+
         end
         else begin
             // clock gating by flip_alpha_logic_gen (clock enable style)
@@ -1160,6 +1276,8 @@ module syndrome(
             alpha_S7_second_min <= flip_alpha_logic_gen ? alpha_S7_second_min_next : alpha_S7_second_min;
             min_pos             <= flip_alpha_logic_gen ? min_pos_next             : min_pos;
             second_min_pos      <= flip_alpha_logic_gen ? second_min_pos_next      : second_min_pos;
+            abs_llr_min         <= flip_alpha_logic_gen ? abs_llr_min_next         : abs_llr_min;
+            abs_llr_second_min  <= flip_alpha_logic_gen ? abs_llr_second_min_next  : abs_llr_second_min;
         end
     end
 
@@ -1176,13 +1294,14 @@ module syndrome(
 
     always @(*) begin
         if (wen_dly || clear_and_wen_dly) begin
-            case (top_2_min_idx_dly) // synopsys full_case
+            case (top_2_min_idx_dly)
                 4'd0: begin
                     alpha_S1_min_next = S1_alpha0;
                     alpha_S3_min_next = S3_alpha0;
                     alpha_S5_min_next = S5_alpha0;
                     alpha_S7_min_next = S7_alpha0;
                     min_pos_next = llr_pos0;
+                    abs_llr_min_next = abs_llr0_dly;
                 end
                 4'd1: begin
                     alpha_S1_min_next = S1_alpha1;
@@ -1190,6 +1309,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha1;
                     alpha_S7_min_next = S7_alpha1;
                     min_pos_next = llr_pos1;
+                    abs_llr_min_next = abs_llr1_dly;
                 end
                 4'd2: begin
                     alpha_S1_min_next = S1_alpha2;
@@ -1197,6 +1317,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha2;
                     alpha_S7_min_next = S7_alpha2;
                     min_pos_next = llr_pos2;
+                    abs_llr_min_next = abs_llr2_dly;
                 end
                 4'd3: begin
                     alpha_S1_min_next = S1_alpha3;
@@ -1204,6 +1325,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha3;
                     alpha_S7_min_next = S7_alpha3;
                     min_pos_next = llr_pos3;
+                    abs_llr_min_next = abs_llr3_dly;
                 end
                 4'd4: begin
                     alpha_S1_min_next = S1_alpha4;
@@ -1211,6 +1333,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha4;
                     alpha_S7_min_next = S7_alpha4;
                     min_pos_next = llr_pos4;
+                    abs_llr_min_next = abs_llr4_dly;
                 end
                 4'd5: begin
                     alpha_S1_min_next = S1_alpha5;
@@ -1218,6 +1341,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha5;
                     alpha_S7_min_next = S7_alpha5;
                     min_pos_next = llr_pos5;
+                    abs_llr_min_next = abs_llr5_dly;
                 end
                 4'd6: begin
                     alpha_S1_min_next = S1_alpha6;
@@ -1225,6 +1349,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha6;
                     alpha_S7_min_next = S7_alpha6;
                     min_pos_next = llr_pos6;
+                    abs_llr_min_next = abs_llr6_dly;
                 end
                 4'd7: begin
                     alpha_S1_min_next = S1_alpha7;
@@ -1232,6 +1357,7 @@ module syndrome(
                     alpha_S5_min_next = S5_alpha7;
                     alpha_S7_min_next = S7_alpha7;
                     min_pos_next = llr_pos7;
+                    abs_llr_min_next = abs_llr7_dly;
                 end
                 4'd8: begin
                     alpha_S1_min_next = alpha_S1_min;
@@ -1239,6 +1365,7 @@ module syndrome(
                     alpha_S5_min_next = alpha_S5_min;
                     alpha_S7_min_next = alpha_S7_min;
                     min_pos_next = min_pos;
+                    abs_llr_min_next = abs_llr_min;
                 end
                 4'd9: begin
                     alpha_S1_min_next = alpha_S1_second_min;
@@ -1246,16 +1373,26 @@ module syndrome(
                     alpha_S5_min_next = alpha_S5_second_min;
                     alpha_S7_min_next = alpha_S7_second_min;
                     min_pos_next = second_min_pos;
+                    abs_llr_min_next = abs_llr_second_min;
+                end
+                default: begin
+                    alpha_S1_min_next = alpha_S1_min;
+                    alpha_S3_min_next = alpha_S3_min;
+                    alpha_S5_min_next = alpha_S5_min;
+                    alpha_S7_min_next = alpha_S7_min;
+                    min_pos_next = min_pos;
+                    abs_llr_min_next = abs_llr_min;
                 end
             endcase
 
-            case (top_2_second_min_idx_dly) // synopsys full_case
+            case (top_2_second_min_idx_dly)
                 4'd0: begin
                     alpha_S1_second_min_next = S1_alpha0;
                     alpha_S3_second_min_next = S3_alpha0;
                     alpha_S5_second_min_next = S5_alpha0;
                     alpha_S7_second_min_next = S7_alpha0;
                     second_min_pos_next = llr_pos0;
+                    abs_llr_second_min_next = abs_llr0_dly;
                 end
                 4'd1: begin
                     alpha_S1_second_min_next = S1_alpha1;
@@ -1263,6 +1400,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha1;
                     alpha_S7_second_min_next = S7_alpha1;
                     second_min_pos_next = llr_pos1;
+                    abs_llr_second_min_next = abs_llr1_dly;
                 end
                 4'd2: begin
                     alpha_S1_second_min_next = S1_alpha2;
@@ -1270,6 +1408,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha2;
                     alpha_S7_second_min_next = S7_alpha2;
                     second_min_pos_next = llr_pos2;
+                    abs_llr_second_min_next = abs_llr2_dly;
                 end
                 4'd3: begin
                     alpha_S1_second_min_next = S1_alpha3;
@@ -1277,6 +1416,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha3;
                     alpha_S7_second_min_next = S7_alpha3;
                     second_min_pos_next = llr_pos3;
+                    abs_llr_second_min_next = abs_llr3_dly;
                 end
                 4'd4: begin
                     alpha_S1_second_min_next = S1_alpha4;
@@ -1284,6 +1424,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha4;
                     alpha_S7_second_min_next = S7_alpha4;
                     second_min_pos_next = llr_pos4;
+                    abs_llr_second_min_next = abs_llr4_dly;
                 end
                 4'd5: begin
                     alpha_S1_second_min_next = S1_alpha5;
@@ -1291,6 +1432,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha5;
                     alpha_S7_second_min_next = S7_alpha5;
                     second_min_pos_next = llr_pos5;
+                    abs_llr_second_min_next = abs_llr5_dly;
                 end
                 4'd6: begin
                     alpha_S1_second_min_next = S1_alpha6;
@@ -1298,6 +1440,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha6;
                     alpha_S7_second_min_next = S7_alpha6;
                     second_min_pos_next = llr_pos6;
+                    abs_llr_second_min_next = abs_llr6_dly;
                 end
                 4'd7: begin
                     alpha_S1_second_min_next = S1_alpha7;
@@ -1305,6 +1448,7 @@ module syndrome(
                     alpha_S5_second_min_next = S5_alpha7;
                     alpha_S7_second_min_next = S7_alpha7;
                     second_min_pos_next = llr_pos7;
+                    abs_llr_second_min_next = abs_llr7_dly;
                 end
                 4'd8: begin
                     alpha_S1_second_min_next = alpha_S1_min;
@@ -1312,6 +1456,7 @@ module syndrome(
                     alpha_S5_second_min_next = alpha_S5_min;
                     alpha_S7_second_min_next = alpha_S7_min;
                     second_min_pos_next = min_pos;
+                    abs_llr_second_min_next = abs_llr_min;
                 end 
                 4'd9: begin
                     alpha_S1_second_min_next = alpha_S1_second_min;
@@ -1319,6 +1464,15 @@ module syndrome(
                     alpha_S5_second_min_next = alpha_S5_second_min;
                     alpha_S7_second_min_next = alpha_S7_second_min;
                     second_min_pos_next = second_min_pos;
+                    abs_llr_second_min_next = abs_llr_second_min;
+                end
+                default: begin
+                    alpha_S1_second_min_next = alpha_S1_second_min;
+                    alpha_S3_second_min_next = alpha_S3_second_min;
+                    alpha_S5_second_min_next = alpha_S5_second_min;
+                    alpha_S7_second_min_next = alpha_S7_second_min;
+                    second_min_pos_next = second_min_pos;
+                    abs_llr_second_min_next = abs_llr_second_min;
                 end
             endcase
         end
@@ -1333,6 +1487,8 @@ module syndrome(
             alpha_S7_second_min_next = alpha_S7_second_min;
             min_pos_next = min_pos;
             second_min_pos_next = second_min_pos;
+            abs_llr_min_next = abs_llr_min;
+            abs_llr_second_min_next = abs_llr_second_min;
         end
     end
 

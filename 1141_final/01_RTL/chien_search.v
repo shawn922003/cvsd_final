@@ -21,9 +21,23 @@ module chien_search(
     output [9:0] o_err_loc3,
     output [2:0] o_num_err,
     output reg o_correct,
+    
+    output reg o_err_valid,
 
+    output [8:0] o_llr_sum,
+    output o_llr_sum_valid,
 
-    output reg o_valid
+    // interaction with llr_mem
+    output [6:0] o_llr_mem_pos0,
+    output [6:0] o_llr_mem_pos1,
+    output [6:0] o_llr_mem_pos2,
+    output [6:0] o_llr_mem_pos3,
+    output reg o_llr_mem_rotate128,
+
+    input [6:0] i_llr_mem_pos_llr0,
+    input [6:0] i_llr_mem_pos_llr1,
+    input [6:0] i_llr_mem_pos_llr2,
+    input [6:0] i_llr_mem_pos_llr3
 );
 
     localparam m8_alpha_n128 = 10'b0011001100; // alpha^(-128) = alpha^(127)
@@ -36,6 +50,8 @@ module chien_search(
     wire sigma2_gen;
     assign sigma2_gen = i_mode == 1'b1 && i_code != 2'b10;
 
+    wire llr_gen;
+    assign llr_gen = i_mode == 1'b1;
 
 
     reg [9:0] sigma0;
@@ -94,6 +110,7 @@ module chien_search(
     wire [6:0] find_1_idx_2_out;
     wire [6:0] find_1_idx_3_out;
     wire [2:0] find_1_idx_num_out;
+    wire [2:0] find_1_idx_num_out_dly;
 
     reg [9:0] find_1_idx_0_adptive;
     reg [9:0] find_1_idx_1_adptive;
@@ -109,6 +126,8 @@ module chien_search(
     reg [3:0] counter_pe, counter_pe_next;
 
     wire [3:0] counter_find_1_idx_pipe;
+
+    reg [9:0] llr_sum, llr_sum_next;
 
 
     genvar i;
@@ -265,6 +284,7 @@ module chien_search(
         .o_q(counter_find_1_idx_pipe)
     );
 
+
     delay_n #(
         .N(1),
         .BITS(3)
@@ -286,6 +306,74 @@ module chien_search(
         .i_en(1'b1),
         .i_d(num_S_degree1_2),
         .o_q(num_S_degree2_2)
+    );
+
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_llr0 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(find_1_idx_0_out),
+        .o_q(o_llr_mem_pos0)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_llr1 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(find_1_idx_1_out),
+        .o_q(o_llr_mem_pos1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_llr2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(find_1_idx_2_out),
+        .o_q(o_llr_mem_pos2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_llr3 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(find_1_idx_3_out),
+        .o_q(o_llr_mem_pos3)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(3)
+    ) u_delay_n_find_1_idx_num_out (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(find_1_idx_num_out),
+        .o_q(find_1_idx_num_out_dly)
+    );
+
+
+    delay_n #(
+        .N(1),
+        .BITS(1)
+    ) delay_n_llr_sum_valid (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(llr_gen),
+        .i_d(o_err_valid),
+        .o_q(o_llr_sum_valid)
     );
 
 
@@ -433,12 +521,13 @@ module chien_search(
     end
 
     always @(*) begin
-        root_mask[126:0] = {127{1'b1}};
         case(i_code) // synopsys full_case
             2'd0: begin // (63,51)
-                root_mask[127] = 1'b1;
+                root_mask[62:0] = {63{1'b1}};
+                root_mask[127:63] = {65{1'b0}};
             end
             2'd1: begin // (255,239)
+                root_mask[126:0] = {127{1'b1}};
                 if (i_clear_and_wen) begin
                     root_mask[127] = 1'b1;
                 end
@@ -456,6 +545,7 @@ module chien_search(
                 end
             end
             2'd2: begin // (1023,983)
+                root_mask[126:0] = {127{1'b1}};
                 if (counter_pe == 4'd6) begin
                     root_mask[127] = 1'b0;
                 end
@@ -627,6 +717,109 @@ module chien_search(
 
 
 
+    assign o_llr_sum = llr_sum;
+
+    always @(posedge i_clk) begin
+        if (!i_rst_n) begin
+            llr_sum <= 9'd0;
+        end
+        else begin
+            llr_sum <= llr_gen ? llr_sum_next : llr_sum;
+        end
+    end
+
+
+
+    always @(*) begin
+        case (i_code) // synopsys full_case
+            2'd0: begin
+                o_llr_mem_rotate128 = 1'b0;
+                case (find_1_idx_num_out_dly) 
+                    3'd0: llr_sum_next = 9'd0;
+                    3'd1: llr_sum_next = i_llr_mem_pos_llr0;
+                    3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                    default: llr_sum_next = 9'd0;
+                endcase
+            end
+            2'd1: begin
+                if (counter_find_1_idx_pipe <= 4'd3) begin
+                    o_llr_mem_rotate128 = llr_gen;
+                end
+                else begin
+                    o_llr_mem_rotate128 = 1'b0;
+                end
+
+                if (counter_find_1_idx_pipe == 4'd0) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = 9'd0;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else if (counter_find_1_idx_pipe == 4'd1) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = llr_sum;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else if (counter_find_1_idx_pipe == 4'd2) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = 9'd0;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else if (counter_find_1_idx_pipe == 4'd3) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = llr_sum;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else begin
+                    llr_sum_next = 9'd0;
+                end
+            end
+            2'd2: begin
+                if (counter_find_1_idx_pipe <= 4'd7) begin
+                    o_llr_mem_rotate128 = llr_gen;
+                end
+                else begin
+                    o_llr_mem_rotate128 = 1'b0;
+                end
+
+                if (counter_find_1_idx_pipe == 4'd0) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = 9'd0;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
+                        3'd3: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + i_llr_mem_pos_llr2;
+                        3'd4: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + i_llr_mem_pos_llr2 + i_llr_mem_pos_llr3;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else if (counter_find_1_idx_pipe >= 4'd1 && counter_find_1_idx_pipe <= 4'd7) begin
+                    case (find_1_idx_num_out_dly) 
+                        3'd0: llr_sum_next = llr_sum;
+                        3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
+                        3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + llr_sum;
+                        3'd3: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + i_llr_mem_pos_llr2 + llr_sum;
+                        3'd4: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + i_llr_mem_pos_llr2 + i_llr_mem_pos_llr3 + llr_sum;
+                        default: llr_sum_next = 9'd0;
+                    endcase
+                end
+                else begin
+                    llr_sum_next = 9'd0;
+                end
+            end
+        endcase
+    end
+
 
 
 
@@ -691,39 +884,39 @@ module chien_search(
             2'd0: begin // (63,51)
                 if (counter_find_1_idx_pipe == 4'd0) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_valid = 1'b1;
+                    o_err_valid = 1'b1;
                 end
                 else if (counter_find_1_idx_pipe == 4'd2 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_valid = 1'b1;
+                    o_err_valid = 1'b1;
                 end 
                 else begin
                     o_correct = 1'b0;
-                    o_valid = 1'b0;
+                    o_err_valid = 1'b0;
                 end
             end
             2'd1: begin // (255,239)
                 if (counter_find_1_idx_pipe == 4'd1) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_valid = 1'b1;
+                    o_err_valid = 1'b1;
                 end
                 else if (counter_find_1_idx_pipe == 4'd3 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_valid = 1'b1;
+                    o_err_valid = 1'b1;
                 end
                 else begin
                     o_correct = 1'b0;
-                    o_valid = 1'b0;
+                    o_err_valid = 1'b0;
                 end
             end
             2'd2: begin // (1023,983)
                 if (counter_find_1_idx_pipe == 4'd7) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_valid = 1'b1;
+                    o_err_valid = 1'b1;
                 end
                 else begin
                     o_correct = 1'b0;
-                    o_valid = 1'b0;
+                    o_err_valid = 1'b0;
                 end
             end
         endcase

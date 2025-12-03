@@ -23,8 +23,9 @@ module bch(
 
 	wire error_bit_saver_clear;
 
-	wire [9:0] llr_mem_pos[0:1];
-	wire [6:0] llr_mem_pos_llr[0:1];
+	wire [6:0] llr_mem_pos[0:3];
+	wire [6:0] llr_mem_pos_llr[0:3];
+	wire llr_mem_right_rotate128;
 
 	wire [9:0] syndrome_tp1_S[1:8];
 	wire [9:0] syndrome_tp2_S[1:8];
@@ -37,6 +38,7 @@ module bch(
 	wire [9:0] flip_alpha_S7[1:2];
 	
 	wire [9:0] flip_pos[1:2];
+	wire [6:0] flip_llr[1:2];
 
 	wire syndrome_odd_s_valid;
 	wire syndrome_all_s_valid;
@@ -57,6 +59,8 @@ module bch(
 	wire [9:0] chien_search_err_loc_out[0:3];
 	wire [2:0] chien_search_num_err_out;
 	wire chien_search_correct_out;
+	wire [8:0] chien_search_llr_sum;
+	wire chien_search_llr_sum_valid;
 
 	wire chien_search_err_loc_valid_pulse;
 
@@ -122,14 +126,20 @@ module bch(
 		.i_clk(clk),     // 1 bit
 		.i_rst_n(rstn),  // 1 bit
 
+		.i_code(core_code),    // 2 bits
 		.i_wen(llr_mem_wen),    // 1 bit
 		.i_data(i_data_buf),   // 64 bits
 
-		.i_pos0(llr_mem_pos[0]),   // 10 bits
-		.i_pos1(llr_mem_pos[1]),   // 10 bits
+		.i_pos0(llr_mem_pos[0]),   // 7 bits
+		.i_pos1(llr_mem_pos[1]),   // 7 bits
+		.i_pos2(llr_mem_pos[2]),   // 7 bits
+		.i_pos3(llr_mem_pos[3]),   // 7 bits
+		.i_right_rotate128(llr_mem_right_rotate128), // 1 bit
 
 		.o_data0(llr_mem_pos_llr[0]),  // 7 bits
-		.o_data1(llr_mem_pos_llr[1])  // 7 bits
+		.o_data1(llr_mem_pos_llr[1]),  // 7 bits
+		.o_data2(llr_mem_pos_llr[2]),  // 7 bits
+		.o_data3(llr_mem_pos_llr[3])   // 7 bits
 	);
 
 	//====================================================
@@ -169,6 +179,8 @@ module bch(
 
 		.o_flip_pos1(flip_pos[1]),         // 10 bits
 		.o_flip_pos2(flip_pos[2]),         // 10 bits
+		.o_flip_llr1(flip_llr[1]),         // 7 bits
+		.o_flip_llr2(flip_llr[2]),         // 7 bits
 
 		.o_flip_valid(flip_valid)         // 1 bit
 	);
@@ -370,7 +382,21 @@ module bch(
 		.o_num_err(chien_search_num_err_out),      // 3 bits
 		.o_correct(chien_search_correct_out),      // 1 bit
 
-		.o_valid(chien_search_err_loc_valid_pulse)         // 1 bit
+		.o_err_valid(chien_search_err_loc_valid_pulse),         // 1 bit
+
+		.o_llr_sum(chien_search_llr_sum),        // 9 bits
+		.o_llr_sum_valid(chien_search_llr_sum_valid),      // 1 bit
+
+		.o_llr_mem_pos0(llr_mem_pos[0]),   // 7 bits
+		.o_llr_mem_pos1(llr_mem_pos[1]),   // 7 bits
+		.o_llr_mem_pos2(llr_mem_pos[2]),   // 7 bits
+		.o_llr_mem_pos3(llr_mem_pos[3]),   // 7 bits
+		.o_llr_mem_rotate128(llr_mem_right_rotate128), // 1 bit
+
+		.i_llr_mem_pos_llr0(llr_mem_pos_llr[0]),  // 7 bits
+		.i_llr_mem_pos_llr1(llr_mem_pos_llr[1]),  // 7 bits
+		.i_llr_mem_pos_llr2(llr_mem_pos_llr[2]),  // 7 bits
+		.i_llr_mem_pos_llr3(llr_mem_pos_llr[3])   // 7 bits
 	);
 
 	//====================================================
@@ -392,8 +418,13 @@ module bch(
 		.i_num_err(chien_search_num_err_out),           // 3 bits
 		.i_correct(chien_search_correct_out),           // 1 bit
 
+		.i_llr_sum(chien_search_llr_sum),            // 9 bits
+		.i_llr_sum_valid(chien_search_llr_sum_valid),      // 1 bit
+
 		.i_flip_pos1(flip_pos[1]),         // 10 bits
 		.i_flip_pos2(flip_pos[2]),         // 10 bits
+		.i_flip_llr1(flip_llr[1]),         // 7 bits
+		.i_flip_llr2(flip_llr[2]),         // 7 bits
 		.i_flip_valid(flip_valid),        // 1 bit
 
 		.o_tp1_err_loc0(err_bit_saver_tp1_loc[0]),      // 10 bits
@@ -428,16 +459,9 @@ module bch(
 		.o_tp4_err_loc5(err_bit_saver_tp4_loc[5]),      // 10 bits
 		.o_tp4_num_err(err_bit_saver_tp4_num_err),       // 3 bits
 
-		.mim_llr_tp(select_tp),          // 3 bits
+		.o_min_llr_tp(select_tp),          // 3 bits
 
-		.o_valid(err_bit_saver_out_valid),             // 1 bit
-
-		// interaction with llr_mem
-		.o_llr_mem_pos0(llr_mem_pos[0]),      // 10 bits
-		.o_llr_mem_pos1(llr_mem_pos[1]),      // 10 bits
-
-		.i_llr_mem_pos0_llr(llr_mem_pos_llr[0]),  // 7 bits
-		.i_llr_mem_pos1_llr(llr_mem_pos_llr[1])  // 7 bits
+		.o_valid(err_bit_saver_out_valid)             // 1 bit
 	);
 
 
