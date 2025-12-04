@@ -1,7 +1,7 @@
 # Setting environment
 sh mkdir -p Netlist
 sh mkdir -p Report
-set_host_options -max_cores 47
+set_host_options -max_cores 16
 set company {NTUGIEE}
 set designer {Student}
 
@@ -54,3 +54,5 @@ source -echo -verbose ./bch_dc.sdc
 
 # Compile Design
 current_design [get_designs ${DESIGN}]
+
+set_fix_multiple_port_nets -all -buffer_constants [get_designs *]

@@ -2,7 +2,7 @@
 ****************************************
 check_design summary:
 Version:     V-2023.12
-Date:        Wed Dec  3 18:03:06 2025
+Date:        Thu Dec  4 14:25:25 2025
 ****************************************
 
                    Name                                            Total
@@ -12,9 +12,9 @@ Inputs/Outputs                                                     23
     Feedthrough (LINT-29)                                          20
     Shorted outputs (LINT-31)                                       1
 
-Cells                                                           11177
+Cells                                                           11188
     Cells do not drive (LINT-1)                                    71
-    Connected to power or ground (LINT-32)                       9194
+    Connected to power or ground (LINT-32)                       9205
     Nets connected to multiple pins on same cell (LINT-33)       1912
 
 Nets                                                               60
@@ -179,6 +179,14 @@ Warning: In design 'bch', a pin on submodule 'u_data_buf' is connected to logic 
    Pin 'i_en' is connected to logic 1. 
 Warning: In design 'bch', a pin on submodule 'u_error_bit_saver_output_selector_pulser' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_clear' is connected to logic 0. 
+Warning: In design 'llr_mem', a pin on submodule 'delay_data0' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'llr_mem', a pin on submodule 'delay_data1' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'llr_mem', a pin on submodule 'delay_data2' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'llr_mem', a pin on submodule 'delay_data3' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
 Warning: In design 'syndrome', a pin on submodule 'u_delay_n_rx_bit' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_en' is connected to logic 1. 
 Warning: In design 'syndrome', a pin on submodule 'u_delay_n_clear_and_wen' is connected to logic 1 or logic 0. (LINT-32)
@@ -1065,9 +1073,23 @@ Warning: In design 'chien_search', a pin on submodule 'u_delay_n_is_root' is con
    Pin 'i_en' is connected to logic 1. 
 Warning: In design 'chien_search', a pin on submodule 'u_delay_n_valid' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_valid_2' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
 Warning: In design 'chien_search', a pin on submodule 'u_delay_n_o_valid' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_en' is connected to logic 1. 
 Warning: In design 'chien_search', a pin on submodule 'u_delay_n_o_valid_2' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_0_out' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_1_out' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_2_out' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_3_out' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_num_out' is connected to logic 1 or logic 0. (LINT-32)
+   Pin 'i_en' is connected to logic 1. 
+Warning: In design 'chien_search', a pin on submodule 'u_delay_n_find_1_idx_num_out_dly2' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_en' is connected to logic 1. 
 Warning: In design 'pulser', a pin on submodule 'u_delay_n' is connected to logic 1 or logic 0. (LINT-32)
    Pin 'i_en' is connected to logic 1. 

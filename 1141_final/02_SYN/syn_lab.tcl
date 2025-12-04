@@ -69,7 +69,9 @@ ungroup -all
 # uniquify
 # ungroup
 set_fix_multiple_port_nets -all -buffer_constants [get_designs *]
-compile_ultra    
+compile_ultra
+
+compile_ultra -only_design_rule
 
 # ungroup -all -flatten
 
@@ -122,7 +124,7 @@ set verilogout_higher_designs_first true
 write -format ddc     -hierarchy -output "./Netlist/${DESIGN}_syn.ddc"
 write -format verilog -hierarchy -output "./Netlist/${DESIGN}_syn.v"
 write_sdf -version 2.1 -context verilog -load_delay cell ./Netlist/${DESIGN}_syn.sdf
-
+write_sdc -version 1.8 -output "./Netlist/${DESIGN}_syn.sdc"
 
 report_timing
 report_area -hierarchy
