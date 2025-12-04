@@ -110,7 +110,13 @@ module chien_search(
     wire [6:0] find_1_idx_2_out;
     wire [6:0] find_1_idx_3_out;
     wire [2:0] find_1_idx_num_out;
-    wire [2:0] find_1_idx_num_out_dly;
+
+    wire [6:0] find_1_idx_0_out_dly;
+    wire [6:0] find_1_idx_1_out_dly;
+    wire [6:0] find_1_idx_2_out_dly;
+    wire [6:0] find_1_idx_3_out_dly;
+    wire [2:0] find_1_idx_num_out_dly1;
+    wire [2:0] find_1_idx_num_out_dly2;
 
     reg [9:0] find_1_idx_0_adptive;
     reg [9:0] find_1_idx_1_adptive;
@@ -125,7 +131,8 @@ module chien_search(
 
     reg [3:0] counter_pe, counter_pe_next;
 
-    wire [3:0] counter_find_1_idx_pipe;
+    wire [3:0] counter_find_1_idx_pipe1;
+    wire [3:0] counter_find_1_idx_pipe2;
 
     reg [9:0] llr_sum, llr_sum_next;
 
@@ -262,7 +269,7 @@ module chien_search(
         .i_idx2_2 ( find_1_idx_1_adptive ),
         .i_idx2_3 ( find_1_idx_2_adptive ),
         .i_idx2_4 ( find_1_idx_3_adptive ),
-        .i_num2   ( find_1_idx_num_out ),
+        .i_num2   ( find_1_idx_num_out_dly1 ),
 
         .o_idx1   ( err_loc0_buf_next ),
         .o_idx2   ( err_loc1_buf_next ),
@@ -281,12 +288,24 @@ module chien_search(
         .i_rst_n(i_rst_n),
         .i_en(1'b1),
         .i_d(counter_pe),
-        .o_q(counter_find_1_idx_pipe)
+        .o_q(counter_find_1_idx_pipe1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(4),
+        .INIT(4'd15)
+    ) u_delay_n_valid_2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(counter_find_1_idx_pipe1),
+        .o_q(counter_find_1_idx_pipe2)
     );
 
 
     delay_n #(
-        .N(1),
+        .N(2),
         .BITS(3)
     ) u_delay_n_o_valid (
         .i_clk(i_clk),
@@ -298,7 +317,7 @@ module chien_search(
 
 
     delay_n #(
-        .N(1),
+        .N(2),
         .BITS(3)
     ) u_delay_n_o_valid_2 (
         .i_clk(i_clk),
@@ -355,13 +374,68 @@ module chien_search(
 
     delay_n #(
         .N(1),
+        .BITS(7)
+    ) u_delay_n_find_1_idx_0_out (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(find_1_idx_0_out),
+        .o_q(find_1_idx_0_out_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_find_1_idx_1_out (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(find_1_idx_1_out),
+        .o_q(find_1_idx_1_out_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_find_1_idx_2_out (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(find_1_idx_2_out),
+        .o_q(find_1_idx_2_out_dly)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) u_delay_n_find_1_idx_3_out (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(find_1_idx_3_out),
+        .o_q(find_1_idx_3_out_dly)
+    );
+
+    delay_n #(
+        .N(1),
         .BITS(3)
     ) u_delay_n_find_1_idx_num_out (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
-        .i_en(llr_gen),
+        .i_en(1'b1),
         .i_d(find_1_idx_num_out),
-        .o_q(find_1_idx_num_out_dly)
+        .o_q(find_1_idx_num_out_dly1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(3)
+    ) u_delay_n_find_1_idx_num_out_dly2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(find_1_idx_num_out_dly1),
+        .o_q(find_1_idx_num_out_dly2)
     );
 
 
@@ -594,28 +668,28 @@ module chien_search(
                 exist_num_err = 3'd0;
             end
             2'd1: begin // (255,239)
-                if (counter_pe == 4'd0) begin
+                if (counter_find_1_idx_pipe1 == 4'd0) begin
                     exist_err_loc0 = 10'd0;
                     exist_err_loc1 = 10'd0;
                     exist_err_loc2 = 10'd0;
                     exist_err_loc3 = 10'd0;
                     exist_num_err = 3'd0;
                 end
-                else if (counter_pe == 4'd1) begin
+                else if (counter_find_1_idx_pipe1 == 4'd1) begin
                     exist_err_loc0 = err_loc0_buf;
                     exist_err_loc1 = err_loc1_buf;
                     exist_err_loc2 = err_loc2_buf;
                     exist_err_loc3 = err_loc3_buf;
                     exist_num_err = num_err_buf;
                 end
-                else if (counter_pe == 4'd2) begin
+                else if (counter_find_1_idx_pipe1 == 4'd2) begin
                     exist_err_loc0 = 10'd0;
                     exist_err_loc1 = 10'd0;
                     exist_err_loc2 = 10'd0;
                     exist_err_loc3 = 10'd0;
                     exist_num_err = 3'd0;
                 end
-                else if (counter_pe == 4'd3) begin
+                else if (counter_find_1_idx_pipe1 == 4'd3) begin
                     exist_err_loc0 = err_loc0_buf;
                     exist_err_loc1 = err_loc1_buf;
                     exist_err_loc2 = err_loc2_buf;
@@ -631,14 +705,14 @@ module chien_search(
                 end
             end
             2'd2: begin // (1023,983)
-                if (counter_pe == 4'd0) begin
+                if (counter_find_1_idx_pipe1 == 4'd0) begin
                     exist_err_loc0 = 10'd0;
                     exist_err_loc1 = 10'd0;
                     exist_err_loc2 = 10'd0;
                     exist_err_loc3 = 10'd0;
                     exist_num_err = 3'd0;
                 end
-                else if (counter_pe >= 4'd1 && counter_pe <= 4'd7) begin
+                else if (counter_find_1_idx_pipe1 >= 4'd1 && counter_find_1_idx_pipe1 <= 4'd7) begin
                     exist_err_loc0 = err_loc0_buf;
                     exist_err_loc1 = err_loc1_buf;
                     exist_err_loc2 = err_loc2_buf;
@@ -660,55 +734,55 @@ module chien_search(
         // if find_1_idx has pipeline, counter_pe should be replaced by counter_find_1_idx_pipe
         case(i_code) // synopsys full_case
             2'd0: begin // (63,51)
-                find_1_idx_0_adptive = {3'b000, find_1_idx_0_out};
-                find_1_idx_1_adptive = {3'b000, find_1_idx_1_out};
-                find_1_idx_2_adptive = {3'b000, find_1_idx_2_out};
-                find_1_idx_3_adptive = {3'b000, find_1_idx_3_out};
+                find_1_idx_0_adptive = {3'b000, find_1_idx_0_out_dly};
+                find_1_idx_1_adptive = {3'b000, find_1_idx_1_out_dly};
+                find_1_idx_2_adptive = {3'b000, find_1_idx_2_out_dly};
+                find_1_idx_3_adptive = {3'b000, find_1_idx_3_out_dly};
             end
             2'd1: begin // (255,239)
-                if (counter_pe == 4'd0) begin
-                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out};
+                if (counter_find_1_idx_pipe1 == 4'd0) begin
+                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out_dly};
                 end
-                else if (counter_pe == 4'd1) begin
-                    find_1_idx_0_adptive = {3'b001, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b001, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b001, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b001, find_1_idx_3_out};
+                else if (counter_find_1_idx_pipe1 == 4'd1) begin
+                    find_1_idx_0_adptive = {3'b001, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b001, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b001, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b001, find_1_idx_3_out_dly};
                 end
-                else if (counter_pe == 4'd2) begin
-                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out};
+                else if (counter_find_1_idx_pipe1 == 4'd2) begin
+                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out_dly};
                 end
-                else if (counter_pe == 4'd3) begin
-                    find_1_idx_0_adptive = {3'b001, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b001, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b001, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b001, find_1_idx_3_out};
+                else if (counter_find_1_idx_pipe1 == 4'd3) begin
+                    find_1_idx_0_adptive = {3'b001, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b001, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b001, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b001, find_1_idx_3_out_dly};
                 end
                 else begin
-                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out};
+                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out_dly};
                 end
             end
             2'd2: begin // (1023,983)
-                if (counter_pe <= 4'd7) begin
-                    find_1_idx_0_adptive = {counter_pe[2:0], find_1_idx_0_out};
-                    find_1_idx_1_adptive = {counter_pe[2:0], find_1_idx_1_out};
-                    find_1_idx_2_adptive = {counter_pe[2:0], find_1_idx_2_out};
-                    find_1_idx_3_adptive = {counter_pe[2:0], find_1_idx_3_out};
+                if (counter_find_1_idx_pipe1 <= 4'd7) begin
+                    find_1_idx_0_adptive = {counter_find_1_idx_pipe1[2:0], find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {counter_find_1_idx_pipe1[2:0], find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {counter_find_1_idx_pipe1[2:0], find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {counter_find_1_idx_pipe1[2:0], find_1_idx_3_out_dly};
                 end
                 else begin
-                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out};
-                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out};
-                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out};
-                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out};
+                    find_1_idx_0_adptive = {3'b000, find_1_idx_0_out_dly};
+                    find_1_idx_1_adptive = {3'b000, find_1_idx_1_out_dly};
+                    find_1_idx_2_adptive = {3'b000, find_1_idx_2_out_dly};
+                    find_1_idx_3_adptive = {3'b000, find_1_idx_3_out_dly};
                 end
             end
         endcase
@@ -734,7 +808,7 @@ module chien_search(
         case (i_code) // synopsys full_case
             2'd0: begin
                 o_llr_mem_rotate128 = 1'b0;
-                case (find_1_idx_num_out_dly) 
+                case (find_1_idx_num_out_dly2) 
                     3'd0: llr_sum_next = 9'd0;
                     3'd1: llr_sum_next = i_llr_mem_pos_llr0;
                     3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
@@ -742,39 +816,39 @@ module chien_search(
                 endcase
             end
             2'd1: begin
-                if (counter_find_1_idx_pipe <= 4'd3) begin
+                if (counter_find_1_idx_pipe1 <= 4'd3) begin
                     o_llr_mem_rotate128 = llr_gen;
                 end
                 else begin
                     o_llr_mem_rotate128 = 1'b0;
                 end
 
-                if (counter_find_1_idx_pipe == 4'd0) begin
-                    case (find_1_idx_num_out_dly) 
+                if (counter_find_1_idx_pipe2 == 4'd0) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = 9'd0;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
                         default: llr_sum_next = 9'd0;
                     endcase
                 end
-                else if (counter_find_1_idx_pipe == 4'd1) begin
-                    case (find_1_idx_num_out_dly) 
+                else if (counter_find_1_idx_pipe2 == 4'd1) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = llr_sum;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
                         default: llr_sum_next = 9'd0;
                     endcase
                 end
-                else if (counter_find_1_idx_pipe == 4'd2) begin
-                    case (find_1_idx_num_out_dly) 
+                else if (counter_find_1_idx_pipe2 == 4'd2) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = 9'd0;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
                         default: llr_sum_next = 9'd0;
                     endcase
                 end
-                else if (counter_find_1_idx_pipe == 4'd3) begin
-                    case (find_1_idx_num_out_dly) 
+                else if (counter_find_1_idx_pipe2 == 4'd3) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = llr_sum;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
@@ -786,15 +860,15 @@ module chien_search(
                 end
             end
             2'd2: begin
-                if (counter_find_1_idx_pipe <= 4'd7) begin
+                if (counter_find_1_idx_pipe1 <= 4'd7) begin
                     o_llr_mem_rotate128 = llr_gen;
                 end
                 else begin
                     o_llr_mem_rotate128 = 1'b0;
                 end
 
-                if (counter_find_1_idx_pipe == 4'd0) begin
-                    case (find_1_idx_num_out_dly) 
+                if (counter_find_1_idx_pipe2 == 4'd0) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = 9'd0;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1;
@@ -803,8 +877,8 @@ module chien_search(
                         default: llr_sum_next = 9'd0;
                     endcase
                 end
-                else if (counter_find_1_idx_pipe >= 4'd1 && counter_find_1_idx_pipe <= 4'd7) begin
-                    case (find_1_idx_num_out_dly) 
+                else if (counter_find_1_idx_pipe2 >= 4'd1 && counter_find_1_idx_pipe2 <= 4'd7) begin
+                    case (find_1_idx_num_out_dly2) 
                         3'd0: llr_sum_next = llr_sum;
                         3'd1: llr_sum_next = i_llr_mem_pos_llr0 + llr_sum;
                         3'd2: llr_sum_next = i_llr_mem_pos_llr0 + i_llr_mem_pos_llr1 + llr_sum;
@@ -882,11 +956,11 @@ module chien_search(
     always @(*) begin
         case(i_code) // synopsys full_case
             2'd0: begin // (63,51)
-                if (counter_find_1_idx_pipe == 4'd0) begin
+                if (counter_find_1_idx_pipe2 == 4'd0) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
                     o_err_valid = 1'b1;
                 end
-                else if (counter_find_1_idx_pipe == 4'd2 && i_mode == 1'b1) begin
+                else if (counter_find_1_idx_pipe2 == 4'd2 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
                     o_err_valid = 1'b1;
                 end 
@@ -896,11 +970,11 @@ module chien_search(
                 end
             end
             2'd1: begin // (255,239)
-                if (counter_find_1_idx_pipe == 4'd1) begin
+                if (counter_find_1_idx_pipe2 == 4'd1) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
                     o_err_valid = 1'b1;
                 end
-                else if (counter_find_1_idx_pipe == 4'd3 && i_mode == 1'b1) begin
+                else if (counter_find_1_idx_pipe2 == 4'd3 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
                     o_err_valid = 1'b1;
                 end
@@ -910,7 +984,7 @@ module chien_search(
                 end
             end
             2'd2: begin // (1023,983)
-                if (counter_find_1_idx_pipe == 4'd7) begin
+                if (counter_find_1_idx_pipe2 == 4'd7) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
                     o_err_valid = 1'b1;
                 end

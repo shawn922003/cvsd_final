@@ -13,10 +13,10 @@ module llr_mem(
     input [6:0] i_pos2,
     input [6:0] i_pos3,
 
-    output reg [6:0] o_data0,
-    output reg [6:0] o_data1,
-    output reg [6:0] o_data2,
-    output reg [6:0] o_data3
+    output [6:0] o_data0,
+    output [6:0] o_data1,
+    output [6:0] o_data2,
+    output [6:0] o_data3
 );
     reg [6:0] mem[0:1023];
     reg [6:0] mem_next[0:1023];
@@ -24,6 +24,56 @@ module llr_mem(
     reg [6:0] data;
 
     wire [6:0] mem_front[0:127];
+
+    reg [6:0] data0;
+    reg [6:0] data1;
+    reg [6:0] data2;
+    reg [6:0] data3;
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_data0 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(data0),
+        .o_q(o_data0)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_data1 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(data1),
+        .o_q(o_data1)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_data2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(data2),
+        .o_q(o_data2)
+    );
+
+    delay_n #(
+        .N(1),
+        .BITS(7)
+    ) delay_data3 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(data3),
+        .o_q(o_data3)
+    );
+
 
     genvar idx;
     generate
@@ -121,10 +171,10 @@ module llr_mem(
     end
 
     always @(*) begin
-        o_data0 = mem_front[i_pos0];
-        o_data1 = mem_front[i_pos1];
-        o_data2 = mem_front[i_pos2];
-        o_data3 = mem_front[i_pos3];
+        data0 = mem_front[i_pos0];
+        data1 = mem_front[i_pos1];
+        data2 = mem_front[i_pos2];
+        data3 = mem_front[i_pos3];
     end
 
 endmodule
