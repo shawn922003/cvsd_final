@@ -21,8 +21,8 @@ wire [9:0] odata;
 
 // --------------------------
 // test data
-reg [63:0] testdata [0:8191];
-reg [9:0] testa [0:511];
+reg [63:0] testdata [0:128000];
+reg [9:0] testa [0:10000];
 integer i1, i2, i3;
 integer errcnt;
 
@@ -60,6 +60,36 @@ initial begin
 		NTEST = 64;
 		$readmemb("../00_TESTBED/tb/soft_decorder_300.txt", testdata);
 		$readmemb("../00_TESTBED/tb/soft_decorder_300a.txt", testa);
+	end
+	if (PATTERN == 700) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch63_hard/p101.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch63_hard/p101a.txt", testa);
+	end
+	if (PATTERN == 800) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch63_hard/p102.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch63_hard/p102a.txt", testa);
+	end
+	if (PATTERN == 900) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch255_hard/p201.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch255_hard/p201a.txt", testa);
+	end
+	if (PATTERN == 1000) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch255_hard/p202.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch255_hard/p202a.txt", testa);
+	end
+	if (PATTERN == 1100) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch1023_hard/p301.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch1023_hard/p301a.txt", testa);
+	end
+	if (PATTERN == 1200) begin
+		NTEST = 1000;
+		$readmemb("../00_TESTBED/tb/bch1023_hard/p302.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch1023_hard/p302a.txt", testa);
 	end
 end
 
@@ -131,6 +161,31 @@ initial begin
 			code = 3;
 			mode = 1;  // 软判决
 		end
+		else if (PATTERN <= 600) begin
+			code = 1;
+			mode = 0;  // 硬判决 bch63
+		end
+		else if (PATTERN <= 800) begin
+			code = 1;
+			mode = 0;  // 硬判决 bch63
+		end
+		else if (PATTERN <= 900) begin
+			code = 2;
+			mode = 0;  // 硬判决 bch255
+		end
+		else if (PATTERN <= 1000) begin
+			code = 2;
+			mode = 0;  // 硬判决 bch255
+		end
+		else if (PATTERN <= 1100) begin
+			code = 3;
+			mode = 0;  // 硬判决 bch1023
+		end
+		else if (PATTERN <= 1200) begin
+			code = 3;
+			mode = 0;  // 硬判决 bch1023
+		end
+
 		set = 1;
 		#(CYCLE);
 		set = 0;
