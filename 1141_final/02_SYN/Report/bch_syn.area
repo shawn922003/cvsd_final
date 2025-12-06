@@ -3,7 +3,7 @@
 Report : area
 Design : bch
 Version: V-2023.12
-Date   : Sat Dec  6 19:51:03 2025
+Date   : Sun Dec  7 04:33:11 2025
 ****************************************
 
 Library(s) Used:
@@ -11,22 +11,22 @@ Library(s) Used:
     slow (File: /mnt/data/LYX/cvsd/CBDK_IC_Contest/CIC/SynopsysDC/db/slow.db)
 
 Number of ports:                           82
-Number of nets:                         83398
-Number of cells:                        83276
-Number of combinational cells:          74240
-Number of sequential cells:              9036
+Number of nets:                         78186
+Number of cells:                        78077
+Number of combinational cells:          68790
+Number of sequential cells:              9229
 Number of macros/black boxes:               0
-Number of buf/inv:                      15771
-Number of references:                     203
+Number of buf/inv:                      13771
+Number of references:                     211
 
-Combinational area:             657577.842561
-Buf/Inv area:                    67038.812293
-Noncombinational area:          233199.000326
+Combinational area:             611792.177464
+Buf/Inv area:                    62131.628954
+Noncombinational area:          238004.339800
 Macro/Black Box area:                0.000000
-Net Interconnect area:         9654588.785950
+Net Interconnect area:         9163233.673065
 
-Total cell area:                890776.842887
-Total area:                   10545365.628837
+Total cell area:                849796.517264
+Total area:                   10013030.190330
 
 Hierarchical area distribution
 ------------------------------
@@ -36,8 +36,8 @@ Hierarchical area distribution
 Hierarchical cell                 Absolute     Percent  Combi-       Noncombi-    Black-
                                   Total        Total    national     national     boxes   Design
 --------------------------------  -----------  -------  -----------  -----------  ------  ---------
-bch                               890776.8429    100.0  657577.8426  233199.0003  0.0000  bch
+bch                               849796.5173    100.0  611792.1775  238004.3398  0.0000  bch
 --------------------------------  -----------  -------  -----------  -----------  ------  ---------
-Total                                                   657577.8426  233199.0003  0.0000
+Total                                                   611792.1775  238004.3398  0.0000
 
 1
