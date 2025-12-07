@@ -54,8 +54,7 @@ module flip_syndrome(
     output [9:0] o_tp4_S7,
     output [9:0] o_tp4_S8,
 
-    output reg o_tp_valid,
-    output o_odd_tp_valid
+    output reg o_tp_valid
 );
 
     wire gen;
@@ -160,7 +159,6 @@ module flip_syndrome(
     assign o_tp4_S7 = tp4_S7;
     assign o_tp4_S8 = tp4_S8;
 
-    assign o_odd_tp_valid = i_flip_alpha_valid && i_syndrome_valid;
 
     // gf_mult u_gf_mult_S2 (
     //     .i_a(i_flip_alpha_S1_1),

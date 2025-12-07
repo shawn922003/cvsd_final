@@ -63,6 +63,16 @@ check_timing > Report/check_timing.txt
 #set high_fanout_net_threshold 0
 
 set_clock_gating_style -pos integrated  -control_point before -control_signal scan_enable -max_fanout 20
+set llr_regs [all_registers u_llr_mem/*]
+
+# 3. 其他暫存器一律禁止 clock gating
+set all_regs     [all_registers]
+set non_llr_regs [remove_from_collection $all_regs $llr_regs]
+
+# 4. 只允許 llr_mem 的暫存器被 gate（其他都 exclude）
+set_clock_gating_registers -include_instances $llr_regs
+set_clock_gating_registers -exclude_instances $non_llr_regs
+
 
 
 ungroup -all
