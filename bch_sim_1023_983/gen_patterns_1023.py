@@ -44,7 +44,7 @@ def encode_with_generator(tx: List[int], GENERATOR_POLY: List[int], N:int) -> Li
 
 def choose_flip_count(max_exclusive: int) -> int:
     if max_exclusive <= 0: return 0
-    return random.randint(0, max_exclusive-1)
+    return random.randint(0, max_exclusive)
 
 def flip_bits(vec: List[int], count: int):
     n=len(vec)
@@ -129,7 +129,7 @@ def gen_one_soft(dec: BCH1023_983_Decoder, soft_flip_lt:int=6, p:int=2):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["hard","soft"], default="soft")
-    ap.add_argument("--ntest", type=int, default=1000)
+    ap.add_argument("--ntest", type=int, default=10000)
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--outdir", type=str, default=".")
     args = ap.parse_args()

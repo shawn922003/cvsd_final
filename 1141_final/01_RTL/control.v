@@ -7,6 +7,7 @@ module control(
     input i_core_mode,
     input [1:0] i_core_code,
     output reg o_core_ready,
+    output reg o_early_stop,
 
     // all module
     output o_mode,
@@ -20,7 +21,10 @@ module control(
     output reg o_llr_mem_wen,
 
     // error_bit_saver
-    output reg o_error_bit_saver_clear
+    output reg o_error_bit_saver_clear,
+
+    // early stop
+    input i_early_stop_pulse
 );
 
     // mode and code
@@ -34,9 +38,9 @@ module control(
     assign o_mode = mode_reg;
     assign o_code = code_reg;
 
+    reg early_stop_flag, early_stop_flag_next;
 
-
-
+    assign o_early_stop = early_stop_flag;
 
     always @(posedge i_clk) begin
         if(!i_rst_n) begin
@@ -162,6 +166,28 @@ module control(
         end
         else begin
             o_error_bit_saver_clear = 1'b0;
+        end
+    end
+
+
+    always @(posedge i_clk) begin
+        if (!i_rst_n) begin
+            early_stop_flag <= 1'b0;
+        end
+        else begin
+            early_stop_flag <= early_stop_flag_next;
+        end
+    end
+
+    always @(*) begin
+        if (i_core_set) begin
+            early_stop_flag_next = 1'b0;
+        end
+        else if (i_early_stop_pulse) begin
+            early_stop_flag_next = 1'b1;
+        end
+        else begin
+            early_stop_flag_next = early_stop_flag;
         end
     end
 endmodule

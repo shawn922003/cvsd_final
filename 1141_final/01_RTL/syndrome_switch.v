@@ -5,6 +5,8 @@ module syndrome_switch(
     input        i_mode,
     input  [1:0] i_code,      // 原本是 1bit，下面有用到 2'b10，改成 2bit
 
+    input i_early_stop,
+
     input  [9:0] i_tp1_S1,
     input  [9:0] i_tp1_S2,
     input  [9:0] i_tp1_S3,
@@ -65,6 +67,10 @@ module syndrome_switch(
     wire valid, valid_dly;
     reg next_tp_valid_pulse;
     wire input_valid_pulse;
+
+    wire o_valid_internal;
+
+    assign o_valid = o_valid_internal & ~i_early_stop;
 
     // ---- delay stage for S1~S8 ----
     delay_n #(
@@ -171,7 +177,7 @@ module syndrome_switch(
         .i_rst_n (i_rst_n),
         .i_in    (valid_dly),
         .i_clear (1'b0),
-        .o_pulse (o_valid)
+        .o_pulse (o_valid_internal)
     );
 
     pulser u_pulser_input_valid (

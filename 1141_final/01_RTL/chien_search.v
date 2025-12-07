@@ -6,6 +6,8 @@ module chien_search(
     input  [1:0] i_code, 
     input        i_clear_and_wen,
 
+    input i_early_stop,
+
     input [9:0] i_sigma1_0,
     input [9:0] i_sigma1_1,
     input [9:0] i_sigma1_2,
@@ -136,6 +138,10 @@ module chien_search(
 
     reg [9:0] llr_sum, llr_sum_next;
 
+    wire o_llr_sum_valid_internal;
+
+
+    assign o_llr_sum_valid = o_llr_sum_valid_internal & ~i_early_stop;
 
     genvar i;
     generate
@@ -447,7 +453,7 @@ module chien_search(
         .i_rst_n(i_rst_n),
         .i_en(llr_gen),
         .i_d(o_err_valid),
-        .o_q(o_llr_sum_valid)
+        .o_q(o_llr_sum_valid_internal)
     );
 
 
@@ -461,7 +467,10 @@ module chien_search(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (i_early_stop) begin
+            counter_pe_next = 4'd15;
+        end
+        else if (i_clear_and_wen) begin
             counter_pe_next = 4'd0;
         end
         else if (counter_pe < 4'd15) begin
@@ -958,11 +967,11 @@ module chien_search(
             2'd0: begin // (63,51)
                 if (counter_find_1_idx_pipe2 == 4'd0) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_err_valid = 1'b1;
+                    o_err_valid = !i_early_stop;
                 end
                 else if (counter_find_1_idx_pipe2 == 4'd2 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_err_valid = 1'b1;
+                    o_err_valid = !i_early_stop;
                 end 
                 else begin
                     o_correct = 1'b0;
@@ -972,11 +981,11 @@ module chien_search(
             2'd1: begin // (255,239)
                 if (counter_find_1_idx_pipe2 == 4'd1) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_err_valid = 1'b1;
+                    o_err_valid = !i_early_stop;
                 end
                 else if (counter_find_1_idx_pipe2 == 4'd3 && i_mode == 1'b1) begin
                     o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_err_valid = 1'b1;
+                    o_err_valid = !i_early_stop;
                 end
                 else begin
                     o_correct = 1'b0;
@@ -986,7 +995,7 @@ module chien_search(
             2'd2: begin // (1023,983)
                 if (counter_find_1_idx_pipe2 == 4'd7) begin
                     o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
-                    o_err_valid = 1'b1;
+                    o_err_valid = !i_early_stop;
                 end
                 else begin
                     o_correct = 1'b0;

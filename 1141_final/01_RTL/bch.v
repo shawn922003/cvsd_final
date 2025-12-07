@@ -45,6 +45,7 @@ module bch(
 	wire flip_valid;
 
 	wire flip_syndrome_all_tp_valid;
+	wire flip_syndrome_odd_tp_valid;
 
 	wire [9:0] syndrome_switch_out_s[1:8];
 	wire syndrome_switch_out_valid;
@@ -78,6 +79,9 @@ module bch(
 	wire err_bit_saver_out_valid;
 	wire err_bit_saver_valid_pulse;
 
+	wire early_stop_pulse;
+	wire early_stop_level;
+
 	delay_n #(
 		.N(1),
 		.BITS(64),
@@ -103,6 +107,7 @@ module bch(
 		.i_core_mode(mode),              // 1 bit
 		.i_core_code(code),              // 2 bits
 		.o_core_ready(ready),             // 1 bit
+		.o_early_stop(early_stop_level),      // 1 bit
 
 		// all module
 		.o_mode(core_mode),                   // 1 bit
@@ -116,7 +121,10 @@ module bch(
 		.o_llr_mem_wen(llr_mem_wen),            // 1 bit
 
 		// error_bit_saver
-		.o_error_bit_saver_clear(error_bit_saver_clear)   // 1 bit
+		.o_error_bit_saver_clear(error_bit_saver_clear),   // 1 bit
+
+		// early stop
+		.i_early_stop_pulse(early_stop_pulse)       // 1 bit
 	);
 
 	//====================================================
@@ -244,7 +252,42 @@ module bch(
 		.o_tp4_S7(syndrome_tp4_S[7]),            // 10 bits
 		.o_tp4_S8(syndrome_tp4_S[8]),            // 10 bits
 
-		.o_tp_valid(flip_syndrome_all_tp_valid)           // 1 bit
+		.o_tp_valid(flip_syndrome_all_tp_valid),           // 1 bit
+		.o_odd_tp_valid(flip_syndrome_odd_tp_valid)      // 1 bit
+	);
+
+
+	early_stop u_early_stop (
+		.i_clk(clk),
+		.i_rst_n(rstn),
+
+		.i_mode(core_mode),
+		.i_code(core_code),
+
+		.i_tp1_S1(syndrome_tp1_S[1]),
+		.i_tp1_S3(syndrome_tp1_S[3]),
+		.i_tp1_S5(syndrome_tp1_S[5]),
+		.i_tp1_S7(syndrome_tp1_S[7]),
+		.i_tp1_valid(syndrome_odd_s_valid),
+
+		.i_tp2_S1(syndrome_tp2_S[1]),
+		.i_tp2_S3(syndrome_tp2_S[3]),
+		.i_tp2_S5(syndrome_tp2_S[5]),
+		.i_tp2_S7(syndrome_tp2_S[7]),
+
+		.i_tp3_S1(syndrome_tp3_S[1]),
+		.i_tp3_S3(syndrome_tp3_S[3]),
+		.i_tp3_S5(syndrome_tp3_S[5]),
+		.i_tp3_S7(syndrome_tp3_S[7]),
+
+		.i_tp4_S1(syndrome_tp4_S[1]),
+		.i_tp4_S3(syndrome_tp4_S[3]),
+		.i_tp4_S5(syndrome_tp4_S[5]),
+		.i_tp4_S7(syndrome_tp4_S[7]),
+
+		.i_all_tp_valid(flip_syndrome_odd_tp_valid),
+
+		.o_early_stop_pulse(early_stop_pulse)
 	);
 
 	//====================================================
@@ -256,6 +299,8 @@ module bch(
 
 		.i_mode(core_mode),       // 1 bit
 		.i_code(core_code),       // 2 bits
+
+		.i_early_stop(early_stop_level), // 1 bit
 
 		.i_tp1_S1(syndrome_tp1_S[1]),     // 10 bits
 		.i_tp1_S2(syndrome_tp1_S[2]),     // 10 bits
@@ -332,6 +377,8 @@ module bch(
 		.i_code(core_code),         // 2 bits
 		.i_clear_and_wen(ibm_in_clear_and_wen),// 1 bit
 
+		.i_early_stop(early_stop_level), // 1 bit
+
 		.i_S1(syndrome_switch_out_s[1]),           // 10 bits
 		.i_S2(syndrome_switch_out_s[2]),           // 10 bits
 		.i_S3(syndrome_switch_out_s[3]),           // 10 bits
@@ -365,6 +412,8 @@ module bch(
 		.i_mode(core_mode),         // 1 bit
 		.i_code(core_code),         // 2 bits
 		.i_clear_and_wen(ibm_out_valid),// 1 bit
+
+		.i_early_stop(early_stop_level), // 1 bit
 
 		.i_sigma1_0(ibm_sigma1[0]),     // 10 bits
 		.i_sigma1_1(ibm_sigma1[1]),     // 10 bits
@@ -408,6 +457,8 @@ module bch(
 
 		.i_mode(core_mode),              // 1 bit
 		.i_code(core_code),              // 2 bits
+
+		.i_early_stop(early_stop_level), // 1 bit
 
 		.i_clear(error_bit_saver_clear),             // 1 bit
 		.i_err_valid_pulse(chien_search_err_loc_valid_pulse),   // 1 bit
@@ -525,6 +576,9 @@ module bch(
 
 		.err_bit_saver_select_tp(select_tp),    // 3 bits
 		.err_bit_saver_valid_pulse(err_bit_saver_valid_pulse),  // 1 bit
+
+		.i_early_stop_pulse(early_stop_pulse),      // 1 bit
+		.i_early_stop(early_stop_level),      // 1 bit
 
 		.o_err_loc(odata),                  // 10 bits
 		.o_valid(finish)                     // 1 bit

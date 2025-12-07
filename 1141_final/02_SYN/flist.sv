@@ -18,7 +18,7 @@
 `include "../01_RTL/syndrome.v"
 `include "../01_RTL/top_2.v"
 `include "../01_RTL/gf_square.v"
-
+`include "../01_RTL/early_stop.v"
 
 // bch.v
 // bch_table.v

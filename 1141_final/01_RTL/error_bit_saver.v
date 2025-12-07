@@ -5,6 +5,8 @@ module error_bit_saver(
     input i_mode,
     input [1:0] i_code,
 
+    input i_early_stop,
+
     input i_clear,
     input i_err_valid_pulse, 
     input [9:0] i_err_loc0,
@@ -57,7 +59,7 @@ module error_bit_saver(
 
     output [2:0] o_min_llr_tp,
 
-    output reg o_valid
+    output o_valid
 );
 
     wire gen;
@@ -115,7 +117,7 @@ module error_bit_saver(
 
 
     wire valid;
-
+    wire o_valid_internal;
 
 
     assign o_tp1_err_loc0 = tp1_err_loc0_buf;
@@ -552,6 +554,8 @@ module error_bit_saver(
 
     wire correct_dly;
 
+    assign o_valid = o_valid_internal & !i_early_stop;
+
     delay_n #(
         .N(1),
         .BITS(3),
@@ -586,7 +590,7 @@ module error_bit_saver(
         .i_rst_n (i_rst_n),
         .i_en    (gen),
         .i_d     (valid),
-        .o_q     (o_valid)
+        .o_q     (o_valid_internal)
     );
 
     delay_n #(

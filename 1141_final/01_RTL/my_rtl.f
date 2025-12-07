@@ -20,3 +20,4 @@ syndrome_switch.v
 syndrome.v
 top_2.v
 gf_square.v
+early_stop.v

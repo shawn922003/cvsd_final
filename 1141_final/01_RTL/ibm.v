@@ -6,6 +6,8 @@ module ibm(
     input [1:0] i_code,
     input i_clear_and_wen,
 
+    input i_early_stop,
+
     input [9:0] i_S1,
     input [9:0] i_S2,
     input [9:0] i_S3,
@@ -48,6 +50,7 @@ module ibm(
 
     reg valid;
     
+    wire o_valid_internal;
 
     assign pe7_12_active = i_mode == 1'b1 || i_code == 2'b10;
     assign pe13_active = i_mode == 1'b1 && i_code != 2'b10; 
@@ -56,6 +59,7 @@ module ibm(
 
     assign all_cen = i_clear_and_wen || (i_code == 2'b10 && counter < 3'd7) || (i_code != 2'b10 && counter < 3'd3);
 
+    assign o_valid = o_valid_internal & ~i_early_stop;
 
     delay_n #(
         .N(1),
@@ -65,7 +69,7 @@ module ibm(
         .i_rst_n(i_rst_n),
         .i_en  (1'b1),
         .i_d   (valid),
-        .o_q   (o_valid)
+        .o_q   (o_valid_internal)
     );
 
     // PE0 to PE6 initialization
@@ -504,28 +508,28 @@ module ibm(
     assign o_sigma2_1 = pe_phi_reg_out[10];
     assign o_sigma2_2 = pe_phi_reg_out[11];
 
+    // always @(posedge i_clk) begin
+    //     if (!i_rst_n) begin
+    //         first <= 1'b1;
+    //     end
+    //     else begin
+    //         first <= first_next;
+    //     end
+    // end
+
+
+    // always @(*) begin
+    //     if (i_clear_and_wen) begin
+    //         first_next = 1'b0;
+    //     end
+    //     else begin
+    //         first_next = first;
+    //     end
+    // end
+
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            first <= 1'b1;
-        end
-        else begin
-            first <= first_next;
-        end
-    end
-
-
-    always @(*) begin
-        if (i_clear_and_wen) begin
-            first_next = 1'b0;
-        end
-        else begin
-            first_next = first;
-        end
-    end
-
-    always @(posedge i_clk) begin
-        if (!i_rst_n) begin
-            counter <= 4'd0;
+            counter <= 4'd15;
         end
         else begin
             counter <= counter_next;
@@ -533,10 +537,13 @@ module ibm(
     end
 
     always @(*) begin
-        if (i_clear_and_wen) begin
+        if (i_early_stop) begin
+            counter_next = 4'd15;
+        end
+        else if (i_clear_and_wen) begin
             counter_next = 4'd0;
         end
-        else if (counter < 4'd15 && !first) begin
+        else if (counter < 4'd15) begin
             counter_next = counter + 4'd1;
         end
         else begin
@@ -546,12 +553,12 @@ module ibm(
 
     always @(*) begin
         if (i_code == 2'b10) begin
-            o_next_S = counter == 4'd6;
-            valid = counter == 4'd6;
+            o_next_S = counter == 4'd6 && !i_early_stop;
+            valid = counter == 4'd6 && !i_early_stop;
         end
         else begin
-            o_next_S = counter == 4'd2;
-            valid = counter == 4'd2;
+            o_next_S = counter == 4'd2 && !i_early_stop;
+            valid = counter == 4'd2 && !i_early_stop;
         end
     end
     

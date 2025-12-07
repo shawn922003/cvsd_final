@@ -43,7 +43,7 @@ def encode_with_generator(tx: List[int], GENERATOR_POLY: List[int], N:int) -> Li
 
 def choose_flip_count(max_exclusive: int) -> int:
     if max_exclusive <= 0: return 0
-    return random.randint(0, max_exclusive-1)
+    return random.randint(0, max_exclusive)
 
 def flip_bits(vec: List[int], count: int):
     n=len(vec)

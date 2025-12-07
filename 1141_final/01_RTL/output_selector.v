@@ -46,6 +46,9 @@ module output_selector(
     input [2:0] err_bit_saver_select_tp, // 1: tp1, 2: tp2, 3: tp3, 4: tp4
     input err_bit_saver_valid_pulse,
 
+    input i_early_stop_pulse,
+    input i_early_stop,
+
     output [9:0] o_err_loc,
     output o_valid // connect to chip finish port
 );
@@ -187,7 +190,7 @@ module output_selector(
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin
-            counter <= 3'd0;
+            counter <= 3'd7;
         end
         else begin
             counter <= counter_next;
@@ -195,7 +198,10 @@ module output_selector(
     end
 
     always @(*) begin
-        if ((i_mode == 0 && chien_search_valid_pulse) ||
+        if (i_early_stop) begin
+            counter_next = 3'd7;
+        end
+        else if ((i_mode == 0 && chien_search_valid_pulse) ||
             (i_mode == 1 && err_bit_saver_valid_pulse)) begin
             counter_next = 3'd0;
         end
@@ -209,7 +215,11 @@ module output_selector(
 
 
     always @(*) begin
-        if (i_mode == 0) begin
+        if (i_early_stop_pulse) begin
+            out_err_loc = 10'd1023;
+            out_valid = 1'b1;
+        end
+        else if (i_mode == 0) begin
             case (counter_next) 
                 3'd0: begin
                     if (chien_search_num_err >= 3'd1) begin
