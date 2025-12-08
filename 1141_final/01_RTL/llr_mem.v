@@ -85,14 +85,8 @@ module llr_mem(
     
     integer i;
     always @(posedge i_clk) begin
-        if (!i_rst_n) begin
-            for (i = 0; i < 1024; i = i + 1) begin
-                mem[i] <= 7'd0;
-            end
-        end else begin
-            for (i = 0; i < 1024; i = i + 1) begin
-                mem[i] <= mem_next[i];
-            end
+        for (i = 0; i < 1024; i = i + 1) begin
+            mem[i] <= mem_next[i];
         end
     end
 

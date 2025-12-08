@@ -47,6 +47,17 @@ foreach_in_collection reg $llr_regs_all {
     }
 }
 
+# 取得 reset port 和所有暫存器
+set rstn_port [get_ports rstn]
+set all_regs  [all_registers]
+
+# setup 多 10 個 clock
+set_multicycle_path 9 -from $rstn_port -to $all_regs -setup
+
+# hold 要配成 N-1，避免變成超嚴苛的 hold 要求
+set_multicycle_path 8  -from $rstn_port -to $all_regs -hold
+
+
 ############################################
 # 4. 其他暫存器一律禁止 clock gating
 ############################################
