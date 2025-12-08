@@ -216,18 +216,23 @@ class BCH255_239_Decoder:
             # 計算 correlation
             correlation = sum(r[i] * (1 - 2 * corrected[i]) for i in range(len(r)))
 
+            extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
+                        if input_rx[idx] != rx[idx]]
+
+            set_roots = set(roots)
+            set_extra = set(extra_roots)
+                
+                
             if correlation > best_correlation:
                 best_correlation = correlation
                 best_decoded = corrected
                 # roots 要加上你在 pattern 裡面翻轉的那些 index
-                extra_roots = [idx for idx, bit in zip(sorted_indices, pattern)
-                        if input_rx[idx] != rx[idx]]
-
-                set_roots = set(roots)
-                set_extra = set(extra_roots)
+                
 
                 # 只保留 roots 與 extra_roots 中「不在對方裡」的元素
                 best_roots = sorted(set_roots ^ set_extra)   # 對稱差 (symmetric difference)
+            elif correlation == best_correlation and best_roots != sorted(set_roots ^ set_extra):
+                return None, None, True   # 多解，視為失敗
 
         return best_decoded, best_roots, all_failed
 

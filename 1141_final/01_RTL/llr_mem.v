@@ -108,34 +108,11 @@ module llr_mem(
             mem_next[6] = i_data[55] ? -i_data[54:48] : i_data[54:48];
             mem_next[7] = i_data[63] ? -i_data[62:56] : i_data[62:56];
 
-            case (i_code)
-                2'd0: begin
-                    for (i = 8; i < 64; i = i + 1) begin
-                        mem_next[i] = mem[i - 8];
-                    end
-                    for (i = 64; i < 1024; i = i + 1) begin
-                        mem_next[i] = mem[i];
-                    end
-                end
-                2'd1: begin
-                    for (i = 8; i < 256; i = i + 1) begin
-                        mem_next[i] = mem[i - 8];
-                    end
-                    for (i = 256; i < 1024; i = i + 1) begin
-                        mem_next[i] = mem[i];
-                    end
-                end
-                2'd2: begin
-                    for (i = 8; i < 1024; i = i + 1) begin
-                        mem_next[i] = mem[i - 8];
-                    end
-                end
-                default: begin
-                    for (i = 8; i < 1024; i = i + 1) begin
-                        mem_next[i] = mem[i];
-                    end
-                end
-            endcase
+
+            for (i = 8; i < 1024; i = i + 1) begin
+                mem_next[i] = mem[i - 8];
+            end
+
         end
         else if (i_right_rotate128) begin
             case (i_code)

@@ -47,7 +47,10 @@ module output_selector(
     input err_bit_saver_valid_pulse,
 
     input i_early_stop_pulse,
+    input [2:0] i_early_stop_tp,
     input i_early_stop,
+    input [9:0] i_flip_pos1,
+    input [9:0] i_flip_pos2,
 
     output [9:0] o_err_loc,
     output o_valid // connect to chip finish port
@@ -66,6 +69,8 @@ module output_selector(
 
     reg [9:0] out_err_loc;
     reg out_valid;
+
+    wire early_stop_pulse_dly;
 
     delay_n #(
         .BITS(10),
@@ -87,6 +92,17 @@ module output_selector(
         .i_en(1'b1),
         .i_d(out_valid),
         .o_q(o_valid)
+    );
+
+    delay_n #(
+        .BITS(1),
+        .N(1)
+    ) u_delay_n_early_stop (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(i_early_stop_pulse),
+        .o_q(early_stop_pulse_dly)
     );
 
 
@@ -198,8 +214,8 @@ module output_selector(
     end
 
     always @(*) begin
-        if (i_early_stop) begin
-            counter_next = 3'd7;
+        if (i_early_stop_pulse) begin
+            counter_next = 3'd6;
         end
         else if ((i_mode == 0 && chien_search_valid_pulse) ||
             (i_mode == 1 && err_bit_saver_valid_pulse)) begin
@@ -215,9 +231,57 @@ module output_selector(
 
 
     always @(*) begin
-        if (i_early_stop_pulse) begin
-            out_err_loc = 10'd1023;
-            out_valid = 1'b1;
+        if (i_early_stop_pulse || early_stop_pulse_dly) begin
+            case (i_early_stop_tp)
+                3'd1: begin
+                    if (counter_next == 3'd6) begin
+                        out_err_loc = 10'd1023;
+                        out_valid = 1'b1;
+                    end
+                    else begin
+                        out_err_loc = 10'd1023;
+                        out_valid = 1'b0;
+                    end
+                end
+                3'd2: begin
+                    if (counter_next == 3'd6) begin
+                        out_err_loc = i_flip_pos1;
+                        out_valid = 1'b1;
+                    end
+                    else begin
+                        out_err_loc = 10'd1023;
+                        out_valid = 1'b0;
+                    end
+                end
+                3'd3: begin
+                    if (counter_next == 3'd6) begin
+                        out_err_loc = i_flip_pos2;
+                        out_valid = 1'b1;
+                    end
+                    else begin
+                        out_err_loc = 10'd1023;
+                        out_valid = 1'b0;
+                    end
+                end
+                3'd4: begin
+                    if (counter_next == 3'd6) begin
+                        out_err_loc = i_flip_pos1;
+                        out_valid = 1'b1;
+                    end
+                    else if (counter_next == 3'd7) begin
+                        out_err_loc = i_flip_pos2;
+                        out_valid = 1'b1;
+                    end
+                    else begin
+                        out_err_loc = 10'd1023;
+                        out_valid = 1'b0;
+                    end
+                end
+                default: begin
+                    out_err_loc = 10'd1023;
+                    out_valid = 1'b0;
+                end
+            endcase
         end
         else if (i_mode == 0) begin
             case (counter_next) 

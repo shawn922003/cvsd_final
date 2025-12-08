@@ -81,6 +81,7 @@ module bch(
 
 	wire early_stop_pulse;
 	wire early_stop_level;
+	wire [2:0] early_stop_tp;
 
 	delay_n #(
 		.N(1),
@@ -252,7 +253,8 @@ module bch(
 		.o_tp4_S7(syndrome_tp4_S[7]),            // 10 bits
 		.o_tp4_S8(syndrome_tp4_S[8]),            // 10 bits
 
-		.o_tp_valid(flip_syndrome_all_tp_valid)           // 1 bit
+		.o_tp_valid(flip_syndrome_all_tp_valid),           // 1 bit
+		.o_odd_tp_valid(flip_syndrome_odd_tp_valid)		   // 1 bit
 	);
 
 
@@ -269,8 +271,24 @@ module bch(
 		.i_tp1_S7(syndrome_tp1_S[7]),
 		.i_tp1_valid(syndrome_odd_s_valid),
 
+		.i_tp2_S1(syndrome_tp2_S[1]),
+		.i_tp2_S3(syndrome_tp2_S[3]),
+		.i_tp2_S5(syndrome_tp2_S[5]),
+		.i_tp2_S7(syndrome_tp2_S[7]),
+		.i_tp3_S1(syndrome_tp3_S[1]),
+		.i_tp3_S3(syndrome_tp3_S[3]),
+		.i_tp3_S5(syndrome_tp3_S[5]),
+		.i_tp3_S7(syndrome_tp3_S[7]),
+		.i_tp4_S1(syndrome_tp4_S[1]),
+		.i_tp4_S3(syndrome_tp4_S[3]),
+		.i_tp4_S5(syndrome_tp4_S[5]),
+		.i_tp4_S7(syndrome_tp4_S[7]),
 
-		.o_early_stop_pulse(early_stop_pulse)
+		.i_all_tp_valid(flip_syndrome_odd_tp_valid),
+
+
+		.o_early_stop_pulse(early_stop_pulse),
+		.o_early_stop_tp(early_stop_tp)
 	);
 
 	//====================================================
@@ -561,7 +579,10 @@ module bch(
 		.err_bit_saver_valid_pulse(err_bit_saver_valid_pulse),  // 1 bit
 
 		.i_early_stop_pulse(early_stop_pulse),      // 1 bit
+		.i_early_stop_tp(early_stop_tp),          // 3 bits
 		.i_early_stop(early_stop_level),      // 1 bit
+		.i_flip_pos1(flip_pos[1]),         // 10 bits
+		.i_flip_pos2(flip_pos[2]),         // 10 bits
 
 		.o_err_loc(odata),                  // 10 bits
 		.o_valid(finish)                     // 1 bit

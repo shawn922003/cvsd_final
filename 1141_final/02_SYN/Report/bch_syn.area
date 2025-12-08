@@ -3,30 +3,30 @@
 Report : area
 Design : bch
 Version: V-2023.12
-Date   : Sun Dec  7 04:33:11 2025
+Date   : Mon Dec  8 16:47:45 2025
 ****************************************
 
 Library(s) Used:
 
     slow (File: /mnt/data/LYX/cvsd/CBDK_IC_Contest/CIC/SynopsysDC/db/slow.db)
 
-Number of ports:                           82
-Number of nets:                         78186
-Number of cells:                        78077
-Number of combinational cells:          68790
-Number of sequential cells:              9229
+Number of ports:                         1506
+Number of nets:                         81153
+Number of cells:                        79980
+Number of combinational cells:          70228
+Number of sequential cells:              9394
 Number of macros/black boxes:               0
-Number of buf/inv:                      13771
-Number of references:                     211
+Number of buf/inv:                       7693
+Number of references:                     557
 
-Combinational area:             611792.177464
-Buf/Inv area:                    62131.628954
-Noncombinational area:          238004.339800
+Combinational area:             653432.789556
+Buf/Inv area:                    44020.371474
+Noncombinational area:          241119.069067
 Macro/Black Box area:                0.000000
-Net Interconnect area:         9163233.673065
+Net Interconnect area:         8753217.608582
 
-Total cell area:                849796.517264
-Total area:                   10013030.190330
+Total cell area:                894551.858623
+Total area:                    9647769.467204
 
 Hierarchical area distribution
 ------------------------------
@@ -35,9 +35,365 @@ Hierarchical area distribution
                                   --------------------  -------------------------------- 
 Hierarchical cell                 Absolute     Percent  Combi-       Noncombi-    Black-
                                   Total        Total    national     national     boxes   Design
---------------------------------  -----------  -------  -----------  -----------  ------  ---------
-bch                               849796.5173    100.0  611792.1775  238004.3398  0.0000  bch
---------------------------------  -----------  -------  -----------  -----------  ------  ---------
-Total                                                   611792.1775  238004.3398  0.0000
+--------------------------------  -----------  -------  -----------  -----------  ------  ----------------------------
+bch                               894551.8586    100.0  648133.5067  235076.3247  0.0000  bch
+clk_gate_u_llr_mem/mem_reg[1001]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_348
+clk_gate_u_llr_mem/mem_reg[1003]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_349
+clk_gate_u_llr_mem/mem_reg[1006]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_350
+clk_gate_u_llr_mem/mem_reg[1009]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_351
+clk_gate_u_llr_mem/mem_reg[1012]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_352
+clk_gate_u_llr_mem/mem_reg[1015]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_353
+clk_gate_u_llr_mem/mem_reg[1018]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_354
+clk_gate_u_llr_mem/mem_reg[101]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_33
+clk_gate_u_llr_mem/mem_reg[1021]      32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_355
+clk_gate_u_llr_mem/mem_reg[1023]      33.9480      0.0      16.9740      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_0
+clk_gate_u_llr_mem/mem_reg[104]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_34
+clk_gate_u_llr_mem/mem_reg[107]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_35
+clk_gate_u_llr_mem/mem_reg[10]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_1
+clk_gate_u_llr_mem/mem_reg[110]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_36
+clk_gate_u_llr_mem/mem_reg[113]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_37
+clk_gate_u_llr_mem/mem_reg[115]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_38
+clk_gate_u_llr_mem/mem_reg[118]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_39
+clk_gate_u_llr_mem/mem_reg[121]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_40
+clk_gate_u_llr_mem/mem_reg[124]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_41
+clk_gate_u_llr_mem/mem_reg[127]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_42
+clk_gate_u_llr_mem/mem_reg[130]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_43
+clk_gate_u_llr_mem/mem_reg[133]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_44
+clk_gate_u_llr_mem/mem_reg[135]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_45
+clk_gate_u_llr_mem/mem_reg[138]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_46
+clk_gate_u_llr_mem/mem_reg[13]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_2
+clk_gate_u_llr_mem/mem_reg[141]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_47
+clk_gate_u_llr_mem/mem_reg[144]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_48
+clk_gate_u_llr_mem/mem_reg[147]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_49
+clk_gate_u_llr_mem/mem_reg[150]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_50
+clk_gate_u_llr_mem/mem_reg[153]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_51
+clk_gate_u_llr_mem/mem_reg[155]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_52
+clk_gate_u_llr_mem/mem_reg[158]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_53
+clk_gate_u_llr_mem/mem_reg[161]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_54
+clk_gate_u_llr_mem/mem_reg[164]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_55
+clk_gate_u_llr_mem/mem_reg[167]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_56
+clk_gate_u_llr_mem/mem_reg[16]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_3
+clk_gate_u_llr_mem/mem_reg[170]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_57
+clk_gate_u_llr_mem/mem_reg[173]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_58
+clk_gate_u_llr_mem/mem_reg[175]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_59
+clk_gate_u_llr_mem/mem_reg[178]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_60
+clk_gate_u_llr_mem/mem_reg[181]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_61
+clk_gate_u_llr_mem/mem_reg[184]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_62
+clk_gate_u_llr_mem/mem_reg[187]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_63
+clk_gate_u_llr_mem/mem_reg[18]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_4
+clk_gate_u_llr_mem/mem_reg[190]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_64
+clk_gate_u_llr_mem/mem_reg[193]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_65
+clk_gate_u_llr_mem/mem_reg[195]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_66
+clk_gate_u_llr_mem/mem_reg[198]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_67
+clk_gate_u_llr_mem/mem_reg[201]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_68
+clk_gate_u_llr_mem/mem_reg[204]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_69
+clk_gate_u_llr_mem/mem_reg[207]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_70
+clk_gate_u_llr_mem/mem_reg[210]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_71
+clk_gate_u_llr_mem/mem_reg[213]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_72
+clk_gate_u_llr_mem/mem_reg[215]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_73
+clk_gate_u_llr_mem/mem_reg[218]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_74
+clk_gate_u_llr_mem/mem_reg[21]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_5
+clk_gate_u_llr_mem/mem_reg[221]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_75
+clk_gate_u_llr_mem/mem_reg[224]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_76
+clk_gate_u_llr_mem/mem_reg[227]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_77
+clk_gate_u_llr_mem/mem_reg[230]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_78
+clk_gate_u_llr_mem/mem_reg[233]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_79
+clk_gate_u_llr_mem/mem_reg[235]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_80
+clk_gate_u_llr_mem/mem_reg[238]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_81
+clk_gate_u_llr_mem/mem_reg[241]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_82
+clk_gate_u_llr_mem/mem_reg[244]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_83
+clk_gate_u_llr_mem/mem_reg[247]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_84
+clk_gate_u_llr_mem/mem_reg[24]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_6
+clk_gate_u_llr_mem/mem_reg[250]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_85
+clk_gate_u_llr_mem/mem_reg[253]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_86
+clk_gate_u_llr_mem/mem_reg[255]       30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_87
+clk_gate_u_llr_mem/mem_reg[258]       33.9480      0.0      16.9740      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_88
+clk_gate_u_llr_mem/mem_reg[261]       33.9480      0.0      16.9740      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_89
+clk_gate_u_llr_mem/mem_reg[264]       33.9480      0.0      16.9740      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_90
+clk_gate_u_llr_mem/mem_reg[266]       33.9480      0.0      16.9740      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_91
+clk_gate_u_llr_mem/mem_reg[269]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_92
+clk_gate_u_llr_mem/mem_reg[272]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_93
+clk_gate_u_llr_mem/mem_reg[275]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_94
+clk_gate_u_llr_mem/mem_reg[278]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_95
+clk_gate_u_llr_mem/mem_reg[27]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_7
+clk_gate_u_llr_mem/mem_reg[281]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_96
+clk_gate_u_llr_mem/mem_reg[283]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_97
+clk_gate_u_llr_mem/mem_reg[286]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_98
+clk_gate_u_llr_mem/mem_reg[289]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_99
+clk_gate_u_llr_mem/mem_reg[292]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_100
+clk_gate_u_llr_mem/mem_reg[295]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_101
+clk_gate_u_llr_mem/mem_reg[298]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_102
+clk_gate_u_llr_mem/mem_reg[301]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_103
+clk_gate_u_llr_mem/mem_reg[303]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_104
+clk_gate_u_llr_mem/mem_reg[306]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_105
+clk_gate_u_llr_mem/mem_reg[309]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_106
+clk_gate_u_llr_mem/mem_reg[30]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_8
+clk_gate_u_llr_mem/mem_reg[312]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_107
+clk_gate_u_llr_mem/mem_reg[315]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_108
+clk_gate_u_llr_mem/mem_reg[318]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_109
+clk_gate_u_llr_mem/mem_reg[321]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_110
+clk_gate_u_llr_mem/mem_reg[323]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_111
+clk_gate_u_llr_mem/mem_reg[326]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_112
+clk_gate_u_llr_mem/mem_reg[329]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_113
+clk_gate_u_llr_mem/mem_reg[332]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_114
+clk_gate_u_llr_mem/mem_reg[335]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_115
+clk_gate_u_llr_mem/mem_reg[338]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_116
+clk_gate_u_llr_mem/mem_reg[33]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_9
+clk_gate_u_llr_mem/mem_reg[341]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_117
+clk_gate_u_llr_mem/mem_reg[343]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_118
+clk_gate_u_llr_mem/mem_reg[346]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_119
+clk_gate_u_llr_mem/mem_reg[349]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_120
+clk_gate_u_llr_mem/mem_reg[352]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_121
+clk_gate_u_llr_mem/mem_reg[355]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_122
+clk_gate_u_llr_mem/mem_reg[358]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_123
+clk_gate_u_llr_mem/mem_reg[35]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_10
+clk_gate_u_llr_mem/mem_reg[361]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_124
+clk_gate_u_llr_mem/mem_reg[363]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_125
+clk_gate_u_llr_mem/mem_reg[366]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_126
+clk_gate_u_llr_mem/mem_reg[369]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_127
+clk_gate_u_llr_mem/mem_reg[372]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_128
+clk_gate_u_llr_mem/mem_reg[375]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_129
+clk_gate_u_llr_mem/mem_reg[378]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_130
+clk_gate_u_llr_mem/mem_reg[381]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_131
+clk_gate_u_llr_mem/mem_reg[383]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_132
+clk_gate_u_llr_mem/mem_reg[386]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_133
+clk_gate_u_llr_mem/mem_reg[389]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_134
+clk_gate_u_llr_mem/mem_reg[38]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_11
+clk_gate_u_llr_mem/mem_reg[392]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_135
+clk_gate_u_llr_mem/mem_reg[395]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_136
+clk_gate_u_llr_mem/mem_reg[398]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_137
+clk_gate_u_llr_mem/mem_reg[401]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_138
+clk_gate_u_llr_mem/mem_reg[403]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_139
+clk_gate_u_llr_mem/mem_reg[406]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_140
+clk_gate_u_llr_mem/mem_reg[409]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_141
+clk_gate_u_llr_mem/mem_reg[412]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_142
+clk_gate_u_llr_mem/mem_reg[415]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_143
+clk_gate_u_llr_mem/mem_reg[418]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_144
+clk_gate_u_llr_mem/mem_reg[41]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_12
+clk_gate_u_llr_mem/mem_reg[421]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_145
+clk_gate_u_llr_mem/mem_reg[423]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_146
+clk_gate_u_llr_mem/mem_reg[426]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_147
+clk_gate_u_llr_mem/mem_reg[429]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_148
+clk_gate_u_llr_mem/mem_reg[432]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_149
+clk_gate_u_llr_mem/mem_reg[435]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_150
+clk_gate_u_llr_mem/mem_reg[438]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_151
+clk_gate_u_llr_mem/mem_reg[441]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_152
+clk_gate_u_llr_mem/mem_reg[443]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_153
+clk_gate_u_llr_mem/mem_reg[446]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_154
+clk_gate_u_llr_mem/mem_reg[449]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_155
+clk_gate_u_llr_mem/mem_reg[44]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_13
+clk_gate_u_llr_mem/mem_reg[452]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_156
+clk_gate_u_llr_mem/mem_reg[455]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_157
+clk_gate_u_llr_mem/mem_reg[458]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_158
+clk_gate_u_llr_mem/mem_reg[461]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_159
+clk_gate_u_llr_mem/mem_reg[463]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_160
+clk_gate_u_llr_mem/mem_reg[466]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_161
+clk_gate_u_llr_mem/mem_reg[469]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_162
+clk_gate_u_llr_mem/mem_reg[472]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_163
+clk_gate_u_llr_mem/mem_reg[475]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_164
+clk_gate_u_llr_mem/mem_reg[478]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_165
+clk_gate_u_llr_mem/mem_reg[47]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_14
+clk_gate_u_llr_mem/mem_reg[481]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_166
+clk_gate_u_llr_mem/mem_reg[483]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_167
+clk_gate_u_llr_mem/mem_reg[486]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_168
+clk_gate_u_llr_mem/mem_reg[489]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_169
+clk_gate_u_llr_mem/mem_reg[492]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_170
+clk_gate_u_llr_mem/mem_reg[495]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_171
+clk_gate_u_llr_mem/mem_reg[498]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_172
+clk_gate_u_llr_mem/mem_reg[501]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_173
+clk_gate_u_llr_mem/mem_reg[503]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_174
+clk_gate_u_llr_mem/mem_reg[506]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_175
+clk_gate_u_llr_mem/mem_reg[509]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_176
+clk_gate_u_llr_mem/mem_reg[50]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_15
+clk_gate_u_llr_mem/mem_reg[512]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_177
+clk_gate_u_llr_mem/mem_reg[515]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_178
+clk_gate_u_llr_mem/mem_reg[518]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_179
+clk_gate_u_llr_mem/mem_reg[521]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_180
+clk_gate_u_llr_mem/mem_reg[523]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_181
+clk_gate_u_llr_mem/mem_reg[526]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_182
+clk_gate_u_llr_mem/mem_reg[529]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_183
+clk_gate_u_llr_mem/mem_reg[532]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_184
+clk_gate_u_llr_mem/mem_reg[535]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_185
+clk_gate_u_llr_mem/mem_reg[538]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_186
+clk_gate_u_llr_mem/mem_reg[53]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_16
+clk_gate_u_llr_mem/mem_reg[541]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_187
+clk_gate_u_llr_mem/mem_reg[543]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_188
+clk_gate_u_llr_mem/mem_reg[546]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_189
+clk_gate_u_llr_mem/mem_reg[549]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_190
+clk_gate_u_llr_mem/mem_reg[552]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_191
+clk_gate_u_llr_mem/mem_reg[555]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_192
+clk_gate_u_llr_mem/mem_reg[558]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_193
+clk_gate_u_llr_mem/mem_reg[55]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_17
+clk_gate_u_llr_mem/mem_reg[561]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_194
+clk_gate_u_llr_mem/mem_reg[563]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_195
+clk_gate_u_llr_mem/mem_reg[566]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_196
+clk_gate_u_llr_mem/mem_reg[569]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_197
+clk_gate_u_llr_mem/mem_reg[572]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_198
+clk_gate_u_llr_mem/mem_reg[575]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_199
+clk_gate_u_llr_mem/mem_reg[578]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_200
+clk_gate_u_llr_mem/mem_reg[581]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_201
+clk_gate_u_llr_mem/mem_reg[583]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_202
+clk_gate_u_llr_mem/mem_reg[586]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_203
+clk_gate_u_llr_mem/mem_reg[589]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_204
+clk_gate_u_llr_mem/mem_reg[58]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_18
+clk_gate_u_llr_mem/mem_reg[592]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_205
+clk_gate_u_llr_mem/mem_reg[595]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_206
+clk_gate_u_llr_mem/mem_reg[598]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_207
+clk_gate_u_llr_mem/mem_reg[601]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_208
+clk_gate_u_llr_mem/mem_reg[603]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_209
+clk_gate_u_llr_mem/mem_reg[606]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_210
+clk_gate_u_llr_mem/mem_reg[609]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_211
+clk_gate_u_llr_mem/mem_reg[612]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_212
+clk_gate_u_llr_mem/mem_reg[615]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_213
+clk_gate_u_llr_mem/mem_reg[618]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_214
+clk_gate_u_llr_mem/mem_reg[61]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_19
+clk_gate_u_llr_mem/mem_reg[621]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_215
+clk_gate_u_llr_mem/mem_reg[623]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_216
+clk_gate_u_llr_mem/mem_reg[626]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_217
+clk_gate_u_llr_mem/mem_reg[629]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_218
+clk_gate_u_llr_mem/mem_reg[632]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_219
+clk_gate_u_llr_mem/mem_reg[635]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_220
+clk_gate_u_llr_mem/mem_reg[638]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_221
+clk_gate_u_llr_mem/mem_reg[641]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_222
+clk_gate_u_llr_mem/mem_reg[643]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_223
+clk_gate_u_llr_mem/mem_reg[646]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_224
+clk_gate_u_llr_mem/mem_reg[649]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_225
+clk_gate_u_llr_mem/mem_reg[64]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_20
+clk_gate_u_llr_mem/mem_reg[652]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_226
+clk_gate_u_llr_mem/mem_reg[655]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_227
+clk_gate_u_llr_mem/mem_reg[658]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_228
+clk_gate_u_llr_mem/mem_reg[661]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_229
+clk_gate_u_llr_mem/mem_reg[663]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_230
+clk_gate_u_llr_mem/mem_reg[666]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_231
+clk_gate_u_llr_mem/mem_reg[669]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_232
+clk_gate_u_llr_mem/mem_reg[672]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_233
+clk_gate_u_llr_mem/mem_reg[675]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_234
+clk_gate_u_llr_mem/mem_reg[678]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_235
+clk_gate_u_llr_mem/mem_reg[67]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_21
+clk_gate_u_llr_mem/mem_reg[681]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_236
+clk_gate_u_llr_mem/mem_reg[683]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_237
+clk_gate_u_llr_mem/mem_reg[686]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_238
+clk_gate_u_llr_mem/mem_reg[689]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_239
+clk_gate_u_llr_mem/mem_reg[692]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_240
+clk_gate_u_llr_mem/mem_reg[695]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_241
+clk_gate_u_llr_mem/mem_reg[698]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_242
+clk_gate_u_llr_mem/mem_reg[701]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_243
+clk_gate_u_llr_mem/mem_reg[703]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_244
+clk_gate_u_llr_mem/mem_reg[706]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_245
+clk_gate_u_llr_mem/mem_reg[709]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_246
+clk_gate_u_llr_mem/mem_reg[70]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_22
+clk_gate_u_llr_mem/mem_reg[712]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_247
+clk_gate_u_llr_mem/mem_reg[715]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_248
+clk_gate_u_llr_mem/mem_reg[718]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_249
+clk_gate_u_llr_mem/mem_reg[721]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_250
+clk_gate_u_llr_mem/mem_reg[723]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_251
+clk_gate_u_llr_mem/mem_reg[726]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_252
+clk_gate_u_llr_mem/mem_reg[729]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_253
+clk_gate_u_llr_mem/mem_reg[732]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_254
+clk_gate_u_llr_mem/mem_reg[735]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_255
+clk_gate_u_llr_mem/mem_reg[738]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_256
+clk_gate_u_llr_mem/mem_reg[73]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_23
+clk_gate_u_llr_mem/mem_reg[741]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_257
+clk_gate_u_llr_mem/mem_reg[743]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_258
+clk_gate_u_llr_mem/mem_reg[746]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_259
+clk_gate_u_llr_mem/mem_reg[749]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_260
+clk_gate_u_llr_mem/mem_reg[752]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_261
+clk_gate_u_llr_mem/mem_reg[755]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_262
+clk_gate_u_llr_mem/mem_reg[758]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_263
+clk_gate_u_llr_mem/mem_reg[75]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_24
+clk_gate_u_llr_mem/mem_reg[761]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_264
+clk_gate_u_llr_mem/mem_reg[763]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_265
+clk_gate_u_llr_mem/mem_reg[766]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_266
+clk_gate_u_llr_mem/mem_reg[769]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_267
+clk_gate_u_llr_mem/mem_reg[772]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_268
+clk_gate_u_llr_mem/mem_reg[775]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_269
+clk_gate_u_llr_mem/mem_reg[778]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_270
+clk_gate_u_llr_mem/mem_reg[781]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_271
+clk_gate_u_llr_mem/mem_reg[783]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_272
+clk_gate_u_llr_mem/mem_reg[786]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_273
+clk_gate_u_llr_mem/mem_reg[789]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_274
+clk_gate_u_llr_mem/mem_reg[78]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_25
+clk_gate_u_llr_mem/mem_reg[792]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_275
+clk_gate_u_llr_mem/mem_reg[795]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_276
+clk_gate_u_llr_mem/mem_reg[798]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_277
+clk_gate_u_llr_mem/mem_reg[801]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_278
+clk_gate_u_llr_mem/mem_reg[803]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_279
+clk_gate_u_llr_mem/mem_reg[806]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_280
+clk_gate_u_llr_mem/mem_reg[809]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_281
+clk_gate_u_llr_mem/mem_reg[812]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_282
+clk_gate_u_llr_mem/mem_reg[815]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_283
+clk_gate_u_llr_mem/mem_reg[818]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_284
+clk_gate_u_llr_mem/mem_reg[81]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_26
+clk_gate_u_llr_mem/mem_reg[821]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_285
+clk_gate_u_llr_mem/mem_reg[823]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_286
+clk_gate_u_llr_mem/mem_reg[826]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_287
+clk_gate_u_llr_mem/mem_reg[829]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_288
+clk_gate_u_llr_mem/mem_reg[832]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_289
+clk_gate_u_llr_mem/mem_reg[835]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_290
+clk_gate_u_llr_mem/mem_reg[838]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_291
+clk_gate_u_llr_mem/mem_reg[841]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_292
+clk_gate_u_llr_mem/mem_reg[843]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_293
+clk_gate_u_llr_mem/mem_reg[846]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_294
+clk_gate_u_llr_mem/mem_reg[849]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_295
+clk_gate_u_llr_mem/mem_reg[84]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_27
+clk_gate_u_llr_mem/mem_reg[852]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_296
+clk_gate_u_llr_mem/mem_reg[855]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_297
+clk_gate_u_llr_mem/mem_reg[858]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_298
+clk_gate_u_llr_mem/mem_reg[861]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_299
+clk_gate_u_llr_mem/mem_reg[863]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_300
+clk_gate_u_llr_mem/mem_reg[866]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_301
+clk_gate_u_llr_mem/mem_reg[869]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_302
+clk_gate_u_llr_mem/mem_reg[872]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_303
+clk_gate_u_llr_mem/mem_reg[875]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_304
+clk_gate_u_llr_mem/mem_reg[878]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_305
+clk_gate_u_llr_mem/mem_reg[87]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_28
+clk_gate_u_llr_mem/mem_reg[881]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_306
+clk_gate_u_llr_mem/mem_reg[883]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_307
+clk_gate_u_llr_mem/mem_reg[886]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_308
+clk_gate_u_llr_mem/mem_reg[889]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_309
+clk_gate_u_llr_mem/mem_reg[892]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_310
+clk_gate_u_llr_mem/mem_reg[895]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_311
+clk_gate_u_llr_mem/mem_reg[898]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_312
+clk_gate_u_llr_mem/mem_reg[901]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_313
+clk_gate_u_llr_mem/mem_reg[903]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_314
+clk_gate_u_llr_mem/mem_reg[906]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_315
+clk_gate_u_llr_mem/mem_reg[909]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_316
+clk_gate_u_llr_mem/mem_reg[90]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_29
+clk_gate_u_llr_mem/mem_reg[912]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_317
+clk_gate_u_llr_mem/mem_reg[915]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_318
+clk_gate_u_llr_mem/mem_reg[918]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_319
+clk_gate_u_llr_mem/mem_reg[921]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_320
+clk_gate_u_llr_mem/mem_reg[923]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_321
+clk_gate_u_llr_mem/mem_reg[926]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_322
+clk_gate_u_llr_mem/mem_reg[929]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_323
+clk_gate_u_llr_mem/mem_reg[932]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_324
+clk_gate_u_llr_mem/mem_reg[935]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_325
+clk_gate_u_llr_mem/mem_reg[938]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_326
+clk_gate_u_llr_mem/mem_reg[93]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_30
+clk_gate_u_llr_mem/mem_reg[941]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_327
+clk_gate_u_llr_mem/mem_reg[943]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_328
+clk_gate_u_llr_mem/mem_reg[946]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_329
+clk_gate_u_llr_mem/mem_reg[949]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_330
+clk_gate_u_llr_mem/mem_reg[952]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_331
+clk_gate_u_llr_mem/mem_reg[955]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_332
+clk_gate_u_llr_mem/mem_reg[958]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_333
+clk_gate_u_llr_mem/mem_reg[95]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_31
+clk_gate_u_llr_mem/mem_reg[961]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_334
+clk_gate_u_llr_mem/mem_reg[963]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_335
+clk_gate_u_llr_mem/mem_reg[966]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_336
+clk_gate_u_llr_mem/mem_reg[969]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_337
+clk_gate_u_llr_mem/mem_reg[972]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_338
+clk_gate_u_llr_mem/mem_reg[975]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_339
+clk_gate_u_llr_mem/mem_reg[978]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_340
+clk_gate_u_llr_mem/mem_reg[981]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_341
+clk_gate_u_llr_mem/mem_reg[983]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_342
+clk_gate_u_llr_mem/mem_reg[986]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_343
+clk_gate_u_llr_mem/mem_reg[989]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_344
+clk_gate_u_llr_mem/mem_reg[98]        30.5532      0.0      13.5792      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_32
+clk_gate_u_llr_mem/mem_reg[992]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_345
+clk_gate_u_llr_mem/mem_reg[995]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_346
+clk_gate_u_llr_mem/mem_reg[998]       32.2506      0.0      15.2766      16.9740  0.0000  SNPS_CLOCK_GATE_HIGH_bch_347
+--------------------------------  -----------  -------  -----------  -----------  ------  ----------------------------
+Total                                                   653432.7896  241119.0691  0.0000
 
 1

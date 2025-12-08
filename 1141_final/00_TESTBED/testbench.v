@@ -21,8 +21,8 @@ wire [9:0] odata;
 
 // --------------------------
 // test data
-reg [63:0] testdata [0:128000];
-reg [9:0] testa [0:10000];
+reg [63:0] testdata [0:1280000];
+reg [9:0] testa [0:100000];
 integer i1, i2, i3;
 integer errcnt;
 
@@ -90,6 +90,36 @@ initial begin
 		NTEST = 1000;
 		$readmemb("../00_TESTBED/tb/bch1023_hard/p302.txt", testdata);
 		$readmemb("../00_TESTBED/tb/bch1023_hard/p302a.txt", testa);
+	end
+	if (PATTERN == 10000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/p10000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/p10000a.txt", testa);
+	end
+	if (PATTERN == 20000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/p20000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/p20000a.txt", testa);
+	end
+	if (PATTERN == 30000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/p30000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/p30000a.txt", testa);
+	end
+	if (PATTERN == 40000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/soft_decoder_10000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/soft_decoder_10000a.txt", testa);
+	end
+	if (PATTERN == 50000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/soft_decoder_20000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/soft_decoder_20000a.txt", testa);
+	end
+	if (PATTERN == 60000) begin
+		NTEST = 10000;
+		$readmemb("../00_TESTBED/tb/soft_decorder_30000.txt", testdata);
+		$readmemb("../00_TESTBED/tb/soft_decorder_30000a.txt", testa);
 	end
 end
 
@@ -185,6 +215,25 @@ initial begin
 			code = 3;
 			mode = 0;  // 硬判决 bch1023
 		end
+		else if (PATTERN <= 10000) begin
+			code = 1;
+			mode = 0;  // 硬判决
+		end else if (PATTERN <= 20000) begin
+			code = 2;
+			mode = 0;  // 硬判决
+		end else if (PATTERN <= 30000) begin
+			code = 3;
+			mode = 0;  // 硬判决
+		end else if (PATTERN <= 40000) begin
+			code = 1;
+			mode = 1;  // 软判决
+		end else if (PATTERN <= 50000) begin
+			code = 2;
+			mode = 1;  // 软判决
+		end else if (PATTERN <= 60000) begin
+			code = 3;
+			mode = 1;  // 软判决
+		end
 
 		set = 1;
 		#(CYCLE);
@@ -222,7 +271,7 @@ initial begin
 	$finish;
 end
 initial begin
-	#(CYCLE*1000000);
+	#(CYCLE*10000000);
 	$write("Timeout\n");
 	$finish;
 end
