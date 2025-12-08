@@ -1,50 +1,11 @@
 # Version:1.0 MMMC View Definition File
 # Do Not Remove Above Line
-
-#------------------------------------
-# RC corner
-#------------------------------------
-create_rc_corner -name RC_Corner \
-    -cap_table {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/tsmc013.capTbl} \
-    -preRoute_res {1.0}  -preRoute_cap {1.0} \
-    -preRoute_clkres {0.0} -preRoute_clkcap {0.0} \
-    -postRoute_res {1.0}  -postRoute_cap {1.0} \
-    -postRoute_xcap {1.0} \
-    -postRoute_clkres {0.0} -postRoute_clkcap {0.0} \
-    -qx_tech_file {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/tsmc13_8lm.cl/icecaps_8lm.tch}
-
-#------------------------------------
-# Library sets
-#  max: slow.lib
-#  min: fast.lib
-#------------------------------------
-
-# 以前就可以跑的那一組 (setup 用)
-create_library_set -name lib_max \
-    -timing {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/slow.lib} \
-    -si {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/celtic/slow.cdB}
-
-# 新增的 fast corner (hold 用)
-# 注意：這裡 **故意不寫 -si**，很多教材根本沒有 fast.cdB
-create_library_set -name lib_min \
-    -timing {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/fast.lib}
-
-#------------------------------------
-# Constraint mode
-#------------------------------------
+create_rc_corner -name RC_corner -cap_table {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/tsmc013.capTbl} -preRoute_res {1.0} -preRoute_cap {1.0} -preRoute_clkres {0.0} -preRoute_clkcap {0.0} -postRoute_res {1.0} -postRoute_cap {1.0} -postRoute_xcap {1.0} -postRoute_clkres {0.0} -postRoute_clkcap {0.0} -qx_tech_file {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/tsmc13_8lm.cl/icecaps_8lm.tch}
+create_library_set -name lib_max -timing {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/slow.lib /home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/RF2SH64x16_slow_syn.lib /home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/tpz013g3wc.lib} -si {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/celtic/slow.cdB}
+create_library_set -name lib_min -timing {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/fast.lib /home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/RF2SH64x16_fast@0C_syn.lib /home/raid7_4/raid1_1/PnR/SOCE_Lab/library/lib/tpz013g3lt.lib} -si {/home/raid7_4/raid1_1/PnR/SOCE_Lab/library/celtic/fast.cdB}
 create_constraint_mode -name func_mode -sdc_files {bch_syn.sdc}
-
-#------------------------------------
-# Delay corners
-#------------------------------------
-create_delay_corner -name Delay_Corner_max -library_set {lib_max} -rc_corner {RC_Corner}
-create_delay_corner -name Delay_Corner_min -library_set {lib_min} -rc_corner {RC_Corner}
-
-#------------------------------------
-# Analysis views
-#------------------------------------
+create_delay_corner -name Delay_Corner_max -library_set {lib_max} -rc_corner {RC_corner}
+create_delay_corner -name Delay_Corner_min -library_set {lib_min} -rc_corner {RC_corner}
 create_analysis_view -name av_func_mode_max -constraint_mode {func_mode} -delay_corner {Delay_Corner_max}
 create_analysis_view -name av_func_mode_min -constraint_mode {func_mode} -delay_corner {Delay_Corner_min}
-
-# setup 用 slow(max)，hold 用 fast(min)
 set_analysis_view -setup {av_func_mode_max} -hold {av_func_mode_min}
