@@ -54,6 +54,8 @@ module bch(
 
 	wire [9:0] ibm_sigma1[0:4];
 	wire [9:0] ibm_sigma2[0:2];
+	wire [3:0] ibm_degree[1:2];
+	wire ibm_correct[1:2];
 
 	wire ibm_out_valid;
 
@@ -394,10 +396,14 @@ module bch(
 		.o_sigma1_2(ibm_sigma1[2]),     // 10 bits
 		.o_sigma1_3(ibm_sigma1[3]),     // 10 bits
 		.o_sigma1_4(ibm_sigma1[4]),     // 10 bits
+		.o_degree1(ibm_degree[1]),      // 4 bits
+		.o_correct1(ibm_correct[1]),     // 1 bit
 
 		.o_sigma2_0(ibm_sigma2[0]),     // 10 bits
 		.o_sigma2_1(ibm_sigma2[1]),     // 10 bits
 		.o_sigma2_2(ibm_sigma2[2]),     // 10 bits
+		.o_degree2(ibm_degree[2]),      // 4 bits
+		.o_correct2(ibm_correct[2]),     // 1 bit
 
 		.o_valid(ibm_out_valid),        // 1 bit
 		.o_next_S(syndrome_switch_next_tp)        // 1 bit
@@ -421,9 +427,13 @@ module bch(
 		.i_sigma1_2(ibm_sigma1[2]),     // 10 bits
 		.i_sigma1_3(ibm_sigma1[3]),     // 10 bits
 		.i_sigma1_4(ibm_sigma1[4]),     // 10 bits
+		.i_degree1(ibm_degree[1]),      // 4 bits
+		.i_correct1(ibm_correct[1]),     // 1 bit
 		.i_sigma2_0(ibm_sigma2[0]),     // 10 bits
 		.i_sigma2_1(ibm_sigma2[1]),     // 10 bits
 		.i_sigma2_2(ibm_sigma2[2]),     // 10 bits
+		.i_degree2(ibm_degree[2]),      // 4 bits
+		.i_correct2(ibm_correct[2]),     // 1 bit
 
 		.o_err_loc0(chien_search_err_loc_out[0]),     // 10 bits
 		.o_err_loc1(chien_search_err_loc_out[1]),     // 10 bits

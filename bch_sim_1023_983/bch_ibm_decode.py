@@ -121,6 +121,16 @@ class BCH1023_983_Decoder:
 
             Phi, Psi = newPhi, newPsi
 
+        # --- 用 l^(2t) 推回 Berlekamp 的 degree L^(2t) ---
+        # Theorem: l^(r) = r - 2 L^(r)  =>  L^(2t) = (2t - l^(2t)) / 2
+        L_num = 2 * T - l
+        if L_num & 1:
+            # 正常情況不應該發生，保險起見加個檢查
+            raise ValueError(f"Inversionless BM inconsistent state: 2T-l = {L_num} is odd")
+
+        L_est = L_num >> 1          # estimated degree of Λ
+        
+        
         # Λ̂(2t)(z) = Φ(2t)[t .. 2t]
         sigma = [Phi[T + j] if (T + j) < len(Phi) else zero for j in range(T + 1)]
         sigma0 = sigma[0] if len(sigma) > 0 else zero
@@ -128,7 +138,7 @@ class BCH1023_983_Decoder:
         sigma2 = sigma[2] if len(sigma) > 2 else zero
         sigma3 = sigma[3] if len(sigma) > 3 else zero
         sigma4 = sigma[4] if len(sigma) > 4 else zero
-        return sigma0, sigma1, sigma2, sigma3, sigma4
+        return sigma0, sigma1, sigma2, sigma3, sigma4, L_est
 
     # ---------------- Chien Search (use sigma0, NOT hard-coded 1) ----------------
     def chien_search(self, sigma0: List[int], sigma1: List[int], sigma2: List[int], sigma3: List[int], sigma4: List[int]) -> List[int]:
@@ -184,7 +194,7 @@ class BCH1023_983_Decoder:
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
     def hard_decode(self, r: List[int]):
         S1, S3, S5, S7 = self.syndromes(r)
-        sigma0, sigma1, sigma2, sigma3, sigma4 = self.berlekamp_iBM(S1, S3, S5, S7)
+        sigma0, sigma1, sigma2, sigma3, sigma4, sigma_degree = self.berlekamp_iBM(S1, S3, S5, S7)
         roots = self.chien_search(sigma0, sigma1, sigma2, sigma3, sigma4)
 
 
@@ -201,7 +211,7 @@ class BCH1023_983_Decoder:
             deg = 3
         else:
             deg = 4
-        success = (deg == len(roots))
+        success = (deg == len(roots))  and sigma_degree <= T
 
         return corrected, roots, success, (sigma1, sigma2, sigma3, sigma4), (S1, S3 , S5, S7)
     

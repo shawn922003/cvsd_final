@@ -145,7 +145,7 @@ class BCH1023_983_Decoder:
         sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
         sigma3 = final_sigma_poly[3] if len(final_sigma_poly) > 3 else gf.zero()
         sigma4 = final_sigma_poly[4] if len(final_sigma_poly) > 4 else gf.zero()
-        return sigma1, sigma2, sigma3, sigma4
+        return sigma1, sigma2, sigma3, sigma4, len(final_sigma_poly) - 1 
 
 
     # Chien 掃根：找 i 使 σ(α^{-i})=0
@@ -176,7 +176,7 @@ class BCH1023_983_Decoder:
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2, sigma3, sigma4), (S1, S3, S5, S7)）
     def hard_decode(self, r: List[int]):
         S1, S3, S5, S7 = self.syndromes(r)
-        sigma1, sigma2, sigma3, sigma4 = self.berlekamp(S1, S3, S5, S7)
+        sigma1, sigma2, sigma3, sigma4, sigma_length = self.berlekamp(S1, S3, S5, S7)
         roots = self.chien_search(sigma1, sigma2, sigma3, sigma4)
 
 
@@ -202,7 +202,7 @@ class BCH1023_983_Decoder:
         else:
             deg = 1
             
-        success = (deg == len(roots))
+        success = (deg == len(roots))  and sigma_length <= T
         return corrected, roots,success, (sigma1, sigma2, sigma3, sigma4), (S1, S3, S5, S7)
     
     # ---------------------------- 軟判決解碼 ----------------------------

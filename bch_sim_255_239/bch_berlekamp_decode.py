@@ -138,7 +138,7 @@ class BCH255_239_Decoder:
         final_sigma_poly = sigma_mu_poly_array[2*T+1]
         sigma1 = final_sigma_poly[1] if len(final_sigma_poly) > 1 else gf.zero()
         sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
-        return sigma1, sigma2
+        return sigma1, sigma2, len(final_sigma_poly) - 1
 
 
     # Chien 掃根：找 i 使 σ(α^{-i})=0
@@ -164,7 +164,7 @@ class BCH255_239_Decoder:
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
     def hard_decode(self, r: List[int]):
         S1, S3 = self.syndromes(r)
-        sigma1, sigma2 = self.berlekamp(S1, S3)
+        sigma1, sigma2, sigma_length = self.berlekamp(S1, S3)
         roots = self.chien_search(sigma1, sigma2)
 
 
@@ -178,7 +178,7 @@ class BCH255_239_Decoder:
         else:
             deg = 2
             
-        success = (deg == len(roots))
+        success = (deg == len(roots)) and sigma_length <= T
 
         return corrected, roots, success, (sigma1, sigma2), (S1, S3)
     
@@ -196,13 +196,17 @@ class BCH255_239_Decoder:
         
         all_failed = True
 
-        for pattern in product([0, 1], repeat=p):
+        if p == 2:
+            patterns = [(0,0), (1,0), (0,1), (1,1)]
+        else:
+            patterns = product([0, 1], repeat=p)
+        for pattern in patterns:
             # 先從硬判決結果複製一份
             rx = input_rx[:]
 
             # 依 pattern 覆寫/翻轉最不可靠的位
             for idx, bit in zip(sorted_indices, pattern):
-                rx[idx] = bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
+                rx[idx] ^= bit   # 或 rx[idx] ^= bit，看你想怎麼定義 pattern
 
             # 硬解碼
             corrected, roots, success, _, _ = self.hard_decode(rx)
@@ -250,37 +254,95 @@ def mul(a, b):
 # -------------------------
 # 小測試（用 1/2-bit 錯誤）
 # -------------------------
+def bits_to_signed_list(bit_str):
+    assert len(bit_str) % 8 == 0, "長度不是 8 的倍數"
+    vals = []
+    for i in range(0, len(bit_str), 8):
+        byte = bit_str[i:i+8]
+        u = int(byte, 2)       # 先當成 unsigned
+        if u >= 128:           # 轉成 signed 8-bit
+            u -= 256
+        vals.append(u)
+    return vals
+
+
+# -------------------------
+# 小測試（用 1/2-bit 錯誤）
+# -------------------------
 if __name__ == "__main__":
     dec = BCH255_239_Decoder()
-    tx = [0]*239
+    # tx = [0]*239
     
-    # 編碼
-    rx = mul(tx, GENERATOR_POLY)
+    # # 編碼
+    # rx = mul(tx, GENERATOR_POLY)
     
-    hard_codeword = rx[:]
-    error0 = 10
-    error1 = 100
-    hard_codeword[error0] ^= 1
-    hard_codeword[error1] ^= 1
-    correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
-    print(f"硬判決：是否修正回原碼字？ {correted == rx}")
-    print(f"硬判決：Chien 找到 roots = {roots}") 
+    # hard_codeword = rx[:]
+    # error0 = 10
+    # error1 = 100
+    # hard_codeword[error0] ^= 1
+    # hard_codeword[error1] ^= 1
+    # correted, roots, _, _, _ = dec.hard_decode(hard_codeword)
+    # print(f"硬判決：是否修正回原碼字？ {correted == rx}")
+    # print(f"硬判決：Chien 找到 roots = {roots}") 
     
     
-    # p=2：只在這兩個最不可靠位上枚舉 4 個候選
-    soft_decode_llr = []
-    errors =[10, 100, 150, 200]
-    for idx in range(N):
-        soft_decode_llr.append((1-2 *rx[idx]) * 127)
+    # # p=2：只在這兩個最不可靠位上枚舉 4 個候選
+    # soft_decode_llr = []
+    # errors =[10, 100, 150, 200]
+    # for idx in range(N):
+    #     soft_decode_llr.append((1-2 *rx[idx]) * 127)
     
-    soft_decode_llr[errors[0]] = -20
-    soft_decode_llr[errors[1]] = -20
-    soft_decode_llr[errors[2]] = -10
-    soft_decode_llr[errors[3]] = -10
+    # soft_decode_llr[errors[0]] = -20
+    # soft_decode_llr[errors[1]] = -20
+    # soft_decode_llr[errors[2]] = -10
+    # soft_decode_llr[errors[3]] = -10
     
-    p = 2
-    soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
+    # p = 2
+    # soft_corrected, roots = dec.soft_decode(soft_decode_llr, p=p)
 
-    # 驗證與顯示
-    print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
-    print(f"軟判決：Chien 找到 roots = {roots}")
+    # # 驗證與顯示
+    # print(f"軟判決：是否修正回原碼字？ {soft_corrected == rx}")
+    # print(f"軟判決：Chien 找到 roots = {roots}")
+    
+    bits = """0000000000111001101010001110101111001011001010111101000110111011
+1101010010010110101111010100001111010100100111000001100110101100
+0010000111110001011101110001011101000011010001111011111010001110
+1011111001111110001000100110110011110000101000101010000000110011
+0111010001010010001011010010100101100100101001011011111001100011
+0001101001010001110110101001010110101001101100100101101111101110
+1000100111100001101111101011001011110101110100010000100001000100
+0011001000101001101000000101000011010011010010001101110011110000
+1101011110100110010101001101110111101101110001001100011100110000
+0011000010010101001010011011101100101011110101100001011001001111
+0011101000010110110000101100001010001101101000101111001010110110
+0100000001010011101011100101110000110101101100001100100000001110
+1110010000101010010100111001000100001100000101101101011100100000
+0111111000001010000111100111110111010110010010111000100101101011
+1010100100010000100101111110110010010101111100101001011111111000
+1110011110110110100001010001111011110110101110001011010000110101
+0111111110001010011000110001011011001001010111001101101110000101
+1111011111000101010001011110000000110111010001010111001000001010
+1101001000100010111101100000110101001010010010000101111001000110
+1100010011011110001011110001010000111010100111110100011011011100
+0011001000001110011101101111101000010100001111010101011000101001
+1101000101011110011010001101000101011001001000110011101101010110
+0001010100110100111000010011101101111011011010010111101001011100
+1101000010010111001110101100011001001000001111010100110111110010
+1100000001111000100110111010111000111010010011111010011010100011
+0110100000111100010100111000110111100110111011000110010111000101
+0101011000100101011100001101111111001010111100001101111111110001
+0011010010101101000010110001100001100110101000010010010011000110
+1111100110000110101000111011001111100001100001111001010101101100
+1011000010000001011111010000110100000111000001001100011100101010
+1100101110000111101110110111011101011011100101101001001010111100
+1001000000111100111101011110011001010100011000010100000101001000"""
+    
+    bits = bits.replace("\n", "").replace(" ", "")
+    llrs = bits_to_signed_list(bits)
+    llrs = llrs[1:]
+    llrs = list(reversed(llrs))
+    
+    # input_rx = [0 if val >= 0 else 1 for val in llrs]
+    # result = dec.soft_decode(input_rx)
+    
+    result = dec.soft_decode(llrs, p=2)

@@ -13,9 +13,13 @@ module chien_search(
     input [9:0] i_sigma1_2,
     input [9:0] i_sigma1_3,
     input [9:0] i_sigma1_4,
+    input [3:0] i_degree1,
+    input i_correct1,
     input [9:0] i_sigma2_0,
     input [9:0] i_sigma2_1,
     input [9:0] i_sigma2_2,
+    input [3:0] i_degree2,
+    input i_correct2,
 
     output [9:0] o_err_loc0,
     output [9:0] o_err_loc1,
@@ -139,6 +143,12 @@ module chien_search(
     reg [9:0] llr_sum, llr_sum_next;
 
     wire o_llr_sum_valid_internal;
+
+    reg correct1_1, correct1_2;
+    reg correct1_1_next, correct1_2_next;
+    wire correct2_1;
+    wire correct2_2;
+    
 
 
     assign o_llr_sum_valid = o_llr_sum_valid_internal & ~i_early_stop;
@@ -335,6 +345,29 @@ module chien_search(
 
 
     delay_n #(
+        .N(2),
+        .BITS(1)
+    ) u_delay_correct1 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(correct1_1),
+        .o_q(correct2_1)
+    );
+
+    delay_n #(
+        .N(2),
+        .BITS(1)
+    ) u_delay_correct2 (
+        .i_clk(i_clk),
+        .i_rst_n(i_rst_n),
+        .i_en(1'b1),
+        .i_d(correct1_2),
+        .o_q(correct2_2)
+    );
+
+
+    delay_n #(
         .N(1),
         .BITS(7)
     ) u_delay_n_llr0 (
@@ -344,6 +377,7 @@ module chien_search(
         .i_d(find_1_idx_0_out),
         .o_q(o_llr_mem_pos0)
     );
+
 
     delay_n #(
         .N(1),
@@ -913,44 +947,59 @@ module chien_search(
         if (!i_rst_n) begin
             num_S_degree1_1 <= 3'd0;
             num_S_degree1_2 <= 3'd0;
+
+            correct1_1 <= 1'b0;
+            correct1_2 <= 1'b0;
         end
         else begin
             num_S_degree1_1 <= num_S_degree1_1_next;
             num_S_degree1_2 <= num_S_degree1_2_next;
+
+            correct1_1 <= correct1_1_next;
+            correct1_2 <= correct1_2_next;
         end
     end
 
     always @(*) begin
         if (i_clear_and_wen) begin
-            if (i_sigma1_4 != 10'd0 && i_code == 2'b10) begin
-                num_S_degree1_1_next = 3'd4;
-            end
-            else if (i_sigma1_3 != 10'd0 && i_code == 2'b10) begin
-                num_S_degree1_1_next = 3'd3;
-            end
-            else if (i_sigma1_2 != 10'd0) begin
-                num_S_degree1_1_next = 3'd2;
-            end
-            else if (i_sigma1_1 != 10'd0) begin
-                num_S_degree1_1_next = 3'd1;
-            end
-            else begin
-                num_S_degree1_1_next = 3'd0;
-            end
+            // if (i_sigma1_4 != 10'd0 && i_code == 2'b10) begin
+            //     num_S_degree1_1_next = 3'd4;
+            // end
+            // else if (i_sigma1_3 != 10'd0 && i_code == 2'b10) begin
+            //     num_S_degree1_1_next = 3'd3;
+            // end
+            // else if (i_sigma1_2 != 10'd0) begin
+            //     num_S_degree1_1_next = 3'd2;
+            // end
+            // else if (i_sigma1_1 != 10'd0) begin
+            //     num_S_degree1_1_next = 3'd1;
+            // end
+            // else begin
+            //     num_S_degree1_1_next = 3'd0;
+            // end
 
-            if (i_sigma2_2 != 10'd0) begin
-                num_S_degree1_2_next = 3'd2;
-            end
-            else if (i_sigma2_1 != 10'd0) begin
-                num_S_degree1_2_next = 3'd1;
-            end
-            else begin
-                num_S_degree1_2_next = 3'd0;
-            end
+            // if (i_sigma2_2 != 10'd0) begin
+            //     num_S_degree1_2_next = 3'd2;
+            // end
+            // else if (i_sigma2_1 != 10'd0) begin
+            //     num_S_degree1_2_next = 3'd1;
+            // end
+            // else begin
+            //     num_S_degree1_2_next = 3'd0;
+            // end
+
+            num_S_degree1_1_next = i_degree1;
+            num_S_degree1_2_next = i_degree2;
+
+            correct1_1_next = i_correct1;
+            correct1_2_next = i_correct2;
         end
         else begin
             num_S_degree1_1_next = num_S_degree1_1;
             num_S_degree1_2_next = num_S_degree1_2;
+
+            correct1_1_next = correct1_1;
+            correct1_2_next = correct1_2;
         end
     end
 
@@ -966,11 +1015,11 @@ module chien_search(
         case(i_code) // synopsys full_case
             2'd0: begin // (63,51)
                 if (counter_find_1_idx_pipe2 == 4'd0) begin
-                    o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_correct = (num_S_degree2_1 == num_err_buf && correct2_1) ? 1'b1 : 1'b0;
                     o_err_valid = !i_early_stop;
                 end
                 else if (counter_find_1_idx_pipe2 == 4'd2 && i_mode == 1'b1) begin
-                    o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_correct = (num_S_degree2_2 == num_err_buf && correct2_2) ? 1'b1 : 1'b0;
                     o_err_valid = !i_early_stop;
                 end 
                 else begin
@@ -980,11 +1029,11 @@ module chien_search(
             end
             2'd1: begin // (255,239)
                 if (counter_find_1_idx_pipe2 == 4'd1) begin
-                    o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_correct = (num_S_degree2_1 == num_err_buf && correct2_1) ? 1'b1 : 1'b0;
                     o_err_valid = !i_early_stop;
                 end
                 else if (counter_find_1_idx_pipe2 == 4'd3 && i_mode == 1'b1) begin
-                    o_correct = (num_S_degree2_2 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_correct = (num_S_degree2_2 == num_err_buf && correct2_2) ? 1'b1 : 1'b0;
                     o_err_valid = !i_early_stop;
                 end
                 else begin
@@ -994,7 +1043,7 @@ module chien_search(
             end
             2'd2: begin // (1023,983)
                 if (counter_find_1_idx_pipe2 == 4'd7) begin
-                    o_correct = (num_S_degree2_1 == num_err_buf) ? 1'b1 : 1'b0;
+                    o_correct = (num_S_degree2_1 == num_err_buf && correct2_1) ? 1'b1 : 1'b0;
                     o_err_valid = !i_early_stop;
                 end
                 else begin

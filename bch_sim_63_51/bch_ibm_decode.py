@@ -100,7 +100,7 @@ class BCH63_51_Decoder:
                 newPhi[i] = self.gf.add(t1, t2)
 
             # print new phi in hex
-            print("r =", r, "Φ' =", [f"{self.gf.bits_to_int(coef):03X}" for coef in newPhi])
+            # print("r =", r, "Φ' =", [f"{self.gf.bits_to_int(coef):03X}" for coef in newPhi])
             
             # Ψ' and l'
             if (not self.gf.is_zero(phi0)) and (l >= 0):
@@ -112,12 +112,22 @@ class BCH63_51_Decoder:
 
             Phi, Psi = newPhi, newPsi
 
-        # Λ̂(2t)(z) = Φ(2t)[t .. 2t]
+        # --- 用 l^(2t) 推回 Berlekamp 的 degree L^(2t) ---
+        # Theorem: l^(r) = r - 2 L^(r)  =>  L^(2t) = (2t - l^(2t)) / 2
+        L_num = 2 * T - l
+        if L_num & 1:
+            # 正常情況不應該發生，保險起見加個檢查
+            raise ValueError(f"Inversionless BM inconsistent state: 2T-l = {L_num} is odd")
+
+        L_est = L_num >> 1          # estimated degree of Λ
+
+        # Λ̂(2t)(z) = Φ(2t)[t .. 2t]  (只取到 z^T，和原本一樣)
         sigma = [Phi[T + j] if (T + j) < len(Phi) else zero for j in range(T + 1)]
         sigma0 = sigma[0] if len(sigma) > 0 else zero
         sigma1 = sigma[1] if len(sigma) > 1 else zero
         sigma2 = sigma[2] if len(sigma) > 2 else zero
-        return sigma0, sigma1, sigma2
+
+        return sigma0, sigma1, sigma2, L_est
 
     # ---------------- Chien Search (use sigma0, NOT hard-coded 1) ----------------
     def chien_search(self, sigma0: List[int], sigma1: List[int], sigma2: List[int]) -> List[int]:
@@ -162,13 +172,13 @@ class BCH63_51_Decoder:
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
     def hard_decode(self, r: List[int]):
         S1, S3 = self.syndromes(r)
-        sigma0, sigma1, sigma2 = self.berlekamp_iBM(S1, S3)
+        sigma0, sigma1, sigma2, sigma_degree = self.berlekamp_iBM(S1, S3)
         roots = self.chien_search(sigma0, sigma1, sigma2)
 
 
         corrected = self.correct(r, roots)
 
-        # 再檢是否success
+        # 再檢查一次 syndrome 是否為 0，保險
         if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2):
             deg = 0
         elif self.gf.is_zero(sigma2):
@@ -176,11 +186,10 @@ class BCH63_51_Decoder:
         else:
             deg = 2
             
-        success = (deg == len(roots))
-        
-        
-        return corrected, roots, success, (sigma1, sigma2), (S1, S3)
+        success = (deg == len(roots)) and sigma_degree <= T
 
+        return corrected, roots, success, (sigma1, sigma2), (S1, S3)
+    
     
     # ---------------------------- 軟判決解碼 ----------------------------
     def soft_decode(self, r: List[float], p: int = 2):

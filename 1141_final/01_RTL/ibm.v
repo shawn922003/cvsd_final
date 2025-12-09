@@ -22,10 +22,14 @@ module ibm(
     output [9:0] o_sigma1_2,
     output [9:0] o_sigma1_3,
     output [9:0] o_sigma1_4,
+    output [3:0] o_degree1,
+    output reg o_correct1,
 
     output [9:0] o_sigma2_0,
     output [9:0] o_sigma2_1,
     output [9:0] o_sigma2_2,
+    output [3:0] o_degree2,
+    output reg o_correct2,
 
     output o_valid,
     output reg o_next_S
@@ -52,6 +56,9 @@ module ibm(
     
     wire o_valid_internal;
 
+    wire [3:0] control1_degree;
+    wire [3:0] control2_degree;
+
     assign pe7_12_active = i_mode == 1'b1 || i_code == 2'b10;
     assign pe13_active = i_mode == 1'b1 && i_code != 2'b10; 
     assign control2_active = i_mode == 1'b1 && i_code != 2'b10; 
@@ -60,6 +67,9 @@ module ibm(
     assign all_cen = i_clear_and_wen || (i_code == 2'b10 && counter < 3'd7) || (i_code != 2'b10 && counter < 3'd3);
 
     assign o_valid = o_valid_internal & ~i_early_stop;
+
+    assign o_degree1 = control1_degree;
+    assign o_degree2 = control2_degree;
 
     delay_n #(
         .N(1),
@@ -473,6 +483,7 @@ module ibm(
     ibm_control u_control1 (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
+        .i_code(i_code),
 
         .i_init(i_clear_and_wen),
         .i_cen(all_cen),
@@ -481,13 +492,15 @@ module ibm(
 
         .i_phi_0(pe_phi_i_out[0]),
 
-        .o_mc(mc1)
+        .o_mc(mc1),
+        .o_num_degree(control1_degree)
     );
 
     // Control Unit 2
     ibm_control u_control2 (
         .i_clk(i_clk),
         .i_rst_n(i_rst_n),
+        .i_code(i_code),
 
         .i_init(i_clear_and_wen),
         .i_cen(all_cen),
@@ -496,7 +509,8 @@ module ibm(
 
         .i_phi_0(pe_phi_i_out[7]),
 
-        .o_mc(mc2)
+        .o_mc(mc2),
+        .o_num_degree(control2_degree)
     );
 
     assign o_sigma1_0 = i_code == 2'b10 ? pe_phi_reg_out[4] : pe_phi_reg_out[2];
@@ -562,6 +576,22 @@ module ibm(
         end
     end
     
+
+    always @(*) begin
+        if (i_code == 2'b10) begin
+            o_correct1 = (o_degree1 <= 4'd4);
+        end
+        else begin
+            o_correct1 = (o_degree1 <= 4'd2);
+        end
+
+        if (i_code == 2'b10) begin
+            o_correct2 = (o_degree2 <= 4'd4);
+        end
+        else begin
+            o_correct2 = (o_degree2 <= 4'd2);
+        end
+    end
 
 endmodule
 
@@ -644,6 +674,7 @@ endmodule
 module ibm_control(
     input i_clk,
     input i_rst_n,
+    input [1:0] i_code,
 
     input i_init,
     input i_cen,
@@ -652,7 +683,8 @@ module ibm_control(
 
     input [9:0] i_phi_0,
 
-    output o_mc
+    output o_mc,
+    output reg [3:0] o_num_degree
 );
 
     wire phi_or;
@@ -661,6 +693,15 @@ module ibm_control(
 
     assign phi_or = |i_phi_0;
     assign o_mc = phi_or & (i_init ? 1'b1: !l_reg[3]);
+
+    always @(*) begin
+        if (i_code == 2'b10) begin
+            o_num_degree = (8 - $signed(l_reg)) >>> 1;
+        end
+        else begin
+            o_num_degree = (4 - $signed(l_reg)) >>> 1;
+        end
+    end
 
     always @(posedge i_clk) begin
         if (!i_rst_n) begin

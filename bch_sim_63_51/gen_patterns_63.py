@@ -214,7 +214,7 @@ def gen_one_soft(dec: BCH63_51_Decoder, soft_flip_lt: int = 4, p: int = 2):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["hard", "soft"], default="soft")
-    ap.add_argument("--ntest", type=int, default=10000)
+    ap.add_argument("--ntest", type=int, default=64)
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--outdir", type=str, default=".")
     args = ap.parse_args()

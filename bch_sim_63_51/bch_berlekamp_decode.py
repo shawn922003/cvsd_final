@@ -142,7 +142,8 @@ class BCH63_51_Decoder:
         final_sigma_poly = sigma_mu_poly_array[2*T + 1]
         sigma1 = final_sigma_poly[1] if len(final_sigma_poly) > 1 else gf.zero()
         sigma2 = final_sigma_poly[2] if len(final_sigma_poly) > 2 else gf.zero()
-        return sigma1, sigma2
+        return sigma1, sigma2, len(final_sigma_poly) - 1
+
 
 
     # Chien 掃根：找 i 使 σ(α^{-i})=0
@@ -168,13 +169,13 @@ class BCH63_51_Decoder:
     # 高階接口：回傳（corrected, roots, (sigma1, sigma2), (S1, S3)）
     def hard_decode(self, r: List[int]):
         S1, S3 = self.syndromes(r)
-        sigma1, sigma2 = self.berlekamp(S1, S3)
+        sigma1, sigma2, sigma_length = self.berlekamp(S1, S3)
         roots = self.chien_search(sigma1, sigma2)
 
 
         corrected = self.correct(r, roots)
 
-        # 再檢是否success
+        # 再檢查一次 syndrome 是否為 0，保險
         if self.gf.is_zero(sigma1) and self.gf.is_zero(sigma2):
             deg = 0
         elif self.gf.is_zero(sigma2):
@@ -182,9 +183,8 @@ class BCH63_51_Decoder:
         else:
             deg = 2
             
-        success = (deg == len(roots))
-        
-        
+        success = (deg == len(roots)) and sigma_length <= T
+
         return corrected, roots, success, (sigma1, sigma2), (S1, S3)
     
     # ---------------------------- 軟判決解碼 ----------------------------
