@@ -208,7 +208,7 @@ def gen_one_soft(dec: BCH1023_983_Decoder, soft_flip_lt: int = 6, p: int = 2):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--mode", choices=["hard", "soft"], default="soft")
-    ap.add_argument("--ntest", type=int, default=64)
+    ap.add_argument("--ntest", type=int, default=10000)
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--outdir", type=str, default=".")
     args = ap.parse_args()
@@ -237,8 +237,8 @@ def main():
         data_path = os.path.join(args.outdir, "p30000.txt")
         ans_path = os.path.join(args.outdir, "p30000a.txt")
     else:
-        data_path = os.path.join(args.outdir, "soft_decorder_300.txt")
-        ans_path = os.path.join(args.outdir, "soft_decorder_300a.txt")
+        data_path = os.path.join(args.outdir, "soft_decorder_30000.txt")
+        ans_path = os.path.join(args.outdir, "soft_decorder_30000a.txt")
 
     write_lines(data_path, data_lines)
     write_lines(ans_path, testa_lines)

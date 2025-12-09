@@ -1,6 +1,6 @@
 ###################################################################
 
-# Created by write_sdc on Mon Dec  8 23:03:47 2025
+# Created by write_sdc on Tue Dec  9 18:10:19 2025
 
 ###################################################################
 set sdc_version 1.8
@@ -446,11 +446,14 @@ set_multicycle_path 8 -hold -from [get_ports rstn] -to [list [get_cells -hsc @ \
 {u_error_bit_saver/tp4_num_err_buf_reg[0]}] [get_cells -hsc @                  \
 {u_error_bit_saver/tp4_num_err_buf_reg[1]}] [get_cells -hsc @                  \
 {u_error_bit_saver/tp4_num_err_buf_reg[2]}] [get_cells -hsc @                  \
+u_chien_search/correct1_1_reg] [get_cells -hsc @                               \
+{u_chien_search/num_S_degree1_2_reg[0]}] [get_cells -hsc @                     \
+{u_chien_search/num_S_degree1_2_reg[1]}] [get_cells -hsc @                     \
+{u_chien_search/num_S_degree1_2_reg[2]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[0]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[1]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[2]}] [get_cells -hsc @                     \
-{u_chien_search/num_S_degree1_2_reg[0]}] [get_cells -hsc @                     \
-{u_chien_search/num_S_degree1_2_reg[1]}] [get_cells -hsc @                     \
+u_chien_search/correct1_2_reg] [get_cells -hsc @                               \
 {u_chien_search/llr_sum_reg[0]}] [get_cells -hsc @                             \
 {u_chien_search/llr_sum_reg[1]}] [get_cells -hsc @                             \
 {u_chien_search/llr_sum_reg[2]}] [get_cells -hsc @                             \
@@ -628,10 +631,16 @@ set_multicycle_path 8 -hold -from [get_ports rstn] -to [list [get_cells -hsc @ \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][4]}] [get_cells -hsc @         \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][5]}] [get_cells -hsc @         \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][6]}] [get_cells -hsc @         \
+{u_chien_search/u_delay_correct2/shift_reg_reg[1][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct2/shift_reg_reg[0][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct1/shift_reg_reg[1][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct1/shift_reg_reg[0][0]}] [get_cells -hsc @       \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][0]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][1]}] [get_cells -hsc @    \
+{u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][2]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][0]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][1]}] [get_cells -hsc @    \
+{u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][2]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][0]}] [get_cells -hsc @      \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][1]}] [get_cells -hsc @      \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][2]}] [get_cells -hsc @      \
@@ -7002,11 +7011,14 @@ set_multicycle_path 9 -setup -from [get_ports rstn] -to [list [get_cells -hsc  \
 {u_error_bit_saver/tp4_num_err_buf_reg[0]}] [get_cells -hsc @                  \
 {u_error_bit_saver/tp4_num_err_buf_reg[1]}] [get_cells -hsc @                  \
 {u_error_bit_saver/tp4_num_err_buf_reg[2]}] [get_cells -hsc @                  \
+u_chien_search/correct1_1_reg] [get_cells -hsc @                               \
+{u_chien_search/num_S_degree1_2_reg[0]}] [get_cells -hsc @                     \
+{u_chien_search/num_S_degree1_2_reg[1]}] [get_cells -hsc @                     \
+{u_chien_search/num_S_degree1_2_reg[2]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[0]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[1]}] [get_cells -hsc @                     \
 {u_chien_search/num_S_degree1_1_reg[2]}] [get_cells -hsc @                     \
-{u_chien_search/num_S_degree1_2_reg[0]}] [get_cells -hsc @                     \
-{u_chien_search/num_S_degree1_2_reg[1]}] [get_cells -hsc @                     \
+u_chien_search/correct1_2_reg] [get_cells -hsc @                               \
 {u_chien_search/llr_sum_reg[0]}] [get_cells -hsc @                             \
 {u_chien_search/llr_sum_reg[1]}] [get_cells -hsc @                             \
 {u_chien_search/llr_sum_reg[2]}] [get_cells -hsc @                             \
@@ -7184,10 +7196,16 @@ set_multicycle_path 9 -setup -from [get_ports rstn] -to [list [get_cells -hsc  \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][4]}] [get_cells -hsc @         \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][5]}] [get_cells -hsc @         \
 {u_chien_search/u_delay_n_llr0/shift_reg_reg[0][6]}] [get_cells -hsc @         \
+{u_chien_search/u_delay_correct2/shift_reg_reg[1][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct2/shift_reg_reg[0][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct1/shift_reg_reg[1][0]}] [get_cells -hsc @       \
+{u_chien_search/u_delay_correct1/shift_reg_reg[0][0]}] [get_cells -hsc @       \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][0]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][1]}] [get_cells -hsc @    \
+{u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[1][2]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][0]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][1]}] [get_cells -hsc @    \
+{u_chien_search/u_delay_n_o_valid_2/shift_reg_reg[0][2]}] [get_cells -hsc @    \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][0]}] [get_cells -hsc @      \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][1]}] [get_cells -hsc @      \
 {u_chien_search/u_delay_n_o_valid/shift_reg_reg[1][2]}] [get_cells -hsc @      \

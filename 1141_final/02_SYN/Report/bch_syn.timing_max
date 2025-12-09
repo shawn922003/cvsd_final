@@ -1,3 +1,5 @@
+Information: Updating design information... (UID-85)
+Warning: Design 'bch' contains 1 high-fanout nets. A fanout number of 1000 will be used for delay calculations involving these nets. (TIM-134)
  
 ****************************************
 Report : timing
@@ -6,7 +8,7 @@ Report : timing
         -max_paths 5
 Design : bch
 Version: V-2023.12
-Date   : Mon Dec  8 23:03:41 2025
+Date   : Tue Dec  9 18:10:05 2025
 ****************************************
 
  # A fanout number of 1000 was used for high fanout net computations.
@@ -16,7 +18,7 @@ Wire Load Model Mode: top
 
   Startpoint: u_control/code_reg_reg[1]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: clk_gate_u_llr_mem/mem_reg[866]/latch
+  Endpoint: clk_gate_u_llr_mem/mem_reg[318]/latch
             (negative level-sensitive latch clocked by clk)
   Path Group: clk
   Path Type: max
@@ -30,58 +32,63 @@ Wire Load Model Mode: top
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
   u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
-  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.27       0.27 f
-  U116009/Y (NAND2X8)                                     0.13       0.39 r
-  U110526/Y (INVX20)                                      0.09       0.48 f
-  U118580/Y (INVX6)                                       0.18       0.66 r
-  U107965/Y (BUFX8)                                       0.18       0.84 r
-  U110340/Y (NAND2X6)                                     0.10       0.93 f
-  U107827/Y (BUFX6)                                       0.23       1.16 f
-  U110273/Y (NAND3X4)                                     0.17       1.33 r
-  U129678/Y (NOR2X8)                                      0.09       1.42 f
-  U129679/Y (INVX3)                                       0.07       1.49 r
-  U121031/Y (AND2X4)                                      0.14       1.64 r
-  U107700/Y (BUFX12)                                      0.19       1.83 r
-  U120989/Y (NOR2X4)                                      0.10       1.93 f
-  U109745/Y (BUFX12)                                      0.16       2.09 f
-  U107535/Y (BUFX12)                                      0.13       2.22 f
-  U107491/Y (BUFX12)                                      0.13       2.35 f
-  U138724/Y (BUFX12)                                      0.16       2.52 f
-  clk_gate_u_llr_mem/mem_reg[866]/EN (SNPS_CLOCK_GATE_HIGH_bch_301)
-                                                          0.00       2.52 f
-  clk_gate_u_llr_mem/mem_reg[866]/test_or/Y (OR2X1)       0.29       2.81 f
-  clk_gate_u_llr_mem/mem_reg[866]/latch/D (TLATNX1)       0.00       2.81 f
-  data arrival time                                                  2.81
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.30       0.30 f
+  U122323/Y (INVX12)                                      0.07       0.37 r
+  U122322/Y (NAND2X8)                                     0.08       0.45 f
+  U125741/Y (BUFX20)                                      0.12       0.57 f
+  U115061/Y (CLKBUFX8)                                    0.19       0.76 f
+  U126008/Y (INVX20)                                      0.21       0.98 r
+  U111392/Y (NAND3X4)                                     0.12       1.10 f
+  U107837/Y (NAND2X2)                                     0.12       1.22 r
+  U108648/Y (NAND2X2)                                     0.10       1.32 f
+  U130009/Y (OAI2BB1X4)                                   0.10       1.42 r
+  U130010/Y (NAND2X4)                                     0.08       1.50 f
+  U111143/Y (NAND2X6)                                     0.09       1.59 r
+  U111109/Y (NAND2X6)                                     0.08       1.66 f
+  U125345/Y (OR2X8)                                       0.16       1.83 f
+  U107063/Y (INVX12)                                      0.10       1.93 r
+  U130011/Y (BUFX20)                                      0.12       2.05 r
+  U130012/Y (INVX20)                                      0.08       2.13 f
+  U130013/Y (AND2X8)                                      0.16       2.29 f
+  U107571/Y (BUFX12)                                      0.15       2.44 f
+  U107540/Y (NOR2X4)                                      0.13       2.57 r
+  U107534/Y (BUFX16)                                      0.22       2.79 r
+  U107491/Y (BUFX16)                                      0.27       3.07 r
+  clk_gate_u_llr_mem/mem_reg[318]/EN (SNPS_CLOCK_GATE_HIGH_bch_109)
+                                                          0.00       3.07 r
+  clk_gate_u_llr_mem/mem_reg[318]/test_or/Y (OR2X1)       0.23       3.30 r
+  clk_gate_u_llr_mem/mem_reg[318]/latch/D (TLATNX1)       0.00       3.30 r
+  data arrival time                                                  3.30
 
   clock clk (fall edge)                                   2.50       2.50
   clock network delay (ideal)                             0.00       2.50
   clock uncertainty                                      -0.10       2.40
-  clk_gate_u_llr_mem/mem_reg[866]/latch/GN (TLATNX1)      0.00       2.40 f
-  time borrowed from endpoint                             0.41       2.81
-  data required time                                                 2.81
+  clk_gate_u_llr_mem/mem_reg[318]/latch/GN (TLATNX1)      0.00       2.40 f
+  time borrowed from endpoint                             0.90       3.30
+  data required time                                                 3.30
   --------------------------------------------------------------------------
-  data required time                                                 2.81
-  data arrival time                                                 -2.81
+  data required time                                                 3.30
+  data arrival time                                                 -3.30
   --------------------------------------------------------------------------
   slack (MET)                                                        0.00
 
   Time Borrowing Information
   --------------------------------------------------------------
   clk nominal pulse width                                 2.50   
-  library setup time                                     -0.09   
+  library setup time                                     -0.11   
   --------------------------------------------------------------
-  max time borrow                                         2.41   
+  max time borrow                                         2.39   
   --------------------------------------------------------------
-  actual time borrow                                      0.41   
+  actual time borrow                                      0.90   
   clock uncertainty                                      -0.10   
   --------------------------------------------------------------
-  time given to startpoint                                0.31   
+  time given to startpoint                                0.80   
   --------------------------------------------------------------
 
 
   Startpoint: u_control/code_reg_reg[1]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: clk_gate_u_llr_mem/mem_reg[863]/latch
+  Endpoint: clk_gate_u_llr_mem/mem_reg[315]/latch
             (negative level-sensitive latch clocked by clk)
   Path Group: clk
   Path Type: max
@@ -95,58 +102,63 @@ Wire Load Model Mode: top
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
   u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
-  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.27       0.27 f
-  U116009/Y (NAND2X8)                                     0.13       0.39 r
-  U110526/Y (INVX20)                                      0.09       0.48 f
-  U118580/Y (INVX6)                                       0.18       0.66 r
-  U107965/Y (BUFX8)                                       0.18       0.84 r
-  U110340/Y (NAND2X6)                                     0.10       0.93 f
-  U107827/Y (BUFX6)                                       0.23       1.16 f
-  U110273/Y (NAND3X4)                                     0.17       1.33 r
-  U129678/Y (NOR2X8)                                      0.09       1.42 f
-  U129679/Y (INVX3)                                       0.07       1.49 r
-  U121031/Y (AND2X4)                                      0.14       1.64 r
-  U107700/Y (BUFX12)                                      0.19       1.83 r
-  U120989/Y (NOR2X4)                                      0.10       1.93 f
-  U109745/Y (BUFX12)                                      0.16       2.09 f
-  U107535/Y (BUFX12)                                      0.13       2.22 f
-  U107491/Y (BUFX12)                                      0.13       2.35 f
-  U138724/Y (BUFX12)                                      0.16       2.52 f
-  clk_gate_u_llr_mem/mem_reg[863]/EN (SNPS_CLOCK_GATE_HIGH_bch_300)
-                                                          0.00       2.52 f
-  clk_gate_u_llr_mem/mem_reg[863]/test_or/Y (OR2X1)       0.29       2.81 f
-  clk_gate_u_llr_mem/mem_reg[863]/latch/D (TLATNX1)       0.00       2.81 f
-  data arrival time                                                  2.81
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.30       0.30 f
+  U122323/Y (INVX12)                                      0.07       0.37 r
+  U122322/Y (NAND2X8)                                     0.08       0.45 f
+  U125741/Y (BUFX20)                                      0.12       0.57 f
+  U115061/Y (CLKBUFX8)                                    0.19       0.76 f
+  U126008/Y (INVX20)                                      0.21       0.98 r
+  U111392/Y (NAND3X4)                                     0.12       1.10 f
+  U107837/Y (NAND2X2)                                     0.12       1.22 r
+  U108648/Y (NAND2X2)                                     0.10       1.32 f
+  U130009/Y (OAI2BB1X4)                                   0.10       1.42 r
+  U130010/Y (NAND2X4)                                     0.08       1.50 f
+  U111143/Y (NAND2X6)                                     0.09       1.59 r
+  U111109/Y (NAND2X6)                                     0.08       1.66 f
+  U125345/Y (OR2X8)                                       0.16       1.83 f
+  U107063/Y (INVX12)                                      0.10       1.93 r
+  U130011/Y (BUFX20)                                      0.12       2.05 r
+  U130012/Y (INVX20)                                      0.08       2.13 f
+  U130013/Y (AND2X8)                                      0.16       2.29 f
+  U107571/Y (BUFX12)                                      0.15       2.44 f
+  U107540/Y (NOR2X4)                                      0.13       2.57 r
+  U107534/Y (BUFX16)                                      0.22       2.79 r
+  U107502/Y (BUFX16)                                      0.27       3.07 r
+  clk_gate_u_llr_mem/mem_reg[315]/EN (SNPS_CLOCK_GATE_HIGH_bch_108)
+                                                          0.00       3.07 r
+  clk_gate_u_llr_mem/mem_reg[315]/test_or/Y (OR2X1)       0.23       3.30 r
+  clk_gate_u_llr_mem/mem_reg[315]/latch/D (TLATNX1)       0.00       3.30 r
+  data arrival time                                                  3.30
 
   clock clk (fall edge)                                   2.50       2.50
   clock network delay (ideal)                             0.00       2.50
   clock uncertainty                                      -0.10       2.40
-  clk_gate_u_llr_mem/mem_reg[863]/latch/GN (TLATNX1)      0.00       2.40 f
-  time borrowed from endpoint                             0.41       2.81
-  data required time                                                 2.81
+  clk_gate_u_llr_mem/mem_reg[315]/latch/GN (TLATNX1)      0.00       2.40 f
+  time borrowed from endpoint                             0.90       3.30
+  data required time                                                 3.30
   --------------------------------------------------------------------------
-  data required time                                                 2.81
-  data arrival time                                                 -2.81
+  data required time                                                 3.30
+  data arrival time                                                 -3.30
   --------------------------------------------------------------------------
   slack (MET)                                                        0.00
 
   Time Borrowing Information
   --------------------------------------------------------------
   clk nominal pulse width                                 2.50   
-  library setup time                                     -0.09   
+  library setup time                                     -0.11   
   --------------------------------------------------------------
-  max time borrow                                         2.41   
+  max time borrow                                         2.39   
   --------------------------------------------------------------
-  actual time borrow                                      0.41   
+  actual time borrow                                      0.90   
   clock uncertainty                                      -0.10   
   --------------------------------------------------------------
-  time given to startpoint                                0.31   
+  time given to startpoint                                0.80   
   --------------------------------------------------------------
 
 
   Startpoint: u_control/code_reg_reg[1]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: clk_gate_u_llr_mem/mem_reg[861]/latch
+  Endpoint: clk_gate_u_llr_mem/mem_reg[312]/latch
             (negative level-sensitive latch clocked by clk)
   Path Group: clk
   Path Type: max
@@ -160,58 +172,63 @@ Wire Load Model Mode: top
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
   u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
-  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.27       0.27 f
-  U116009/Y (NAND2X8)                                     0.13       0.39 r
-  U110526/Y (INVX20)                                      0.09       0.48 f
-  U118580/Y (INVX6)                                       0.18       0.66 r
-  U107965/Y (BUFX8)                                       0.18       0.84 r
-  U110340/Y (NAND2X6)                                     0.10       0.93 f
-  U107827/Y (BUFX6)                                       0.23       1.16 f
-  U110273/Y (NAND3X4)                                     0.17       1.33 r
-  U129678/Y (NOR2X8)                                      0.09       1.42 f
-  U129679/Y (INVX3)                                       0.07       1.49 r
-  U121031/Y (AND2X4)                                      0.14       1.64 r
-  U107700/Y (BUFX12)                                      0.19       1.83 r
-  U120989/Y (NOR2X4)                                      0.10       1.93 f
-  U109745/Y (BUFX12)                                      0.16       2.09 f
-  U107535/Y (BUFX12)                                      0.13       2.22 f
-  U107491/Y (BUFX12)                                      0.13       2.35 f
-  U138724/Y (BUFX12)                                      0.16       2.52 f
-  clk_gate_u_llr_mem/mem_reg[861]/EN (SNPS_CLOCK_GATE_HIGH_bch_299)
-                                                          0.00       2.52 f
-  clk_gate_u_llr_mem/mem_reg[861]/test_or/Y (OR2X1)       0.29       2.81 f
-  clk_gate_u_llr_mem/mem_reg[861]/latch/D (TLATNX1)       0.00       2.81 f
-  data arrival time                                                  2.81
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.30       0.30 f
+  U122323/Y (INVX12)                                      0.07       0.37 r
+  U122322/Y (NAND2X8)                                     0.08       0.45 f
+  U125741/Y (BUFX20)                                      0.12       0.57 f
+  U115061/Y (CLKBUFX8)                                    0.19       0.76 f
+  U126008/Y (INVX20)                                      0.21       0.98 r
+  U111392/Y (NAND3X4)                                     0.12       1.10 f
+  U107837/Y (NAND2X2)                                     0.12       1.22 r
+  U108648/Y (NAND2X2)                                     0.10       1.32 f
+  U130009/Y (OAI2BB1X4)                                   0.10       1.42 r
+  U130010/Y (NAND2X4)                                     0.08       1.50 f
+  U111143/Y (NAND2X6)                                     0.09       1.59 r
+  U111109/Y (NAND2X6)                                     0.08       1.66 f
+  U125345/Y (OR2X8)                                       0.16       1.83 f
+  U107063/Y (INVX12)                                      0.10       1.93 r
+  U130011/Y (BUFX20)                                      0.12       2.05 r
+  U130012/Y (INVX20)                                      0.08       2.13 f
+  U130013/Y (AND2X8)                                      0.16       2.29 f
+  U107571/Y (BUFX12)                                      0.15       2.44 f
+  U107540/Y (NOR2X4)                                      0.13       2.57 r
+  U107534/Y (BUFX16)                                      0.22       2.79 r
+  U107491/Y (BUFX16)                                      0.27       3.07 r
+  clk_gate_u_llr_mem/mem_reg[312]/EN (SNPS_CLOCK_GATE_HIGH_bch_107)
+                                                          0.00       3.07 r
+  clk_gate_u_llr_mem/mem_reg[312]/test_or/Y (OR2X1)       0.23       3.30 r
+  clk_gate_u_llr_mem/mem_reg[312]/latch/D (TLATNX1)       0.00       3.30 r
+  data arrival time                                                  3.30
 
   clock clk (fall edge)                                   2.50       2.50
   clock network delay (ideal)                             0.00       2.50
   clock uncertainty                                      -0.10       2.40
-  clk_gate_u_llr_mem/mem_reg[861]/latch/GN (TLATNX1)      0.00       2.40 f
-  time borrowed from endpoint                             0.41       2.81
-  data required time                                                 2.81
+  clk_gate_u_llr_mem/mem_reg[312]/latch/GN (TLATNX1)      0.00       2.40 f
+  time borrowed from endpoint                             0.90       3.30
+  data required time                                                 3.30
   --------------------------------------------------------------------------
-  data required time                                                 2.81
-  data arrival time                                                 -2.81
+  data required time                                                 3.30
+  data arrival time                                                 -3.30
   --------------------------------------------------------------------------
   slack (MET)                                                        0.00
 
   Time Borrowing Information
   --------------------------------------------------------------
   clk nominal pulse width                                 2.50   
-  library setup time                                     -0.09   
+  library setup time                                     -0.11   
   --------------------------------------------------------------
-  max time borrow                                         2.41   
+  max time borrow                                         2.39   
   --------------------------------------------------------------
-  actual time borrow                                      0.41   
+  actual time borrow                                      0.90   
   clock uncertainty                                      -0.10   
   --------------------------------------------------------------
-  time given to startpoint                                0.31   
+  time given to startpoint                                0.80   
   --------------------------------------------------------------
 
 
   Startpoint: u_control/code_reg_reg[1]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: clk_gate_u_llr_mem/mem_reg[858]/latch
+  Endpoint: clk_gate_u_llr_mem/mem_reg[309]/latch
             (negative level-sensitive latch clocked by clk)
   Path Group: clk
   Path Type: max
@@ -225,58 +242,63 @@ Wire Load Model Mode: top
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
   u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
-  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.27       0.27 f
-  U116009/Y (NAND2X8)                                     0.13       0.39 r
-  U110526/Y (INVX20)                                      0.09       0.48 f
-  U118580/Y (INVX6)                                       0.18       0.66 r
-  U107965/Y (BUFX8)                                       0.18       0.84 r
-  U110340/Y (NAND2X6)                                     0.10       0.93 f
-  U107827/Y (BUFX6)                                       0.23       1.16 f
-  U110273/Y (NAND3X4)                                     0.17       1.33 r
-  U129678/Y (NOR2X8)                                      0.09       1.42 f
-  U129679/Y (INVX3)                                       0.07       1.49 r
-  U121031/Y (AND2X4)                                      0.14       1.64 r
-  U107700/Y (BUFX12)                                      0.19       1.83 r
-  U120989/Y (NOR2X4)                                      0.10       1.93 f
-  U109745/Y (BUFX12)                                      0.16       2.09 f
-  U107535/Y (BUFX12)                                      0.13       2.22 f
-  U107491/Y (BUFX12)                                      0.13       2.35 f
-  U138724/Y (BUFX12)                                      0.16       2.52 f
-  clk_gate_u_llr_mem/mem_reg[858]/EN (SNPS_CLOCK_GATE_HIGH_bch_298)
-                                                          0.00       2.52 f
-  clk_gate_u_llr_mem/mem_reg[858]/test_or/Y (OR2X1)       0.29       2.81 f
-  clk_gate_u_llr_mem/mem_reg[858]/latch/D (TLATNX1)       0.00       2.81 f
-  data arrival time                                                  2.81
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.30       0.30 f
+  U122323/Y (INVX12)                                      0.07       0.37 r
+  U122322/Y (NAND2X8)                                     0.08       0.45 f
+  U125741/Y (BUFX20)                                      0.12       0.57 f
+  U115061/Y (CLKBUFX8)                                    0.19       0.76 f
+  U126008/Y (INVX20)                                      0.21       0.98 r
+  U111392/Y (NAND3X4)                                     0.12       1.10 f
+  U107837/Y (NAND2X2)                                     0.12       1.22 r
+  U108648/Y (NAND2X2)                                     0.10       1.32 f
+  U130009/Y (OAI2BB1X4)                                   0.10       1.42 r
+  U130010/Y (NAND2X4)                                     0.08       1.50 f
+  U111143/Y (NAND2X6)                                     0.09       1.59 r
+  U111109/Y (NAND2X6)                                     0.08       1.66 f
+  U125345/Y (OR2X8)                                       0.16       1.83 f
+  U107063/Y (INVX12)                                      0.10       1.93 r
+  U130011/Y (BUFX20)                                      0.12       2.05 r
+  U130012/Y (INVX20)                                      0.08       2.13 f
+  U130013/Y (AND2X8)                                      0.16       2.29 f
+  U107571/Y (BUFX12)                                      0.15       2.44 f
+  U107540/Y (NOR2X4)                                      0.13       2.57 r
+  U107534/Y (BUFX16)                                      0.22       2.79 r
+  U107491/Y (BUFX16)                                      0.27       3.07 r
+  clk_gate_u_llr_mem/mem_reg[309]/EN (SNPS_CLOCK_GATE_HIGH_bch_106)
+                                                          0.00       3.07 r
+  clk_gate_u_llr_mem/mem_reg[309]/test_or/Y (OR2X1)       0.23       3.30 r
+  clk_gate_u_llr_mem/mem_reg[309]/latch/D (TLATNX1)       0.00       3.30 r
+  data arrival time                                                  3.30
 
   clock clk (fall edge)                                   2.50       2.50
   clock network delay (ideal)                             0.00       2.50
   clock uncertainty                                      -0.10       2.40
-  clk_gate_u_llr_mem/mem_reg[858]/latch/GN (TLATNX1)      0.00       2.40 f
-  time borrowed from endpoint                             0.41       2.81
-  data required time                                                 2.81
+  clk_gate_u_llr_mem/mem_reg[309]/latch/GN (TLATNX1)      0.00       2.40 f
+  time borrowed from endpoint                             0.90       3.30
+  data required time                                                 3.30
   --------------------------------------------------------------------------
-  data required time                                                 2.81
-  data arrival time                                                 -2.81
+  data required time                                                 3.30
+  data arrival time                                                 -3.30
   --------------------------------------------------------------------------
   slack (MET)                                                        0.00
 
   Time Borrowing Information
   --------------------------------------------------------------
   clk nominal pulse width                                 2.50   
-  library setup time                                     -0.09   
+  library setup time                                     -0.11   
   --------------------------------------------------------------
-  max time borrow                                         2.41   
+  max time borrow                                         2.39   
   --------------------------------------------------------------
-  actual time borrow                                      0.41   
+  actual time borrow                                      0.90   
   clock uncertainty                                      -0.10   
   --------------------------------------------------------------
-  time given to startpoint                                0.31   
+  time given to startpoint                                0.80   
   --------------------------------------------------------------
 
 
   Startpoint: u_control/code_reg_reg[1]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: clk_gate_u_llr_mem/mem_reg[855]/latch
+  Endpoint: clk_gate_u_llr_mem/mem_reg[306]/latch
             (negative level-sensitive latch clocked by clk)
   Path Group: clk
   Path Type: max
@@ -290,52 +312,57 @@ Wire Load Model Mode: top
   clock clk (rise edge)                                   0.00       0.00
   clock network delay (ideal)                             0.00       0.00
   u_control/code_reg_reg[1]/CK (DFFHQX8)                  0.00 #     0.00 r
-  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.27       0.27 f
-  U116009/Y (NAND2X8)                                     0.13       0.39 r
-  U110526/Y (INVX20)                                      0.09       0.48 f
-  U118580/Y (INVX6)                                       0.18       0.66 r
-  U107965/Y (BUFX8)                                       0.18       0.84 r
-  U110340/Y (NAND2X6)                                     0.10       0.93 f
-  U107827/Y (BUFX6)                                       0.23       1.16 f
-  U110273/Y (NAND3X4)                                     0.17       1.33 r
-  U129678/Y (NOR2X8)                                      0.09       1.42 f
-  U129679/Y (INVX3)                                       0.07       1.49 r
-  U121031/Y (AND2X4)                                      0.14       1.64 r
-  U107700/Y (BUFX12)                                      0.19       1.83 r
-  U120989/Y (NOR2X4)                                      0.10       1.93 f
-  U109745/Y (BUFX12)                                      0.16       2.09 f
-  U107535/Y (BUFX12)                                      0.13       2.22 f
-  U107491/Y (BUFX12)                                      0.13       2.35 f
-  U138724/Y (BUFX12)                                      0.16       2.52 f
-  clk_gate_u_llr_mem/mem_reg[855]/EN (SNPS_CLOCK_GATE_HIGH_bch_297)
-                                                          0.00       2.52 f
-  clk_gate_u_llr_mem/mem_reg[855]/test_or/Y (OR2X1)       0.29       2.81 f
-  clk_gate_u_llr_mem/mem_reg[855]/latch/D (TLATNX1)       0.00       2.81 f
-  data arrival time                                                  2.81
+  u_control/code_reg_reg[1]/Q (DFFHQX8)                   0.30       0.30 f
+  U122323/Y (INVX12)                                      0.07       0.37 r
+  U122322/Y (NAND2X8)                                     0.08       0.45 f
+  U125741/Y (BUFX20)                                      0.12       0.57 f
+  U115061/Y (CLKBUFX8)                                    0.19       0.76 f
+  U126008/Y (INVX20)                                      0.21       0.98 r
+  U111392/Y (NAND3X4)                                     0.12       1.10 f
+  U107837/Y (NAND2X2)                                     0.12       1.22 r
+  U108648/Y (NAND2X2)                                     0.10       1.32 f
+  U130009/Y (OAI2BB1X4)                                   0.10       1.42 r
+  U130010/Y (NAND2X4)                                     0.08       1.50 f
+  U111143/Y (NAND2X6)                                     0.09       1.59 r
+  U111109/Y (NAND2X6)                                     0.08       1.66 f
+  U125345/Y (OR2X8)                                       0.16       1.83 f
+  U107063/Y (INVX12)                                      0.10       1.93 r
+  U130011/Y (BUFX20)                                      0.12       2.05 r
+  U130012/Y (INVX20)                                      0.08       2.13 f
+  U130013/Y (AND2X8)                                      0.16       2.29 f
+  U107571/Y (BUFX12)                                      0.15       2.44 f
+  U107540/Y (NOR2X4)                                      0.13       2.57 r
+  U107534/Y (BUFX16)                                      0.22       2.79 r
+  U107502/Y (BUFX16)                                      0.27       3.07 r
+  clk_gate_u_llr_mem/mem_reg[306]/EN (SNPS_CLOCK_GATE_HIGH_bch_105)
+                                                          0.00       3.07 r
+  clk_gate_u_llr_mem/mem_reg[306]/test_or/Y (OR2X1)       0.23       3.30 r
+  clk_gate_u_llr_mem/mem_reg[306]/latch/D (TLATNX1)       0.00       3.30 r
+  data arrival time                                                  3.30
 
   clock clk (fall edge)                                   2.50       2.50
   clock network delay (ideal)                             0.00       2.50
   clock uncertainty                                      -0.10       2.40
-  clk_gate_u_llr_mem/mem_reg[855]/latch/GN (TLATNX1)      0.00       2.40 f
-  time borrowed from endpoint                             0.41       2.81
-  data required time                                                 2.81
+  clk_gate_u_llr_mem/mem_reg[306]/latch/GN (TLATNX1)      0.00       2.40 f
+  time borrowed from endpoint                             0.90       3.30
+  data required time                                                 3.30
   --------------------------------------------------------------------------
-  data required time                                                 2.81
-  data arrival time                                                 -2.81
+  data required time                                                 3.30
+  data arrival time                                                 -3.30
   --------------------------------------------------------------------------
   slack (MET)                                                        0.00
 
   Time Borrowing Information
   --------------------------------------------------------------
   clk nominal pulse width                                 2.50   
-  library setup time                                     -0.09   
+  library setup time                                     -0.11   
   --------------------------------------------------------------
-  max time borrow                                         2.41   
+  max time borrow                                         2.39   
   --------------------------------------------------------------
-  actual time borrow                                      0.41   
+  actual time borrow                                      0.90   
   clock uncertainty                                      -0.10   
   --------------------------------------------------------------
-  time given to startpoint                                0.31   
+  time given to startpoint                                0.80   
   --------------------------------------------------------------
 
 
