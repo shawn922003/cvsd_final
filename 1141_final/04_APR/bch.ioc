@@ -12,7 +12,6 @@
 )
 (iopin
     (top
-	(pin name="clk"	 layer=2 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="rstn"	 layer=2 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="mode"	 layer=2 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="code[1]"	 layer=2 width=0.2000 depth=0.7200 place_status=placed  )
@@ -46,6 +45,7 @@
 	(pin name="idata[40]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="idata[39]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="idata[38]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )
+	(pin name="clk"	 layer=2 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="idata[37]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="idata[36]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )
 	(pin name="idata[35]"	 layer=3 width=0.2000 depth=0.7200 place_status=placed  )

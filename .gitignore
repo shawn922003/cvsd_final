@@ -1,20 +1,11 @@
-*simv*
-*Log*
-*novas*
-*csrc*
-*.log
-*spyglass*
-*.nfs*
-*alib*
-*cksum*
-*.mr*
-*.svf*
-*.fsdb*
-*.pvl
-*.syn
-*.key
-*BSSLib.lib++
-*clogmgtbKg*
-*all_cells*
-*ff.list*
+# APR 中介檔，不要進 Git（DB、GUI 設定）
+1141_final/04_APR/DBS/
+1141_final/04_APR/Report/
+
+# 一般報告檔
+*.rpt
+*.summary
+
+# 波形檔
+*.fsdb
 *.vcd
