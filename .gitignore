@@ -18,3 +18,7 @@
 *all_cells*
 *ff.list*
 *.vcd
+*tmp*
+*/timingReports/*
+*innovus*
+*nfs*
