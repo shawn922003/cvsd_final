@@ -1,6 +1,6 @@
 ###################################################################
 
-# Created by write_sdc on Tue Dec  9 18:10:19 2025
+# Created by write_sdc on Fri Dec 12 07:56:12 2025
 
 ###################################################################
 set sdc_version 1.8
@@ -13379,6 +13379,158 @@ set_drive 1  [get_ports {idata[3]}]
 set_drive 1  [get_ports {idata[2]}]
 set_drive 1  [get_ports {idata[1]}]
 set_drive 1  [get_ports {idata[0]}]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/num_tp_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/num_tp_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/num_tp_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/num_tp_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/num_valid_tp_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/num_valid_tp_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/num_valid_tp_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/num_valid_tp_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp1_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp1_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp2_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp2_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc3_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp3_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_num_err_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp3_num_err_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc1_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc2_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc2_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc2_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc2_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc4_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc5_buf_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/tp4_err_loc5_buf_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc5_buf_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/tp4_err_loc5_buf_reg@main_gate]
+set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/min_llr_reg@main_gate]
+set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \
+clk_gate_u_error_bit_saver/min_llr_reg@main_gate]
+set_clock_gating_check -rise -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/min_llr_reg@main_gate]
+set_clock_gating_check -fall -hold 0 [get_cells -hsc @                         \
+clk_gate_u_error_bit_saver/min_llr_reg@main_gate]
 set_clock_gating_check -rise -setup 0 [get_cells -hsc @                        \
 {clk_gate_u_llr_mem/mem_reg[10]@main_gate}]
 set_clock_gating_check -fall -setup 0 [get_cells -hsc @                        \

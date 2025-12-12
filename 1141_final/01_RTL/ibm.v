@@ -66,7 +66,7 @@ module ibm(
 
     assign all_cen = i_clear_and_wen || (i_code == 2'b10 && counter < 3'd7) || (i_code != 2'b10 && counter < 3'd3);
 
-    assign o_valid = o_valid_internal & ~i_early_stop;
+    assign o_valid = o_valid_internal;
 
     assign o_degree1 = control1_degree;
     assign o_degree2 = control2_degree;

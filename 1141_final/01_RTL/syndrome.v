@@ -1264,20 +1264,20 @@ module syndrome(
         end
         else begin
             // clock gating by flip_alpha_logic_gen (clock enable style)
-            min_llr             <= flip_alpha_logic_gen ? min_llr_next             : min_llr;
-            second_min_llr      <= flip_alpha_logic_gen ? second_min_llr_next      : second_min_llr;
-            alpha_S1_min        <= flip_alpha_logic_gen ? alpha_S1_min_next        : alpha_S1_min;
-            alpha_S1_second_min <= flip_alpha_logic_gen ? alpha_S1_second_min_next : alpha_S1_second_min;
-            alpha_S3_min        <= flip_alpha_logic_gen ? alpha_S3_min_next        : alpha_S3_min;
-            alpha_S3_second_min <= flip_alpha_logic_gen ? alpha_S3_second_min_next : alpha_S3_second_min;
-            alpha_S5_min        <= flip_alpha_logic_gen ? alpha_S5_min_next        : alpha_S5_min;
-            alpha_S5_second_min <= flip_alpha_logic_gen ? alpha_S5_second_min_next : alpha_S5_second_min;
-            alpha_S7_min        <= flip_alpha_logic_gen ? alpha_S7_min_next        : alpha_S7_min;
-            alpha_S7_second_min <= flip_alpha_logic_gen ? alpha_S7_second_min_next : alpha_S7_second_min;
-            min_pos             <= flip_alpha_logic_gen ? min_pos_next             : min_pos;
-            second_min_pos      <= flip_alpha_logic_gen ? second_min_pos_next      : second_min_pos;
-            abs_llr_min         <= flip_alpha_logic_gen ? abs_llr_min_next         : abs_llr_min;
-            abs_llr_second_min  <= flip_alpha_logic_gen ? abs_llr_second_min_next  : abs_llr_second_min;
+            min_llr             <=  min_llr_next             ;
+            second_min_llr      <=  second_min_llr_next      ;
+            alpha_S1_min        <=  alpha_S1_min_next        ;
+            alpha_S1_second_min <=  alpha_S1_second_min_next ;
+            alpha_S3_min        <=  alpha_S3_min_next        ;
+            alpha_S3_second_min <=  alpha_S3_second_min_next ;
+            alpha_S5_min        <=  alpha_S5_min_next        ;
+            alpha_S5_second_min <=  alpha_S5_second_min_next ;
+            alpha_S7_min        <=  alpha_S7_min_next        ;
+            alpha_S7_second_min <=  alpha_S7_second_min_next ;
+            min_pos             <=  min_pos_next             ;
+            second_min_pos      <=  second_min_pos_next      ;
+            abs_llr_min         <=  abs_llr_min_next         ;
+            abs_llr_second_min  <=  abs_llr_second_min_next  ;
         end
     end
 

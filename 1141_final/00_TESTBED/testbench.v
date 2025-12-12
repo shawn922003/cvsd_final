@@ -91,6 +91,51 @@ initial begin
 		$readmemb("../00_TESTBED/tb/bch1023_hard/p302.txt", testdata);
 		$readmemb("../00_TESTBED/tb/bch1023_hard/p302a.txt", testa);
 	end
+	if (PATTERN == 1300) begin
+		NTEST = 1;
+		$readmemb("../00_TESTBED/tb/bch63_soft/p400.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch63_soft/p400a.txt", testa);
+	end 
+	if (PATTERN == 1400) begin
+		NTEST = 500;
+		$readmemb("../00_TESTBED/tb/bch63_soft/p401.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch63_soft/p401a.txt", testa);
+	end
+	if (PATTERN == 1500) begin
+		NTEST = 50;
+		$readmemb("../00_TESTBED/tb/bch63_soft/p402.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch63_soft/p402a.txt", testa);
+	end
+	if (PATTERN == 1600) begin
+		NTEST = 1;
+		$readmemb("../00_TESTBED/tb/bch255_soft/p500.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch255_soft/p500a.txt", testa);
+	end
+	if (PATTERN == 1700) begin
+		NTEST = 500;
+		$readmemb("../00_TESTBED/tb/bch255_soft/p501.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch255_soft/p501a.txt", testa);
+	end
+	if (PATTERN == 1800) begin
+		NTEST = 50;
+		$readmemb("../00_TESTBED/tb/bch255_soft/p502.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch255_soft/p502a.txt", testa);
+	end
+	if (PATTERN == 1900) begin
+		NTEST = 1;
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p600.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p600a.txt", testa);
+	end
+	if (PATTERN == 2000) begin
+		NTEST = 500;
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p601.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p601a.txt", testa);
+	end
+	if (PATTERN == 2100) begin
+		NTEST = 50;
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p602.txt", testdata);
+		$readmemb("../00_TESTBED/tb/bch1023_soft/p602a.txt", testa);
+	end
 	if (PATTERN == 10000) begin
 		NTEST = 10000;
 		$readmemb("../00_TESTBED/tb/p10000.txt", testdata);
@@ -214,6 +259,42 @@ initial begin
 		else if (PATTERN <= 1200) begin
 			code = 3;
 			mode = 0;  // 硬判决 bch1023
+		end
+		else if (PATTERN <= 1300) begin
+			code = 1;
+			mode = 1;  // 软判决 bch63
+		end
+		else if (PATTERN <= 1400) begin
+			code = 1;
+			mode = 1;  // 软判决 bch63
+		end
+		else if (PATTERN <= 1500) begin
+			code = 1;
+			mode = 1;  // 软判决 bch63
+		end
+		else if (PATTERN <= 1600) begin
+			code = 2;
+			mode = 1;  // 软判决 bch255
+		end
+		else if (PATTERN <= 1700) begin
+			code = 2;
+			mode = 1;  // 软判决 bch255
+		end
+		else if (PATTERN <= 1800) begin
+			code = 2;
+			mode = 1;  // 软判决 bch255
+		end
+		else if (PATTERN <= 1900) begin
+			code = 3;
+			mode = 1;  // 软判决 bch1023
+		end
+		else if (PATTERN <= 2000) begin
+			code = 3;
+			mode = 1;  // 软判决 bch1023
+		end
+		else if (PATTERN <= 2100) begin
+			code = 3;
+			mode = 1;  // 软判决 bch1023
 		end
 		else if (PATTERN <= 10000) begin
 			code = 1;

@@ -1,2 +1,2 @@
-10.0 ns (write decimal point)
+5.2 ns (write decimal point)
 

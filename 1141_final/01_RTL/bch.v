@@ -420,7 +420,7 @@ module bch(
 		.i_code(core_code),         // 2 bits
 		.i_clear_and_wen(ibm_out_valid),// 1 bit
 
-		.i_early_stop(early_stop_level), // 1 bit
+		.i_early_stop(1'b0), // 1 bit
 
 		.i_sigma1_0(ibm_sigma1[0]),     // 10 bits
 		.i_sigma1_1(ibm_sigma1[1]),     // 10 bits

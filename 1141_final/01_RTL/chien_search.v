@@ -253,7 +253,7 @@ module chien_search(
         .BITS(128)
     ) u_delay_n_is_root (
         .i_clk(i_clk),
-        .i_rst_n(i_rst_n),
+        .i_rst_n(1'b1),
         .i_en(1'b1),
         .i_d(is_root & root_mask),
         .o_q(is_root_reg)
@@ -614,9 +614,9 @@ module chien_search(
         end
         else begin
             sigma1_0_buf <= sigma1_0_buf_next;
-            sigma2_0_buf <= sigma2_gen ? sigma2_0_buf_next : sigma2_0_buf;
-            sigma2_1_buf <= sigma2_gen ? sigma2_1_buf_next : sigma2_1_buf;
-            sigma2_2_buf <= sigma2_gen ? sigma2_2_buf_next : sigma2_2_buf;
+            sigma2_0_buf <= sigma2_0_buf_next;
+            sigma2_1_buf <= sigma2_1_buf_next;
+            sigma2_2_buf <= sigma2_2_buf_next;
 
         end
     end
@@ -1152,19 +1152,46 @@ module chien_search_pe #(
 
     // ----------------------------
     // select proper domain tuples for multiplication
-    wire [9:0] mult1_alpha1 = (i_code == 2'd0) ? alpha1_63   :
-                              (i_code == 2'd1) ? alpha1_255  :
-                                                 alpha1_1023;
-    wire [9:0] mult2_alpha2 = (i_code == 2'd0) ? alpha2_63   :
-                              (i_code == 2'd1) ? alpha2_255  :
-                                                 alpha2_1023;
-    wire [9:0] mult3_alpha3 = (i_code == 2'd0) ? alpha3_63   :
-                              (i_code == 2'd1) ? alpha3_255  :
-                                                 alpha3_1023;
-    wire [9:0] mult4_alpha4 = (i_code == 2'd0) ? alpha4_63   :
-                              (i_code == 2'd1) ? alpha4_255  :
-                                                 alpha4_1023;
+    // wire [9:0] mult1_alpha1 = (i_code == 2'd0) ? alpha1_63   :
+    //                           (i_code == 2'd1) ? alpha1_255  :
+    //                                              alpha1_1023;
+    // wire [9:0] mult2_alpha2 = (i_code == 2'd0) ? alpha2_63   :
+    //                           (i_code == 2'd1) ? alpha2_255  :
+    //                                              alpha2_1023;
+    // wire [9:0] mult3_alpha3 = (i_code == 2'd0) ? alpha3_63   :
+    //                           (i_code == 2'd1) ? alpha3_255  :
+    //                                              alpha3_1023;
+    // wire [9:0] mult4_alpha4 = (i_code == 2'd0) ? alpha4_63   :
+    //                           (i_code == 2'd1) ? alpha4_255  :
+    //                                              alpha4_1023;
 
+    reg [9:0] mult1_alpha1;
+    reg [9:0] mult2_alpha2;
+    reg [9:0] mult3_alpha3;
+    reg [9:0] mult4_alpha4;
+
+    always @(*) begin
+        case(i_code) // synopsys full_case
+            2'd0: begin // (63,51)
+                mult1_alpha1 = alpha1_63;
+                mult2_alpha2 = alpha2_63;
+                mult3_alpha3 = 10'd0;
+                mult4_alpha4 = 10'd0;
+            end
+            2'd1: begin // (255,239)
+                mult1_alpha1 = alpha1_255;
+                mult2_alpha2 = alpha2_255;
+                mult3_alpha3 = 10'd0;
+                mult4_alpha4 = 10'd0;
+            end
+            2'd2: begin // (1023,983)
+                mult1_alpha1 = alpha1_1023;
+                mult2_alpha2 = alpha2_1023;
+                mult3_alpha3 = alpha3_1023;
+                mult4_alpha4 = alpha4_1023;
+            end
+        endcase
+    end
     // ----------------------------
     // GF multiplications
     wire [9:0] mult_out1, mult_out2, mult_out3, mult_out4;
@@ -1184,13 +1211,13 @@ module chien_search_pe #(
     gf_mult u_gf_mult3 (
         .i_a(i_sigma_alpha3),
         .i_b(mult3_alpha3),
-        .i_code(i_code),
+        .i_code(2'b10),
         .o_product(mult_out3)
     );
     gf_mult u_gf_mult4 (
         .i_a(i_sigma_alpha4),
         .i_b(mult4_alpha4),
-        .i_code(i_code),
+        .i_code(2'b10),
         .o_product(mult_out4)
     );
 
