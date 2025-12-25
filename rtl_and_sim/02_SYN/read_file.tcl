@@ -5,7 +5,7 @@ set_host_options -max_cores 16
 set company {NTUGIEE}
 set designer {Student}
 
-set search_path      ". /mnt/data/LYX/cvsd/CBDK_IC_Contest/CIC/SynopsysDC/db $search_path"
+set search_path      ". /home/raid7_2/course/cvsd/CBDK_IC_Contest/CIC/SynopsysDC/db $search_path"
 set target_library   "slow.db"
 set link_library     "* $target_library dw_foundation.sldb"
 set symbol_library   "tsmc13.sdb generic.sdb"
