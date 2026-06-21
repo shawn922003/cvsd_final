@@ -1,5 +1,11 @@
 # CVSD Final Project — BCH Decoder (Hard/Soft Decision) RTL + Python Reference
 
+---
+
+score: 100/100
+
+---
+
 This repository contains our BCH decoder project, including:
 - **RTL implementation** with VCS simulation flow
 - **Synthesis / gate-level / post-layout** simulation setups
